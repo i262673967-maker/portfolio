@@ -1,0 +1,30 @@
+import type { ComponentType } from "react";
+import type { DemoKey, Project } from "@/lib/data";
+import type { DemoProps } from "./_shared";
+import LocalServiceDemo from "./LocalServiceDemo";
+import EcommerceDemo from "./EcommerceDemo";
+import RestaurantDemo from "./RestaurantDemo";
+
+export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
+  renovation: LocalServiceDemo,
+  plumber: LocalServiceDemo,
+  electrician: LocalServiceDemo,
+  ecommerce: EcommerceDemo,
+  restaurant: RestaurantDemo,
+};
+
+/* preview=true (the default) means the concept is shown as a preview inside a
+   device frame or card, so it must not own the page's <h1>. Only the standalone
+   /demos/[slug] route renders it as the document's main heading. */
+export function Demo({
+  demo,
+  project,
+  preview = true,
+}: {
+  demo: DemoKey;
+  project: Project;
+  preview?: boolean;
+}) {
+  const Cmp = demoRegistry[demo];
+  return <Cmp project={project} preview={preview} />;
+}

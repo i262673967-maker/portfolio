@@ -12,7 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
-import { clientTypes, principles, process, qualityChecklist, services, site } from "@/lib/data";
+import { clientTypes, principles, processSteps, qualityChecklist, services, site } from "@/lib/data";
 
 const iconMap: Record<string, typeof Building2> = {
   wrench: Wrench,
@@ -156,7 +156,7 @@ export function Services() {
             return (
               <Reveal key={s.title} delay={(i % 3) * 0.06}>
                 <div
-                  className={`relative h-full rounded-2xl border p-6 transition-colors ${
+                  className={`relative h-full overflow-hidden rounded-2xl border p-6 transition-colors ${
                     featured
                       ? "border-accent/40 bg-surface-2"
                       : "border-line bg-surface hover:border-line-strong"
@@ -235,7 +235,7 @@ export function Process() {
         </Reveal>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {process.map((p, i) => (
+          {processSteps.map((p, i) => (
             <Reveal key={p.step} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-line bg-surface p-5">
                 <span className="font-display text-2xl font-bold text-accent">{p.step}</span>
@@ -370,7 +370,7 @@ export function About() {
             {!isTodo(site.experience) && (
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
                 <dt className="w-28 shrink-0 font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-                  Experience
+                  Focus
                 </dt>
                 <dd className="text-offwhite/90">{site.experience}</dd>
               </div>

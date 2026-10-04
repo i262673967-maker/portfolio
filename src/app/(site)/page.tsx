@@ -16,6 +16,7 @@ import { site } from "@/lib/data";
 export const metadata: Metadata = {
   title: { absolute: `${site.brand} — Modern Websites for Local Businesses` },
   description: site.supportingMessage,
+  alternates: { canonical: "/" },
 };
 
 export default function HomePage() {

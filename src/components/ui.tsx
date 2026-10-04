@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, MotionConfig } from "framer-motion";
+import { MotionConfig } from "framer-motion";
 import type { ReactNode } from "react";
 
 /* Respects the user's prefers-reduced-motion setting for all Framer Motion animations. */
@@ -20,15 +20,12 @@ export function Reveal({
   className?: string;
 }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      className={`reveal ${className ?? ""}`}
+      style={{ "--reveal-delay": `${delay}s`, "--reveal-y": `${y}px` } as React.CSSProperties}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 

@@ -168,6 +168,7 @@ export default function ContactForm() {
                   <label htmlFor={fid("details")} className={label}>Project details</label>
                   <textarea
                     id={fid("details")}
+                    name="details"
                     required
                     rows={5}
                     value={form.details}

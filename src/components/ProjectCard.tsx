@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import DeviceMockup from "./DeviceMockup";
 import { Demo } from "@/demos";
@@ -9,11 +8,9 @@ import type { Project } from "@/lib/data";
 
 export default function ProjectCard({ project, i }: { project: Project; i: number }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      className="reveal"
+      style={{ "--reveal-delay": `${(i % 3) * 0.08}s`, "--reveal-y": "24px" } as React.CSSProperties}
     >
       {/* The card previews a whole website, which contains its own links, so the
           card itself can't be an <a>. A stretched overlay keeps it clickable. */}
@@ -56,6 +53,6 @@ export default function ProjectCard({ project, i }: { project: Project; i: numbe
           aria-label={`${project.name} — view concept project`}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

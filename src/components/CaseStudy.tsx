@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Monitor, Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import { Demo } from "@/demos";
@@ -51,13 +51,11 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
           </div>
         </div>
         <div className="mt-8">
-          <AnimatePresence mode="wait">
-            <motion.div key={device} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-              <DeviceMockup device={device}>
-                <Demo demo={project.demo} project={project} />
-              </DeviceMockup>
-            </motion.div>
-          </AnimatePresence>
+          <div key={device} className="reveal">
+            <DeviceMockup device={device}>
+              <Demo demo={project.demo} project={project} />
+            </DeviceMockup>
+          </div>
         </div>
       </div>
 

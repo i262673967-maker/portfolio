@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Monitor, Tablet, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import { Demo } from "@/demos";
@@ -84,19 +84,11 @@ export default function Showcase() {
 
         {/* Preview */}
         <div className="mt-10">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${project.slug}-${device}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35 }}
-            >
-              <DeviceMockup device={device}>
-                <Demo demo={project.demo} project={project} />
-              </DeviceMockup>
-            </motion.div>
-          </AnimatePresence>
+          <div key={`${project.slug}-${device}`} className="reveal">
+            <DeviceMockup device={device}>
+              <Demo demo={project.demo} project={project} />
+            </DeviceMockup>
+          </div>
         </div>
 
         {/* Actions */}

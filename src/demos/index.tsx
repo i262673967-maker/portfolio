@@ -3,11 +3,14 @@ import type { DemoKey, Project } from "@/lib/data";
 import type { DemoProps } from "./_shared";
 import LocalServiceDemo from "./LocalServiceDemo";
 import EcommerceDemo from "./EcommerceDemo";
+import PlumberDemo from "./PlumberDemo";
 import RestaurantDemo from "./RestaurantDemo";
 
 export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
   renovation: LocalServiceDemo,
-  plumber: LocalServiceDemo,
+  /* FlowRight is a bright concept site, so it gets its own layout rather than
+     a recoloured copy of the dark local-service one. */
+  plumber: PlumberDemo,
   electrician: LocalServiceDemo,
   ecommerce: EcommerceDemo,
   restaurant: RestaurantDemo,

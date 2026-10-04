@@ -62,6 +62,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
             {searchOpen && (
               <input
                 type="search"
+                name="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search the collection"
@@ -171,7 +172,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
               Each piece is produced with independent makers using natural materials. No mass
               production, no throwaway trends — just objects that age well.
             </p>
-            <DemoAction variant="ghost" className="mt-5 px-5 py-2.5" note="Concept build — the long-form story is written together with the client.">
+            <DemoAction variant="ghost" className="mt-5 px-5 py-2.5">
               Read Our Story
             </DemoAction>
           </div>
@@ -190,6 +191,8 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
         >
           <input
             type="email"
+            name="email"
+            autoComplete="email"
             required
             value={email}
             onChange={(e) => {

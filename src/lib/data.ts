@@ -7,13 +7,31 @@
    before publishing.
    ----------------------------------------------------------------------- */
 
-/* TODO: replace with your real domain once you have one.
-   Used for sitemap.xml, canonical URLs and Open Graph tags. */
-export const siteUrl = "https://TODO-your-domain.com";
+/* Site domain, resolved at build time in this order:
+   1. NEXT_PUBLIC_SITE_URL — set it yourself (e.g. https://example.com).
+   2. VERCEL_PROJECT_PRODUCTION_URL — Vercel's own production URL, no config needed.
+   3. The TODO placeholder below, which keeps sitemap/robots switched off.
+   Only server files read this (layout metadata, sitemap.ts, robots.ts), so a
+   build-time env var is safe here. */
+const envHost =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined);
 
-/* TODO: create a free form at https://web3forms.com and paste your access key
-   here. Until then the contact form shows a clear error instead of sending. */
-export const web3formsAccessKey = "TODO_PASTE_YOUR_WEB3FORMS_ACCESS_KEY";
+export const siteUrl = (envHost ?? "https://TODO-your-domain.com").replace(/\/+$/, "");
+
+/* Every absolute URL on this site is derived from siteUrl in one place, so
+   setting the real domain updates metadata, Open Graph, canonicals, sitemap and
+   robots at once. Nothing hardcodes a domain that does not exist yet. */
+export const siteBase = siteUrl;
+export const hasRealDomain = !siteUrl.includes("TODO");
+export const absoluteUrl = (path = "/") => `${siteBase}/${path.replace(/^\//, "")}`;
+
+/* Web3Forms access key — public by design: it only lets a visitor send a message
+   to the inbox you configured at web3forms.com, and they rate-limit submissions.
+   Replace it any time you rotate the form. */
+export const web3formsAccessKey = "7b769c0d-dedf-43ab-83ed-07a8475a0b84";
 export const formEndpoint = "https://api.web3forms.com/submit";
 
 export const site = {
@@ -34,13 +52,13 @@ export const site = {
   /* Replaces the pricing section. No prices are published. */
   quoteOffer: "Free quote within 24 hours. Tell me what you need.",
 
-  /* TODO: list your real tools (e.g. Figma, Next.js, WordPress, Webflow…).
-     Nothing is invented here on purpose. */
-  tools: "TODO: list your tools here",
+  /* Only tools this project actually runs on (see package.json). */
+  tools: "Next.js, React, TypeScript, Tailwind CSS, Framer Motion",
 
-  /* TODO: add your real experience (months/years and what you've built).
-     Nothing is invented here on purpose. */
-  experience: "TODO: add your real experience here",
+  /* Shown under the "Focus" label, never as years or client counts — no
+     experience figure, client count or award is claimed anywhere on this site. */
+  experience:
+    "Independent web designer & developer focused on modern websites for local businesses.",
 
   bio: "I build new websites and fix slow, outdated ones for local businesses. I start with a free website audit, so you see exactly what's wrong before you pay anything.",
 
@@ -84,7 +102,7 @@ export type ServiceDemoContent = {
   whyIntro: string;
   whyPoints: string[];
   faqTitle: string;
-  faqs: string[];
+  faqs: { q: string; a: string }[];
   ctaTitle: string;
   ctaBody: string;
 };
@@ -183,9 +201,18 @@ export const projects: Project[] = [
       ],
       faqTitle: "Questions, answered",
       faqs: [
-        "How long does a typical renovation take?",
-        "Do you handle permits?",
-        "Can I live at home during the work?",
+        {
+          q: "How long does a typical renovation take?",
+          a: "It depends on the size and scope of the project. After a consultation and review of the work involved, we can give you a clearer estimated timeline.",
+        },
+        {
+          q: "Do you handle permits?",
+          a: "Where approvals or permits are required, they should be identified during the planning stage and factored into the project before work begins.",
+        },
+        {
+          q: "Can I live at home during the work?",
+          a: "Sometimes. It depends on which areas of the home are being renovated and how much of the property is affected. We discuss the practical options before the project starts.",
+        },
       ],
       ctaTitle: "Ready to talk about your project?",
       ctaBody: "Book a free consultation and get a clear, fixed quote.",
@@ -216,8 +243,9 @@ export const projects: Project[] = [
       "The booking call to action appears above the fold, mid-page, and again at the end",
       "\"Fixed price before we start\" is the single objection the page is built to answer",
     ],
-    accent: "#3fa9f5",
-    palette: { bg: "#08111a", fg: "#eaf3fa", accent: "#3fa9f5" },
+    accent: "#0b6bcb",
+    /* Bright theme: cool white surfaces, deep navy text, professional blue. */
+    palette: { bg: "#f4f8fb", fg: "#0f2337", accent: "#0b6bcb" },
     content: {
       logoLetter: "F",
       navName: "FlowRight Plumbing",
@@ -232,9 +260,9 @@ export const projects: Project[] = [
         { value: "Fixed", label: "Price before we start" },
       ],
       heroImages: [
-        { from: "#2b6f9e", to: "#0e2f47", label: "Boiler service" },
-        { from: "#4d8fbd", to: "#1d4360", label: "Bathroom" },
-        { from: "#7fb2d4", to: "#33627f", label: "Leak trace" },
+        { from: "#a9cfee", to: "#3f7bb5", label: "Boiler service" },
+        { from: "#dbeaf7", to: "#87b3d8", label: "Bathroom" },
+        { from: "#84bade", to: "#2f628f", label: "Leak trace" },
       ],
       servicesTitle: "What we get called for",
       services: [
@@ -247,9 +275,9 @@ export const projects: Project[] = [
       ],
       galleryTitle: "Jobs From This Month",
       gallery: [
-        { title: "Boiler swap", from: "#2b6f9e", to: "#0e2f47" },
-        { title: "Bathroom refit", from: "#4d8fbd", to: "#1d4360" },
-        { title: "Leak trace", from: "#7fb2d4", to: "#33627f" },
+        { title: "Boiler swap", from: "#bcd9f0", to: "#4a80b6" },
+        { title: "Bathroom refit", from: "#dcecf8", to: "#7cadd6" },
+        { title: "Leak trace", from: "#95c6e6", to: "#33688f" },
       ],
       whyTitle: "Why locals call FlowRight",
       whyIntro:
@@ -262,9 +290,20 @@ export const projects: Project[] = [
       ],
       faqTitle: "Before you call",
       faqs: [
-        "How fast can you get here?",
-        "Do you charge for a quote?",
-        "Are you insured?",
+        {
+          q: "How fast can you get here?",
+          a: "Emergency jobs are prioritised, but arrival time depends on availability, location, and the current workload. We confirm the expected arrival time when the callout is booked.",
+        },
+        {
+          q: "Do you charge for a quote?",
+          a: "Ask for a quote and the work can be discussed before anything begins. The final scope and price should be clear before work starts.",
+        },
+        {
+          /* The insurance question deliberately shows no claim: on a real site it
+             can only be answered once the business confirms its actual cover. */
+          q: "Are you insured?",
+          a: "This is a concept website, so no specific insurance claim is displayed. On a real business website, this should only be stated once the business has confirmed its actual insurance details.",
+        },
       ],
       ctaTitle: "Water won't wait. Neither do we.",
       ctaBody: "Tell us what's wrong and get a fixed price before any work starts.",
@@ -341,9 +380,18 @@ export const projects: Project[] = [
       ],
       faqTitle: "Common questions",
       faqs: [
-        "Do I actually need a full rewire?",
-        "How long does an EV charger install take?",
-        "Can you work around my hours?",
+        {
+          q: "Do I actually need a full rewire?",
+          a: "Not always. It depends on the age, condition, safety, and existing layout of the wiring. A proper inspection is the best way to determine what needs to be replaced.",
+        },
+        {
+          q: "How long does an EV charger install take?",
+          a: "Installation time depends on the property, cable route, charger, and existing electrical setup. The required work can be confirmed after the installation requirements are assessed.",
+        },
+        {
+          q: "Can you work around my hours?",
+          a: "Visit times can be discussed around the customer's availability. The actual appointment windows should be confirmed with the business.",
+        },
       ],
       ctaTitle: "Something not right with your electrics?",
       ctaBody: "Send a photo of the problem and get a clear, fixed quote back.",
@@ -374,8 +422,9 @@ export const projects: Project[] = [
       "Reserve call to action in the header, the hero, and the dedicated booking panel",
       "Opening days and hours repeated next to the booking form to remove the last question",
     ],
-    accent: "#e0a45e",
-    palette: { bg: "#0d0a08", fg: "#f7efe6", accent: "#e0a45e" },
+    accent: "#b5522f",
+    /* Bright theme: ivory/cream surfaces, warm charcoal text, terracotta accent. */
+    palette: { bg: "#f8f2e9", fg: "#2f2724", accent: "#b5522f" },
   },
   {
     slug: "maison-lifestyle",
@@ -477,7 +526,7 @@ export const principles = [
   },
 ];
 
-export const process = [
+export const processSteps = [
   { step: "01", title: "Free Audit", body: "You send me your website link (or your business details) and I tell you exactly what's wrong or what's missing." },
   { step: "02", title: "Plan", body: "We agree the structure, the pages, and the visual direction before anything is built." },
   { step: "03", title: "Design", body: "The look and layout is designed around your business, your services, and your customers." },

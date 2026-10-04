@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
-import { projects, siteUrl } from "@/lib/data";
+import { hasRealDomain, projects, siteBase } from "@/lib/data";
 
-/* Sitemap — URLs use the TODO domain placeholder from data.ts until a real
-   domain is connected. */
+/* Sitemap — every URL is built from siteUrl in data.ts, so connecting a real
+   domain and redeploying updates this file automatically. With no domain
+   resolved it stays empty rather than listing placeholder URLs. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteUrl.replace(/\/+$/, "");
+  if (!hasRealDomain) return [];
   const lastModified = new Date();
   return [
-    { url: `${base}/`, lastModified },
-    ...projects.map((p) => ({ url: `${base}/work/${p.slug}`, lastModified })),
-    ...projects.map((p) => ({ url: `${base}/demos/${p.slug}`, lastModified })),
+    { url: `${siteBase}/`, lastModified },
+    ...projects.map((p) => ({ url: `${siteBase}/work/${p.slug}`, lastModified })),
+    ...projects.map((p) => ({ url: `${siteBase}/demos/${p.slug}`, lastModified })),
   ];
 }

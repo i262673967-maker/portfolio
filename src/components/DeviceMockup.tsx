@@ -63,19 +63,26 @@ export default function DeviceMockup({
               </span>
             </div>
           )}
-          {scale > 0 && (
-            <div
-              className="demo-scroll absolute left-0 origin-top-left"
-              style={{
-                width: spec.layout,
-                height: innerHeight,
-                transform: `scale(${scale})`,
-                top: chrome && device === "desktop" ? 0 : 0,
-              }}
-            >
-              {children}
-            </div>
-          )}
+          <div
+            className="demo-scroll absolute inset-0 origin-top-left"
+            style={
+              scale
+                ? {
+                    inset: "auto",
+                    left: 0,
+                    top: 0,
+                    width: spec.layout,
+                    height: innerHeight,
+                    transform: `scale(${scale})`,
+                  }
+                : /* Before the frame has been measured (and forever, if the client
+                     bundle never runs) the demo renders at the frame's own width.
+                     Its container queries pick a layout that fits, so nothing is blank. */
+                  { width: "100%", height: "100%" }
+            }
+          >
+            {children}
+          </div>
         </div>
       </div>
     </div>

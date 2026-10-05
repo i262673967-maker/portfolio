@@ -7,7 +7,7 @@ import { cta, projects } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Concept Projects",
   description:
-    "Fully-designed concept websites for local businesses — renovation, plumbing, electrical, dining and retail. Each has a case study with its objective, strategy and live preview.",
+    "Concept websites for local businesses — renovation, plumbing, electrical, dining and retail. Each has a case study and a live preview.",
   alternates: { canonical: "/projects" },
 };
 
@@ -28,6 +28,7 @@ export default function ProjectsPage() {
       </div>
 
       <section aria-label="All concept projects" className="container-shell py-14">
+        <h2 className="sr-only">All concept projects</h2>
         <ProjectGallery />
       </section>
 

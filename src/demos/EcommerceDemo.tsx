@@ -67,7 +67,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search the collection"
                 placeholder="Search pieces"
-                className="w-24 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[11px] outline-none placeholder:text-current/40 focus:border-[var(--d-accent)]/60 @5xl:w-36"
+                className="w-24 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[11px] placeholder:text-current/40 focus:border-[var(--d-accent)]/60 @5xl:w-36"
               />
             )}
             <button type="button" onClick={() => setSearchOpen((v) => !v)} aria-expanded={searchOpen} className="hover:text-current">
@@ -201,7 +201,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
             }}
             aria-label="Email address"
             placeholder="Email address"
-            className="min-w-0 flex-1 rounded-full border border-white/12 bg-white/[0.03] px-4 py-2.5 text-left text-xs outline-none placeholder:text-current/40 focus:border-[var(--d-accent)]/60"
+            className="min-w-0 flex-1 rounded-full border border-white/12 bg-white/[0.03] px-4 py-2.5 text-left text-xs placeholder:text-current/40 focus:border-[var(--d-accent)]/60"
           />
           <Btn type="submit" className="px-5">Subscribe</Btn>
         </form>

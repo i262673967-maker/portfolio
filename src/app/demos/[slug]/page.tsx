@@ -27,7 +27,7 @@ export default async function DemoPage(props: PageProps<"/demos/[slug]">) {
   return (
     <div className="min-h-screen bg-base">
       {/* Floating control bar */}
-      <div className="fixed inset-x-0 top-0 z-50 border-b border-line bg-base/85 backdrop-blur-xl">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-base/85 backdrop-blur-xl">
         <div className="container-shell flex h-14 items-center justify-between gap-3">
           <Link href="/projects" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-offwhite">
             <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">All projects</span>
@@ -43,31 +43,33 @@ export default async function DemoPage(props: PageProps<"/demos/[slug]">) {
               Project Breakdown
             </Link>
             <Link href="/#contact" className="group inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-[12px] font-semibold text-ink transition-colors hover:bg-offwhite">
-              {cta.nav} <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              {cta.nav} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* The demo website, rendered natively (fully responsive) */}
-      <div className="pt-14">
-        <Demo demo={project.demo} project={project} preview={false} />
-      </div>
-
-      {/* End-of-demo CTA */}
-      <div className="border-t border-line bg-base-2">
-        <div className="container-shell flex flex-col items-center gap-4 py-12 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div>
-            <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
-              Want a website like this for your business?
-            </h2>
-            <p className="mt-1 text-sm text-muted">This is a concept project for a fictional business — yours would be built around yours.</p>
-          </div>
-          <Link href="/#contact" className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent">
-            <Search className="h-4 w-4" /> {cta.primary} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+      <main>
+        {/* The demo website, rendered natively (fully responsive) */}
+        <div className="pt-14">
+          <Demo demo={project.demo} project={project} preview={false} />
         </div>
-      </div>
+
+        {/* End-of-demo CTA */}
+        <div className="border-t border-line bg-base-2">
+          <div className="container-shell flex flex-col items-center gap-4 py-12 text-center sm:flex-row sm:justify-between sm:text-left">
+            <div>
+              <h2 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">
+                Want a website like this for your business?
+              </h2>
+              <p className="mt-1 text-sm text-muted">This is a concept project for a fictional business — yours would be built around yours.</p>
+            </div>
+            <Link href="/#contact" className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent">
+              <Search className="h-4 w-4" /> {cta.primary} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

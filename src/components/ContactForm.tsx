@@ -1,13 +1,16 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, Search, CheckCircle2, AlertCircle } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
 import { cta, formEndpoint, site, web3formsAccessKey } from "@/lib/data";
 
+/* No `outline-none` here: the global :focus-visible ring in globals.css is the
+   keyboard indicator, and line-input clears 3:1 so the empty field itself is
+   visible (WCAG 1.4.11). The border colour only marks pointer focus. */
 const input =
-  "w-full rounded-xl border border-line bg-base-2 px-4 py-3 text-[14px] text-offwhite placeholder:text-faint outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/15";
+  "w-full rounded-xl border border-line-input bg-base-2 px-4 py-3 text-[14px] text-offwhite placeholder:text-faint transition-colors focus:border-accent";
 const label = "mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-muted";
 const err = "mt-1.5 text-[12px] text-warm";
 
@@ -57,21 +60,39 @@ export default function ContactForm() {
      are not sent — the visitor gets an honest error with a mailto fallback. */
   const keyMissing = web3formsAccessKey.trim().toUpperCase().startsWith("TODO");
 
-  function validate(): { website: string } | null {
+  /* A screen reader only hears that something went wrong if we say so out loud,
+     so the first invalid field takes focus and the summary is a live region. */
+  const websiteRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const sentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (status === "sent") sentRef.current?.focus();
+  }, [status]);
+
+  const invalidCount = Object.values(fieldErrors).filter(Boolean).length;
+
+  function validate(): { website: string; errors: FieldErrors } {
     const next: FieldErrors = {};
     const website = normaliseWebsite(form.website);
     if (!website) next.website = "Enter your website link, for example yourbusiness.com";
     if (!form.name.trim()) next.name = "Please add your name so I know who to reply to";
     if (!EMAIL.test(form.email.trim())) next.email = "Enter a valid email so I can send the audit";
-    setFieldErrors(next);
-    if (website && Object.keys(next).length === 0) return { website };
-    return null;
+    return { website: website ?? "", errors: next };
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = validate();
-    if (!parsed) return;
+    const { website, errors } = validate();
+    setFieldErrors(errors);
+    if (!website) {
+      const first = (["website", "name", "email"] as const).find((k) => errors[k]);
+      if (first === "website") websiteRef.current?.focus();
+      else if (first === "name") nameRef.current?.focus();
+      else if (first === "email") emailRef.current?.focus();
+      return;
+    }
     if (keyMissing) {
       setStatus("error");
       setErrorMsg(
@@ -80,7 +101,7 @@ export default function ContactForm() {
       return;
     }
     setStatus("sending");
-    const domain = parsed.website.replace(/^https?:\/\//i, "").split("/")[0];
+    const domain = website.replace(/^https?:\/\//i, "").split("/")[0];
     try {
       const res = await fetch(formEndpoint, {
         method: "POST",
@@ -91,7 +112,7 @@ export default function ContactForm() {
           from_name: form.name.trim(),
           name: form.name.trim(),
           email: form.email.trim(),
-          website: parsed.website,
+          website,
           note: form.note.trim() || "—",
           botcheck: form.botcheck,
         }),
@@ -147,8 +168,11 @@ export default function ContactForm() {
           <div className="relative rounded-2xl border border-line bg-surface p-6 sm:p-8">
             {status === "sent" ? (
               <motion.div
+                ref={sentRef}
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
+                role="status"
+                tabIndex={-1}
                 className="flex min-h-[360px] flex-col items-center justify-center text-center"
               >
                 <CheckCircle2 className="h-12 w-12 text-accent" />
@@ -160,6 +184,7 @@ export default function ContactForm() {
                 <button
                   onClick={() => {
                     setStatus("idle");
+                    setFieldErrors({});
                     setForm({ website: "", name: "", email: "", note: "", botcheck: "" });
                   }}
                   className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
@@ -169,12 +194,24 @@ export default function ContactForm() {
               </motion.div>
             ) : (
               <form onSubmit={onSubmit} noValidate className="grid gap-4">
+                {invalidCount > 0 && (
+                  <p
+                    role="alert"
+                    className="rounded-xl border border-warm/40 bg-warm/[0.08] px-4 py-3 text-[13px] leading-relaxed text-offwhite/90"
+                  >
+                    Please check the{" "}
+                    {invalidCount === 1 ? "highlighted field" : `${invalidCount} highlighted fields`} below,
+                    then send it again.
+                  </p>
+                )}
+
                 <div>
                   <label htmlFor={fid("website")} className={label}>
                     Website URL
                   </label>
                   <input
                     id={fid("website")}
+                    ref={websiteRef}
                     required
                     type="url"
                     inputMode="url"
@@ -201,6 +238,7 @@ export default function ContactForm() {
                     </label>
                     <input
                       id={fid("name")}
+                      ref={nameRef}
                       required
                       name="name"
                       autoComplete="name"
@@ -223,6 +261,7 @@ export default function ContactForm() {
                     </label>
                     <input
                       id={fid("email")}
+                      ref={emailRef}
                       required
                       type="email"
                       inputMode="email"

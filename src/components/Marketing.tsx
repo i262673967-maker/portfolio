@@ -440,7 +440,6 @@ export function About() {
               width={400}
               height={400}
               className="h-auto w-full max-w-[15rem] rounded-full object-contain"
-              priority
             />
           </div>
         </Reveal>

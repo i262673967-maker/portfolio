@@ -11,9 +11,13 @@
   --color-surface-2: #191c25;
   --color-line: #ffffff14;
   --color-line-strong: #ffffff24;
+  /* Form controls need a boundary a visitor can actually see (WCAG 1.4.11 asks
+     for 3:1 against the surrounding colour). line/line-strong are decorative
+     hairlines at ~1.2:1 and don't qualify, so inputs get their own token. */
+  --color-line-input: #626a7c;
   --color-offwhite: #f4f3ef;
   --color-muted: #9aa0ad;
-  --color-faint: #6b7280;
+  --color-faint: #838a97;
   --color-accent: #38bdf8;
   --color-accent-2: #22d3ee;
   --color-accent-deep: #0ea5e9;

@@ -257,15 +257,15 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
           <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 @3xl:flex-row @3xl:flex-wrap @3xl:items-end @3xl:justify-center">
             <label className="flex flex-col gap-1.5 text-left @3xl:flex-1">
               <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-current/50">Date</span>
-              <input type="date" name="date" aria-label="Reservation date" className={field} />
+              <input type="date" name="date" className={field} />
             </label>
             <label className="flex flex-col gap-1.5 text-left @3xl:flex-1">
               <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-current/50">Time</span>
-              <input type="time" name="time" aria-label="Reservation time" min="18:00" max="23:30" step={900} className={field} />
+              <input type="time" name="time" min="18:00" max="23:30" step={900} className={field} />
             </label>
             <label className="flex flex-col gap-1.5 text-left @3xl:w-28">
               <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-current/50">Guests</span>
-              <input type="number" name="guests" aria-label="Number of guests" min={2} max={8} defaultValue={2} className={field} />
+              <input type="number" name="guests" min={2} max={8} defaultValue={2} className={field} />
             </label>
             <NoteAction>Find a Table</NoteAction>
           </div>

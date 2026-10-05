@@ -215,7 +215,10 @@ export function DemoNav({
   className?: string;
 }) {
   return (
-    <nav className={`hidden gap-6 text-[11px] text-current/70 @5xl:flex ${className}`}>
+    <nav
+      aria-label="Concept website navigation"
+      className={`hidden gap-6 text-[11px] text-current/70 @5xl:flex ${className}`}
+    >
       {items.map(([label, section]) => (
         <a
           key={label}

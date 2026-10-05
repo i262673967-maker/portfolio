@@ -3,14 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { cta, nav, site } from "@/lib/data";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
+
+  /* Only real pages get a current state — the rest of the nav jumps to anchors
+     on the homepage, which are never "the current page". */
+  const isCurrent = (href: string) => !href.includes("#") && pathname.startsWith(href);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -65,7 +71,10 @@ export default function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className="rounded-full px-3.5 py-2 text-[13px] text-muted transition-colors hover:bg-white/5 hover:text-offwhite"
+              aria-current={isCurrent(item.href) ? "page" : undefined}
+              className={`rounded-full px-3.5 py-2 text-[13px] transition-colors hover:bg-white/5 hover:text-offwhite ${
+                isCurrent(item.href) ? "text-offwhite" : "text-muted"
+              }`}
             >
               {item.label}
             </Link>
@@ -112,8 +121,11 @@ export default function Navbar() {
                 >
                   <Link
                     href={item.href}
+                    aria-current={isCurrent(item.href) ? "page" : undefined}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-base text-offwhite/90 transition-colors hover:bg-white/5"
+                    className={`block rounded-lg px-3 py-3 text-base transition-colors hover:bg-white/5 ${
+                      isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
+                    }`}
                   >
                     {item.label}
                   </Link>

@@ -4,62 +4,95 @@ import { useId, useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, Search, CheckCircle2, AlertCircle } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
-import { formEndpoint, site, web3formsAccessKey, websiteNeeds } from "@/lib/data";
+import { cta, formEndpoint, site, web3formsAccessKey } from "@/lib/data";
 
 const input =
   "w-full rounded-xl border border-line bg-base-2 px-4 py-3 text-[14px] text-offwhite placeholder:text-faint outline-none transition-colors focus:border-accent/60 focus:ring-2 focus:ring-accent/15";
 const label = "mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-muted";
+const err = "mt-1.5 text-[12px] text-warm";
 
 type Status = "idle" | "sending" | "sent" | "error";
+type FieldErrors = { website?: string; name?: string; email?: string };
+
+/* Accepts what a business owner actually types — "joesplumbing.com", "www.joe.com/Contact",
+   or a full URL — and normalises it to something verifiable. */
+function normaliseWebsite(raw: string): string | null {
+  const value = raw.trim().replace(/\s+/g, "");
+  if (!value) return null;
+  const withProtocol = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  let url: URL;
+  try {
+    url = new URL(withProtocol);
+  } catch {
+    return null;
+  }
+  if (!url.hostname.includes(".") || url.hostname.endsWith(".")) return null;
+  return url.toString();
+}
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function ContactForm() {
   const uid = useId();
   const fid = (k: string) => `${uid}-${k}`;
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState({
-    name: "",
-    business: "",
-    email: "",
     website: "",
-    need: websiteNeeds[0],
-    details: "",
+    name: "",
+    email: "",
+    note: "",
     botcheck: "",
   });
 
   const set =
     (k: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((f) => ({ ...f, [k]: e.target.value }));
+      setFieldErrors((fe) => ({ ...fe, [k]: undefined }));
+    };
 
   /* Until a real Web3Forms access key is set in src/lib/data.ts, submissions
      are not sent — the visitor gets an honest error with a mailto fallback. */
   const keyMissing = web3formsAccessKey.trim().toUpperCase().startsWith("TODO");
 
+  function validate(): { website: string } | null {
+    const next: FieldErrors = {};
+    const website = normaliseWebsite(form.website);
+    if (!website) next.website = "Enter your website link, for example yourbusiness.com";
+    if (!form.name.trim()) next.name = "Please add your name so I know who to reply to";
+    if (!EMAIL.test(form.email.trim())) next.email = "Enter a valid email so I can send the audit";
+    setFieldErrors(next);
+    if (website && Object.keys(next).length === 0) return { website };
+    return null;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const parsed = validate();
+    if (!parsed) return;
     if (keyMissing) {
       setStatus("error");
       setErrorMsg(
-        "This form isn't connected yet, so nothing was sent. Please email me directly — I'll get back to you with next steps."
+        "This form isn't connected yet, so nothing was sent. Please email me directly with your link — I'll get back to you."
       );
       return;
     }
     setStatus("sending");
+    const domain = parsed.website.replace(/^https?:\/\//i, "").split("/")[0];
     try {
       const res = await fetch(formEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: web3formsAccessKey,
-          subject: `New project request — ${form.business || form.name}`,
-          from_name: form.name,
-          name: form.name,
-          business: form.business,
-          email: form.email,
-          website: form.website || "—",
-          need: form.need,
-          details: form.details,
+          subject: `Free website audit request — ${domain}`,
+          from_name: form.name.trim(),
+          name: form.name.trim(),
+          email: form.email.trim(),
+          website: parsed.website,
+          note: form.note.trim() || "—",
           botcheck: form.botcheck,
         }),
       });
@@ -82,9 +115,9 @@ export default function ContactForm() {
         <Reveal>
           <div>
             <SectionHeading
-              eyebrow="Contact"
-              title="Request a Quote"
-              copy="Tell me about your business and what you need. I'll review the details and get back to you with the next steps."
+              eyebrow="Free Website Audit"
+              title="Want me to check yours?"
+              copy="Send me your link and your best contact. I'll review your website and tell you exactly what's holding it back — free, no commitment."
             />
             <div className="mt-8 space-y-4">
               <div className="flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
@@ -95,9 +128,6 @@ export default function ContactForm() {
                   <p className="text-[14px] font-semibold text-offwhite">{site.auditTitle}</p>
                   <p className="mt-0.5 text-[13px] leading-relaxed text-muted">{site.auditOffer}</p>
                 </div>
-              </div>
-              <div className="rounded-xl border border-line bg-surface p-4">
-                <p className="text-[14px] font-semibold text-offwhite">{site.quoteOffer}</p>
               </div>
               <a
                 href={`mailto:${site.email}`}
@@ -119,62 +149,112 @@ export default function ContactForm() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex min-h-[420px] flex-col items-center justify-center text-center"
+                className="flex min-h-[360px] flex-col items-center justify-center text-center"
               >
                 <CheckCircle2 className="h-12 w-12 text-accent" />
-                <h3 className="mt-4 font-display text-xl font-semibold">Request sent</h3>
-                <p className="mt-2 max-w-sm text-[14px] text-muted">
-                  Thanks — I&apos;ve got your details and I&apos;ll get back to you with next steps.
+                <h3 className="mt-4 font-display text-xl font-semibold">Audit request received</h3>
+                <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-muted">
+                  Thanks. I&apos;ll review your website and identify the biggest areas that could be
+                  improved, then reply to {form.email.trim() || "your email"}.
                 </p>
                 <button
                   onClick={() => {
                     setStatus("idle");
-                    setForm((f) => ({ ...f, details: "" }));
+                    setForm({ website: "", name: "", email: "", note: "", botcheck: "" });
                   }}
                   className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
                 >
-                  Send another request
+                  Request another audit
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
+              <form onSubmit={onSubmit} noValidate className="grid gap-4">
                 <div>
-                  <label htmlFor={fid("name")} className={label}>Name</label>
-                  <input id={fid("name")} required name="name" autoComplete="name" value={form.name} onChange={set("name")} className={input} placeholder="Your name" />
-                </div>
-                <div>
-                  <label htmlFor={fid("business")} className={label}>Business Name</label>
-                  <input id={fid("business")} name="business" autoComplete="organization" value={form.business} onChange={set("business")} className={input} placeholder="Company Ltd." />
-                </div>
-                <div>
-                  <label htmlFor={fid("email")} className={label}>Email</label>
-                  <input id={fid("email")} required type="email" name="email" autoComplete="email" value={form.email} onChange={set("email")} className={input} placeholder="you@company.com" />
-                </div>
-                <div>
-                  <label htmlFor={fid("website")} className={label}>Business Website (optional)</label>
-                  <input id={fid("website")} name="website" autoComplete="url" value={form.website} onChange={set("website")} className={input} placeholder="https://" />
-                </div>
-                <div className="sm:col-span-2">
-                  <label htmlFor={fid("need")} className={label}>What do you need?</label>
-                  <select id={fid("need")} name="need" value={form.need} onChange={set("need")} className={input}>
-                    {websiteNeeds.map((w) => (
-                      <option key={w} value={w}>
-                        {w}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="sm:col-span-2">
-                  <label htmlFor={fid("details")} className={label}>Project details</label>
-                  <textarea
-                    id={fid("details")}
-                    name="details"
+                  <label htmlFor={fid("website")} className={label}>
+                    Website URL
+                  </label>
+                  <input
+                    id={fid("website")}
                     required
-                    rows={5}
-                    value={form.details}
-                    onChange={set("details")}
+                    type="url"
+                    inputMode="url"
+                    name="website"
+                    autoComplete="url"
+                    value={form.website}
+                    onChange={set("website")}
+                    aria-invalid={fieldErrors.website ? true : undefined}
+                    aria-describedby={fieldErrors.website ? fid("website-err") : undefined}
                     className={input}
-                    placeholder="Tell me about your business, your customers, and what you want the website to do…"
+                    placeholder="yourbusiness.com"
+                  />
+                  {fieldErrors.website && (
+                    <p id={fid("website-err")} className={err}>
+                      {fieldErrors.website}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor={fid("name")} className={label}>
+                      Name
+                    </label>
+                    <input
+                      id={fid("name")}
+                      required
+                      name="name"
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={set("name")}
+                      aria-invalid={fieldErrors.name ? true : undefined}
+                      aria-describedby={fieldErrors.name ? fid("name-err") : undefined}
+                      className={input}
+                      placeholder="Your name"
+                    />
+                    {fieldErrors.name && (
+                      <p id={fid("name-err")} className={err}>
+                        {fieldErrors.name}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor={fid("email")} className={label}>
+                      Email
+                    </label>
+                    <input
+                      id={fid("email")}
+                      required
+                      type="email"
+                      inputMode="email"
+                      name="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={set("email")}
+                      aria-invalid={fieldErrors.email ? true : undefined}
+                      aria-describedby={fieldErrors.email ? fid("email-err") : undefined}
+                      className={input}
+                      placeholder="you@company.com"
+                    />
+                    {fieldErrors.email && (
+                      <p id={fid("email-err")} className={err}>
+                        {fieldErrors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor={fid("note")} className={label}>
+                    Anything I should know? (optional)
+                  </label>
+                  <textarea
+                    id={fid("note")}
+                    name="note"
+                    rows={3}
+                    value={form.note}
+                    onChange={set("note")}
+                    className={input}
+                    placeholder="What you want the website to do for your business…"
                   />
                 </div>
 
@@ -195,27 +275,34 @@ export default function ContactForm() {
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     role="alert"
-                    className="flex items-start gap-2.5 rounded-xl border border-warm/40 bg-warm/[0.08] p-4 sm:col-span-2"
+                    className="flex items-start gap-2.5 rounded-xl border border-warm/40 bg-warm/[0.08] p-4"
                   >
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warm" />
                     <p className="text-[13px] leading-relaxed text-offwhite/90">
                       {errorMsg}{" "}
-                      <a href={`mailto:${site.email}`} className="font-semibold text-accent underline-offset-4 hover:underline">
+                      <a
+                        href={`mailto:${site.email}?subject=${encodeURIComponent("Free website audit request")}`}
+                        className="font-semibold text-accent underline-offset-4 hover:underline"
+                      >
                         {site.email}
                       </a>
                     </p>
                   </motion.div>
                 )}
 
-                <div className="sm:col-span-2">
+                <div>
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)] disabled:translate-y-0 disabled:opacity-60"
+                    aria-busy={status === "sending" ? true : undefined}
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60"
                   >
-                    {status === "sending" ? "Sending…" : "Send Project Request"}
+                    {status === "sending" ? "Sending…" : cta.primary}
                     <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
+                  <p className="mt-3 text-center text-[12px] leading-relaxed text-faint">
+                    No commitment and no obligation — you just get an honest look at your website.
+                  </p>
                 </div>
               </form>
             )}

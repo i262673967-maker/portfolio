@@ -11,19 +11,22 @@ const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["lati
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${site.brand} — Modern Websites for Local Businesses`,
+    default: `${site.brand} — Websites for Local Businesses`,
     template: `%s · ${site.brand}`,
   },
   description: site.supportingMessage,
   openGraph: {
-    title: `${site.brand} — Modern Websites for Local Businesses`,
+    title: `${site.brand} — Websites for Local Businesses`,
     description: site.supportingMessage,
-    url: siteUrl,
     siteName: site.brand,
-    images: [{ url: "/logo.png", width: 1254, height: 1254, alt: `${site.brand} logo` }],
     type: "website",
+    locale: "en_US",
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.brand} — Websites for Local Businesses`,
+    description: site.supportingMessage,
+  },
 };
 
 export default function RootLayout(props: LayoutProps<"/">) {

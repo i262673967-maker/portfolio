@@ -12,7 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
-import { clientTypes, principles, processSteps, qualityChecklist, services, site } from "@/lib/data";
+import { clientTypes, cta, principles, processSteps, qualityChecklist, services, site } from "@/lib/data";
 
 const iconMap: Record<string, typeof Building2> = {
   wrench: Wrench,
@@ -211,7 +211,7 @@ export function Services() {
               href="/#contact"
               className="group mt-6 inline-flex items-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent"
             >
-              Request a Quote
+              {cta.primary}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
@@ -221,7 +221,7 @@ export function Services() {
   );
 }
 
-/* Five steps, start to finish. */
+/* Six steps, start to finish. */
 export function Process() {
   return (
     <section id="process" className="py-20 sm:py-28">
@@ -234,7 +234,7 @@ export function Process() {
           />
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {processSteps.map((p, i) => (
             <Reveal key={p.step} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-line bg-surface p-5">

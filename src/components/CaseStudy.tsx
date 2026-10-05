@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Monitor, Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import { Demo } from "@/demos";
-import type { Project } from "@/lib/data";
+import { cta, type Project } from "@/lib/data";
 
 export default function CaseStudy({ project, prev, next }: { project: Project; prev?: Project; next?: Project }) {
   const [device, setDevice] = useState<Device>("desktop");
@@ -16,8 +16,8 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
       {/* Header */}
       <div className="studio-bg border-b border-line pt-28 pb-14">
         <div className="container-shell">
-          <Link href="/#work" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-offwhite">
-            <ArrowLeft className="h-4 w-4" /> All work
+          <Link href="/projects" className="inline-flex min-h-11 items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-offwhite">
+            <ArrowLeft className="h-4 w-4" /> All projects
           </Link>
           <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
             <div>
@@ -41,6 +41,9 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
             {([["desktop", Monitor, "Desktop"], ["mobile", Smartphone, "Mobile"]] as const).map(([id, Icon, label]) => (
               <button
                 key={id}
+                type="button"
+                aria-label={`Preview on ${label.toLowerCase()}`}
+                aria-pressed={device === id}
                 onClick={() => setDevice(id)}
                 className={`relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors ${device === id ? "text-ink" : "text-muted hover:text-offwhite"}`}
               >
@@ -123,7 +126,7 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
           <div className="rounded-2xl border border-accent/30 bg-accent/[0.06] p-6 text-center">
             <h3 className="font-display text-lg font-semibold tracking-tight">Want a website like this for your business?</h3>
             <Link href="/#contact" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5">
-              Request A Quote <ArrowRight className="h-4 w-4" />
+              {cta.primary} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </aside>

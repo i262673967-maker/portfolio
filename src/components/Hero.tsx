@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
 import DeviceMockup from "./DeviceMockup";
-import { Demo } from "@/demos";
-import { projects, site, type DemoKey } from "@/lib/data";
+import LazyDemo from "./LazyDemo";
+import { cta, heroPoints, projects, site, type DemoKey } from "@/lib/data";
 
 const byDemo = (k: DemoKey) => projects.find((p) => p.demo === k)!;
-
-const offering = ["Web Design", "Development", "Redesigns", "Landing Pages"];
 
 /* Entrance staging lives in CSS (see globals.css .reveal) so the copy is visible
    even when the client bundle never runs. */
@@ -24,33 +22,34 @@ export default function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
           <div>
             <p className="eyebrow reveal" style={staged(0, 12)}>
-              New Websites · Website Fixes · Local Businesses
+              Websites for Local Businesses
             </p>
 
             <h1
               className="heading-display mt-5 text-[2.5rem] leading-[1.03] sm:text-5xl lg:text-[3.4rem] reveal"
               style={staged(0.06, 18)}
             >
-              I Build New Websites. I Fix{" "}
+              Your Website Might Be{" "}
               <span className="relative inline-block text-accent">
-                Slow, Outdated
+                Costing You Customers
                 <span
                   className="absolute -bottom-1 left-0 h-[3px] w-full origin-left rounded-full bg-gradient-to-r from-accent to-warm"
                   style={{ animation: "underline-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both" }}
                 />
-              </span>{" "}
-              Ones.
+              </span>
+              .
             </h1>
 
             <p
               className="mt-6 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px] reveal"
               style={staged(0.14)}
             >
-              {site.supportingMessage}
+              I build fast, modern websites for local businesses — and fix the ones
+              that are outdated, slow, confusing, or difficult to use on mobile.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2 reveal" style={staged(0.2)}>
-              {offering.map((o) => (
+              {heroPoints.map((o) => (
                 <span key={o} className="rounded-full border border-line bg-surface px-3 py-1.5 text-[12px] text-muted">
                   {o}
                 </span>
@@ -62,13 +61,13 @@ export default function Hero() {
                 href="/#contact"
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)]"
               >
-                <Search className="h-4 w-4" /> Get My Free Website Audit
+                <Search className="h-4 w-4" /> {cta.primary}
               </Link>
               <Link
                 href="/#work"
                 className="group inline-flex items-center justify-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-[15px] font-semibold text-offwhite transition-colors hover:bg-white/5"
               >
-                View My Work
+                {cta.secondary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
@@ -85,7 +84,7 @@ export default function Hero() {
             <div className="relative pb-[6%]">
               <div className="relative z-10">
                 <DeviceMockup device="desktop">
-                  <Demo demo="renovation" project={byDemo("renovation")} />
+                  <LazyDemo demo="renovation" project={byDemo("renovation")} />
                 </DeviceMockup>
               </div>
 
@@ -94,7 +93,7 @@ export default function Hero() {
                 style={staged(0.5, 20)}
               >
                 <DeviceMockup device="tablet" chrome={false}>
-                  <Demo demo="ecommerce" project={byDemo("ecommerce")} />
+                  <LazyDemo demo="ecommerce" project={byDemo("ecommerce")} />
                 </DeviceMockup>
               </div>
 
@@ -103,7 +102,7 @@ export default function Hero() {
                 style={staged(0.62, 20)}
               >
                 <DeviceMockup device="mobile" chrome={false}>
-                  <Demo demo="restaurant" project={byDemo("restaurant")} />
+                  <LazyDemo demo="restaurant" project={byDemo("restaurant")} />
                 </DeviceMockup>
               </div>
             </div>

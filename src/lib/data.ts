@@ -67,12 +67,56 @@ export const site = {
 };
 
 export const nav = [
-  { label: "Work", href: "/#work" },
+  { label: "Projects", href: "/projects" },
+  { label: "Free Audit", href: "/#audit" },
   { label: "Services", href: "/#services" },
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
+
+/* One conversion path: a single primary action everywhere it appears. `nav`
+   exists only because the header pill cannot fit the full sentence. */
+export const cta = {
+  primary: "Get My Free Website Audit",
+  nav: "Free Website Audit",
+  secondary: "See My Work",
+};
+
+export const heroPoints = ["Mobile-first", "Fast", "Business-focused"];
+
+/* What a free audit looks at. Nothing here promises rankings or revenue. */
+export const auditChecks = [
+  "Mobile experience",
+  "Usability",
+  "Speed and performance",
+  "Navigation",
+  "Calls-to-action",
+  "Trust and credibility",
+  "Website structure",
+  "Obvious conversion problems",
+  "Basic technical issues",
+];
+
+/* A demonstration of the output format. Fictional numbers on a fictional site —
+   the UI labels it SAMPLE and states it is not a client result. */
+export const sampleAudit = {
+  score: 62,
+  rows: [
+    { label: "Mobile experience", status: "warn", note: "Needs improvement" },
+    { label: "Page speed", status: "warn", note: "Slow" },
+    { label: "HTTPS", status: "good", note: "Good" },
+    { label: "Navigation", status: "warn", note: "Confusing" },
+    { label: "Call-to-action", status: "bad", note: "Weak" },
+    { label: "Trust signals", status: "warn", note: "Limited" },
+  ] as { label: string; status: "good" | "warn" | "bad"; note: string }[],
+  fixes: [
+    "Improve mobile layout",
+    "Make the main CTA obvious",
+    "Simplify navigation",
+    "Improve loading performance",
+  ],
+};
 
 export type DemoKey =
   | "renovation"
@@ -457,6 +501,11 @@ export const projects: Project[] = [
   },
 ];
 
+/* The homepage previews three concepts; the full set lives on /projects. */
+export const featuredProjects = ["atlas-renovation", "flowright-plumbing", "voltwise-electrical"]
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter((p): p is Project => p !== undefined);
+
 export type Service = {
   title: string;
   body: string;
@@ -530,8 +579,9 @@ export const processSteps = [
   { step: "01", title: "Free Audit", body: "You send me your website link (or your business details) and I tell you exactly what's wrong or what's missing." },
   { step: "02", title: "Plan", body: "We agree the structure, the pages, and the visual direction before anything is built." },
   { step: "03", title: "Design", body: "The look and layout is designed around your business, your services, and your customers." },
-  { step: "04", title: "Develop", body: "The design becomes a real, responsive website — new build, or your existing site fixed properly." },
-  { step: "05", title: "Launch", body: "Tested on phone, tablet, and desktop, polished, and handed over." },
+  { step: "04", title: "Build", body: "The design becomes a real, responsive website — new build, or your existing site fixed properly." },
+  { step: "05", title: "Test", body: "Phone, tablet and desktop, plus links, forms, responsiveness and performance." },
+  { step: "06", title: "Launch", body: "Polished, verified, and handed over." },
 ];
 
 export const qualityChecklist = [
@@ -559,14 +609,4 @@ export const clientTypes = [
   "Landscaping & Gardens",
   "Dentists & Clinics",
   "Garages & Auto",
-];
-
-/* Options for the "What do you need?" field on the contact form. */
-export const websiteNeeds = [
-  "Fix / speed up my current website",
-  "New website",
-  "Redesign of my existing website",
-  "Landing page",
-  "Online store",
-  "Not sure yet",
 ];

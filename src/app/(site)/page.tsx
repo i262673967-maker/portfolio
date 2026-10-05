@@ -9,12 +9,13 @@ import {
   TrustStrip,
 } from "@/components/Marketing";
 import FeaturedWork from "@/components/FeaturedWork";
+import FreeAudit from "@/components/FreeAudit";
 import Showcase from "@/components/Showcase";
 import ContactForm from "@/components/ContactForm";
 import { site } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: { absolute: `${site.brand} — Modern Websites for Local Businesses` },
+  title: { absolute: `${site.brand} — Websites for Local Businesses` },
   description: site.supportingMessage,
   alternates: { canonical: "/" },
 };
@@ -25,6 +26,7 @@ export default function HomePage() {
       <Hero />
       <TrustStrip />
       <FeaturedWork />
+      <FreeAudit />
       <Showcase />
       <BeforeAfter />
       <Services />

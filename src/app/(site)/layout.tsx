@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import StickyCta from "@/components/StickyCta";
 import Footer from "@/components/Footer";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -7,6 +8,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
+      <StickyCta />
     </div>
   );
 }

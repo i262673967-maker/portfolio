@@ -1,16 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail } from "lucide-react";
-import { site } from "@/lib/data";
+import { ArrowRight, Mail } from "lucide-react";
+import { cta, site } from "@/lib/data";
 
 const cols = [
-  { title: "Navigate", links: [["Work", "/#work"], ["Services", "/#services"], ["Process", "/#process"]] },
-  { title: "Studio", links: [["About", "/#about"], ["Contact", "/#contact"], ["Request a Quote", "/#contact"]] },
+  { title: "Navigate", links: [["Projects", "/projects"], ["Free Audit", "/#audit"], ["Services", "/#services"], ["Process", "/#process"]] },
+  { title: "Studio", links: [["About", "/#about"], ["Contact", "/#contact"], [site.auditTitle, "/#audit"]] },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-base-2">
+    <footer id="footer" className="border-t border-line bg-base-2">
       <div className="container-shell py-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -32,6 +32,15 @@ export default function Footer() {
               <Mail className="h-4 w-4" />
               {site.email}
             </a>
+            <div>
+              <Link
+                href="/#contact"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[13px] font-semibold text-ink transition-colors hover:bg-offwhite"
+              >
+                {cta.nav}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
 
           {cols.map((col) => (

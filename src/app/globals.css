@@ -164,6 +164,24 @@ body {
   }
 }
 
+/* Anchor targets clear the fixed header when jumped to from the nav. */
+section[id],
+footer[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Keyboard focus stays visible for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* The mobile menu sits above the sticky audit bar, so the bar must not show
+   through it. Driven by body[data-nav-open], set by the Navbar. */
+body[data-nav-open="true"] .sticky-cta {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     animation: none;

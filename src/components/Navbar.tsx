@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { nav, site } from "@/lib/data";
+import { cta, nav, site } from "@/lib/data";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -20,9 +21,23 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+    document.body.dataset.navOpen = open ? "true" : "false";
     return () => {
       document.body.style.overflow = "";
+      document.body.dataset.navOpen = "false";
     };
+  }, [open]);
+
+  /* Escape closes the menu and hands focus back to the button it came from. */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      menuButton.current?.focus();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
   return (
@@ -32,7 +47,7 @@ export default function Navbar() {
       }`}
     >
       <div className="container-shell flex h-16 items-center justify-between">
-        <Link href="/#home" className="group flex items-center gap-2.5" onClick={() => setOpen(false)}>
+        <Link href="/#home" className="group flex min-h-11 items-center gap-2.5" onClick={() => setOpen(false)}>
           <Image
             src="/logo.png"
             alt={`${site.brand} logo`}
@@ -45,7 +60,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.label}
@@ -60,15 +75,18 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link
             href="/#contact"
-            className="group hidden items-center gap-1.5 rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
+            className="group hidden min-h-11 items-center gap-1.5 rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
           >
-            Request a Quote
+            {cta.nav}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <button
-            aria-label="Toggle menu"
+            ref={menuButton}
+            aria-label="Menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="grid h-10 w-10 place-items-center rounded-lg border border-line text-offwhite lg:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-line text-offwhite lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -84,7 +102,7 @@ export default function Navbar() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden border-t border-line bg-base/95 backdrop-blur-xl lg:hidden"
           >
-            <nav className="container-shell flex flex-col gap-1 py-4">
+            <nav id="mobile-menu" aria-label="Site sections" className="container-shell flex flex-col gap-1 py-4">
               {nav.map((item, i) => (
                 <motion.div
                   key={item.label}
@@ -104,9 +122,9 @@ export default function Navbar() {
               <Link
                 href="/#contact"
                 onClick={() => setOpen(false)}
-                className="mt-2 inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-ink"
+                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-2"
               >
-                Request a Quote <ArrowRight className="h-4 w-4" />
+                {cta.primary} <ArrowRight className="h-4 w-4" />
               </Link>
             </nav>
           </motion.div>

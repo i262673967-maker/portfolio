@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Monitor, Tablet, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
-import { Demo } from "@/demos";
+import LazyDemo from "./LazyDemo";
 import { projects } from "@/lib/data";
 import { Reveal, SectionHeading } from "./ui";
 
@@ -38,6 +38,8 @@ export default function Showcase() {
             {projects.map((p, i) => (
               <button
                 key={p.slug}
+                type="button"
+                aria-pressed={i === active}
                 onClick={() => setActive(i)}
                 className={`rounded-full border px-4 py-2 text-[13px] transition-all ${
                   i === active
@@ -61,6 +63,9 @@ export default function Showcase() {
                 return (
                   <button
                     key={d.id}
+                    type="button"
+                    aria-label={`Preview on ${d.label.toLowerCase()}`}
+                    aria-pressed={device === d.id}
                     onClick={() => setDevice(d.id)}
                     className={`relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors ${
                       device === d.id ? "text-ink" : "text-muted hover:text-offwhite"
@@ -86,7 +91,7 @@ export default function Showcase() {
         <div className="mt-10">
           <div key={`${project.slug}-${device}`} className="reveal">
             <DeviceMockup device={device}>
-              <Demo demo={project.demo} project={project} />
+              <LazyDemo demo={project.demo} project={project} />
             </DeviceMockup>
           </div>
         </div>

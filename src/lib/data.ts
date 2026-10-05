@@ -49,11 +49,29 @@ export const site = {
   auditOffer: "Send me your link and I'll tell you exactly what's wrong — free.",
   auditTitle: "Free Website Audit",
 
+  /* The promise behind every project — what the visitor judges the work on,
+     not the framework it was built with. */
+  customerQualities: [
+    "Fast",
+    "Responsive",
+    "Clear",
+    "Professional",
+    "Reliable",
+    "Easy to use",
+  ],
+
+  /* Kept deliberately small and low-contrast: the stack is a detail, not the
+     pitch. Only tools this project actually runs on (see package.json). */
+  tools: "Next.js, React, TypeScript, Tailwind CSS, Framer Motion",
+
+  /* Paired with the "You work directly with me." heading in the about
+     section — stated as a fact about how the work is delivered, never as a
+     client count, year count or certification. */
+  directWork:
+    "There is no account manager in the middle and no handover to someone else — the person you brief is the person who designs and builds the site.",
+
   /* Replaces the pricing section. No prices are published. */
   quoteOffer: "Free quote within 24 hours. Tell me what you need.",
-
-  /* Only tools this project actually runs on (see package.json). */
-  tools: "Next.js, React, TypeScript, Tailwind CSS, Framer Motion",
 
   /* Shown under the "Focus" label, never as years or client counts — no
      experience figure, client count or award is claimed anywhere on this site. */
@@ -575,6 +593,65 @@ export const principles = [
   },
 ];
 
+/* What a prospect recognises about their own site before they read anything
+   about mine. Symptom-first, one line each — no invented statistics. */
+export const problems = [
+  {
+    title: "Outdated Design",
+    body: "Your business has evolved, but your website hasn't.",
+    icon: "history",
+  },
+  {
+    title: "Bad Mobile Experience",
+    body: "Customers shouldn't have to pinch, zoom, or hunt for your phone number.",
+    icon: "mobile",
+  },
+  {
+    title: "Slow Experience",
+    body: "Visitors shouldn't have to wait for the page to become usable.",
+    icon: "gauge",
+  },
+  {
+    title: "Unclear Action",
+    body: "Customers should immediately understand what to do next.",
+    icon: "cursor",
+  },
+];
+
+/* Why the working relationship is different — five points, confident rather
+   than boastful. Every line is verifiable by the visitor during a project. */
+export const whyWork = [
+  {
+    title: "Built Around Your Business",
+    body: "Your website is designed around your services, customers, and goals rather than being dropped into a generic template.",
+  },
+  {
+    title: "Mobile-First",
+    body: "Most local customers browse on their phones, so the experience is designed to work properly across phones, tablets, and desktops.",
+  },
+  {
+    title: "Business-Focused",
+    body: "A website should not only look good. It should make it easier for customers to understand your business and take action.",
+  },
+  {
+    title: "Direct Communication",
+    body: "Clients work directly with me rather than going through layers of salespeople or account managers.",
+  },
+  {
+    title: "No Fake Promises",
+    body: "Concept projects are clearly labelled. No fake testimonials, fake clients, fake traffic numbers, or invented results.",
+  },
+];
+
+/* The closing objection: the visitor agrees something is wrong but can't say
+   what. This answers it and routes to the one primary action. */
+export const finalCta = {
+  title: "Not sure what's wrong with your website?",
+  lead: "I'll take a look for free.",
+  body: "Send me your website and I'll identify the biggest areas that could be improved.",
+  note: "No commitment. Just an honest audit.",
+};
+
 export const processSteps = [
   { step: "01", title: "Free Audit", body: "You send me your website link (or your business details) and I tell you exactly what's wrong or what's missing." },
   { step: "02", title: "Plan", body: "We agree the structure, the pages, and the visual direction before anything is built." },
@@ -597,16 +674,19 @@ export const qualityChecklist = [
   "Conversion-focused structure",
 ];
 
-/* Local businesses this studio builds for. */
+/* Local businesses this studio builds for. Ordered so a visitor finds their own
+   trade in the first line or two. */
 export const clientTypes = [
-  "Restaurants & Cafés",
   "Plumbers & Heating",
   "Electricians",
-  "Builders & Renovators",
+  "Builders & Contractors",
+  "Renovation Companies",
+  "Restaurants & Cafés",
   "Salons & Barbers",
   "Cleaning Services",
+  "Garages & Auto",
   "Local Shops & Retail",
+  "Professional Services",
   "Landscaping & Gardens",
   "Dentists & Clinics",
-  "Garages & Auto",
 ];

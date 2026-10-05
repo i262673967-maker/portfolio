@@ -4,7 +4,11 @@ import {
   ArrowRight,
   Building2,
   Check,
+  Gauge,
+  History,
   Mail,
+  MonitorSmartphone,
+  MousePointerClick,
   RefreshCw,
   ShoppingCart,
   Smartphone,
@@ -12,7 +16,18 @@ import {
   Wrench,
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
-import { clientTypes, cta, principles, processSteps, qualityChecklist, services, site } from "@/lib/data";
+import {
+  clientTypes,
+  cta,
+  finalCta,
+  principles,
+  problems,
+  processSteps,
+  qualityChecklist,
+  services,
+  site,
+  whyWork,
+} from "@/lib/data";
 
 const iconMap: Record<string, typeof Building2> = {
   wrench: Wrench,
@@ -21,6 +36,10 @@ const iconMap: Record<string, typeof Building2> = {
   cart: ShoppingCart,
   refresh: RefreshCw,
   smartphone: Smartphone,
+  history: History,
+  mobile: MonitorSmartphone,
+  gauge: Gauge,
+  cursor: MousePointerClick,
 };
 
 const isTodo = (v: string) => v.trim().toUpperCase().startsWith("TODO");
@@ -53,6 +72,55 @@ export function TrustStrip() {
       <p className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
         Modern websites for local businesses.
       </p>
+    </section>
+  );
+}
+
+/* Four ways a website quietly stops working for the business that owns it. */
+export function Problems() {
+  return (
+    <section id="problems" className="border-y border-line bg-base-2 py-20 sm:py-28">
+      <div className="container-shell">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Sound Familiar?"
+            title="Websites rarely break all at once. They leak in four places."
+            copy="Most owners can't tell which one is costing them enquiries — and that's the point of looking."
+          />
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {problems.map((p, i) => {
+            const Icon = iconMap[p.icon] ?? Target;
+            return (
+              <Reveal key={p.title} delay={(i % 4) * 0.05}>
+                <div className="h-full rounded-2xl border border-line bg-surface p-5">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-warm/10 text-warm">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-4 font-display text-base font-semibold tracking-tight text-offwhite">
+                    {p.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-muted">{p.body}</p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <Reveal delay={0.06}>
+          <p className="mt-8 text-[14px] leading-relaxed text-muted">
+            Not sure which of these is your website?{" "}
+            <Link
+              href="/#audit"
+              className="font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              That&apos;s exactly what the free audit answers
+            </Link>
+            .
+          </p>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -197,9 +265,32 @@ export function Services() {
           })}
         </div>
 
-        {/* Replaces the old pricing section — no published prices. */}
+        {/* Relevance check: the visitor finds their own trade here. */}
         <Reveal delay={0.05}>
-          <div className="mt-14 rounded-2xl border border-line bg-surface p-8 text-center sm:p-12">
+          <div className="mt-6 rounded-2xl border border-line bg-surface p-6 sm:p-8">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-offwhite">
+              Built for local businesses
+            </h3>
+            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-muted">
+              If your customers find you by searching, comparing, and calling, this is
+              the kind of website they need to see.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {clientTypes.map((c) => (
+                <span
+                  key={c}
+                  className="rounded-full border border-line bg-base-2 px-3 py-1.5 text-[12px] text-muted"
+                >
+                  {c}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Replaces the old pricing section — no published prices. */}
+        <Reveal delay={0.08}>
+          <div className="mt-6 rounded-2xl border border-line bg-surface p-8 text-center sm:p-12">
             <h3 className="font-display text-2xl font-semibold tracking-tight text-offwhite sm:text-3xl">
               {site.quoteOffer}
             </h3>
@@ -259,7 +350,7 @@ export function Standards() {
       <div className="container-shell">
         <Reveal>
           <SectionHeading
-            eyebrow="Why Ismail Web Studio"
+            eyebrow="How I Build"
             title="What Every Website Is Built Around"
             copy="Four principles hold up every project, whatever the industry. Below them is the exact checklist each site is checked against before it ships."
           />
@@ -281,41 +372,54 @@ export function Standards() {
           ))}
         </div>
 
-        <div className="mt-6 grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-          <Reveal>
-            <div className="h-full rounded-2xl border border-line bg-surface p-6">
-              <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
-                Every site I ship meets this checklist
-              </h3>
-              <ul className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-                {qualityChecklist.map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-[13px] text-muted">
-                    <Check className="h-3.5 w-3.5 shrink-0 text-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
+        <Reveal>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
+              Every site I ship meets this checklist
+            </h3>
+            <ul className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-3">
+              {qualityChecklist.map((item) => (
+                <li key={item} className="flex items-center gap-2 text-[13px] text-muted">
+                  <Check className="h-3.5 w-3.5 shrink-0 text-accent" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
 
-          <Reveal delay={0.06}>
-            <div className="h-full rounded-2xl border border-line bg-surface p-6">
-              <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
-                Who I Work With
-              </h3>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {clientTypes.map((c) => (
-                  <span
-                    key={c}
-                    className="rounded-full border border-line px-3 py-1.5 text-[12px] text-muted"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
+/* Five reasons to work with me rather than with a template or an agency. */
+export function WhyWork() {
+  return (
+    <section id="why" className="border-y border-line bg-base-2 py-20 sm:py-28">
+      <div className="container-shell grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Why Work With Me"
+            title="One person, one clear promise: built for your business."
+            copy="No template, no middlemen, and nothing on this page that didn't actually happen."
+          />
+        </Reveal>
+
+        <Reveal delay={0.08}>
+          <ol className="divide-y divide-line border-y border-line">
+            {whyWork.map((w) => (
+              <li key={w.title} className="flex gap-5 py-5">
+                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
+                <div>
+                  <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
+                    {w.title}
+                  </h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{w.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
       </div>
     </section>
   );
@@ -323,9 +427,7 @@ export function Standards() {
 
 /* Honest about section — logo instead of a photo, no invented facts. */
 export function About() {
-  const tools = isTodo(site.tools)
-    ? ["Web Design", "Website Development", "Redesigns", "Landing Pages", "Website Fixes"]
-    : site.tools.split(",").map((t) => t.trim()).filter(Boolean);
+  const stack = isTodo(site.tools) ? "" : site.tools;
 
   return (
     <section id="about" className="py-20 sm:py-28">
@@ -346,6 +448,13 @@ export function About() {
         <Reveal delay={0.08}>
           <SectionHeading eyebrow="About" title={site.role} />
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted">{site.bio}</p>
+
+          <div className="mt-6 max-w-xl rounded-2xl border border-accent/30 bg-accent/[0.06] p-5">
+            <p className="font-display text-[15px] font-semibold leading-snug text-offwhite">
+              You work directly with me.
+            </p>
+            <p className="mt-2 text-[14px] leading-relaxed text-muted">{site.directWork}</p>
+          </div>
 
           <dl className="mt-8 space-y-4 border-t border-line pt-8 text-sm">
             <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
@@ -379,15 +488,21 @@ export function About() {
 
           <div className="mt-8">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-              {isTodo(site.tools) ? "What I do" : "Tools"}
+              What you can expect
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
-              {tools.map((t) => (
-                <span key={t} className="rounded-full bg-white/5 px-3 py-1.5 text-[12px] text-muted">
-                  {t}
+              {site.customerQualities.map((q) => (
+                <span key={q} className="rounded-full bg-white/5 px-3 py-1.5 text-[12px] text-muted">
+                  {q}
                 </span>
               ))}
             </div>
+            {stack && (
+              <p className="mt-4 text-[12px] leading-relaxed text-faint">
+                Built on a modern stack — {stack} — because it stays fast and
+                maintainable. The framework is never the point.
+              </p>
+            )}
           </div>
 
           {site.socials.length > 0 && (
@@ -408,12 +523,45 @@ export function About() {
 
           <a
             href={`mailto:${site.email}`}
-            className="group mt-8 inline-flex items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
+            className="group mt-8 inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
           >
             <Mail className="h-4 w-4 text-accent" />
             Email me directly
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* The closing ask — the same single primary action used everywhere else.
+   No guaranteed results, only what the audit actually delivers. */
+export function FinalCta() {
+  return (
+    <section className="border-t border-line py-20 sm:py-24">
+      <div className="container-shell">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-line bg-surface p-8 text-center sm:p-14">
+            <div className="pointer-events-none absolute left-1/2 -top-40 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+            <div className="relative">
+              <h2 className="heading-display text-3xl sm:text-4xl">{finalCta.title}</h2>
+              <p className="mt-4 font-display text-lg font-semibold text-accent">{finalCta.lead}</p>
+              <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-muted">
+                {finalCta.body}
+              </p>
+              <Link
+                href="/#contact"
+                className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-offwhite"
+              >
+                {cta.primary}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
+                {finalCta.note}
+              </p>
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

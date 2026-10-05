@@ -3,10 +3,13 @@ import Hero from "@/components/Hero";
 import {
   About,
   BeforeAfter,
+  FinalCta,
+  Problems,
   Process,
   Services,
   Standards,
   TrustStrip,
+  WhyWork,
 } from "@/components/Marketing";
 import FeaturedWork from "@/components/FeaturedWork";
 import FreeAudit from "@/components/FreeAudit";
@@ -26,6 +29,7 @@ export default function HomePage() {
       <Hero />
       <TrustStrip />
       <FeaturedWork />
+      <Problems />
       <FreeAudit />
       <Showcase />
       <BeforeAfter />
@@ -33,6 +37,8 @@ export default function HomePage() {
       <Process />
       <Standards />
       <About />
+      <WhyWork />
+      <FinalCta />
       <ContactForm />
     </div>
   );

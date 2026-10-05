@@ -116,7 +116,7 @@ export default function ContactForm() {
           <div>
             <SectionHeading
               eyebrow="Free Website Audit"
-              title="Want me to check yours?"
+              title="Request your free audit"
               copy="Send me your link and your best contact. I'll review your website and tell you exactly what's holding it back — free, no commitment."
             />
             <div className="mt-8 space-y-4">

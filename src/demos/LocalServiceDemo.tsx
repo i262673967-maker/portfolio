@@ -112,7 +112,7 @@ export default function LocalServiceDemo({ project, preview }: DemoProps) {
             <button
               type="button"
               onClick={() => setShowAllWork((v) => !v)}
-              className="hidden text-[11px] text-[var(--d-accent)] hover:underline @5xl:block"
+              className="hidden min-h-6 items-center text-[11px] text-[var(--d-accent)] hover:underline @5xl:inline-flex"
             >
               {showAllWork ? "Show less" : "View all →"}
             </button>

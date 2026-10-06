@@ -70,10 +70,10 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
                 className="w-24 rounded-full border border-white/12 bg-white/[0.04] px-3 py-1 text-[11px] placeholder:text-current/40 focus:border-[var(--d-accent)]/60 @5xl:w-36"
               />
             )}
-            <button type="button" onClick={() => setSearchOpen((v) => !v)} aria-expanded={searchOpen} className="hover:text-current">
+            <button type="button" onClick={() => setSearchOpen((v) => !v)} aria-expanded={searchOpen} className="inline-flex min-h-6 items-center hover:text-current">
               Search
             </button>
-            <button type="button" onClick={() => setBagOpen((v) => !v)} aria-expanded={bagOpen} className="relative hover:text-current">
+            <button type="button" onClick={() => setBagOpen((v) => !v)} aria-expanded={bagOpen} className="relative inline-flex min-h-6 min-w-6 items-center hover:text-current">
               Bag
               {bagCount > 0 && (
                 <span className="absolute -top-2 -right-2.5 grid h-3.5 w-3.5 place-items-center rounded-full bg-[var(--d-accent)] text-[8px] font-bold text-black">
@@ -130,7 +130,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
             <button
               type="button"
               onClick={() => setExpanded((v) => !v)}
-              className="shrink-0 text-[11px] text-[var(--d-accent)] hover:underline"
+              className="inline-flex shrink-0 min-h-6 items-center text-[11px] text-[var(--d-accent)] hover:underline"
             >
               {expanded ? "Show less" : "View all →"}
             </button>
@@ -145,7 +145,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
                   type="button"
                   onClick={() => setBag((prev) => ({ ...prev, [name]: (prev[name] ?? 0) + 1 }))}
                   aria-label={`Add ${name} to bag`}
-                  className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-3 py-1 text-[10px] text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                  className="absolute bottom-2 left-1/2 inline-flex -translate-x-1/2 min-h-11 items-center justify-center rounded-full bg-black/70 px-3 text-[10px] text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
                 >
                   Quick add
                 </button>

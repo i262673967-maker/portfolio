@@ -32,7 +32,8 @@ export default async function DemoPage(props: PageProps<"/demos/[slug]">) {
       {/* Floating control bar */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-base/85 backdrop-blur-xl">
         <div className="container-shell flex h-14 items-center justify-between gap-3">
-          <Link href="/projects" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-offwhite">
+          {/* The label collapses to just the arrow below sm, so the name has to be carried explicitly. */}
+          <Link href="/projects" aria-label="All projects" className="inline-flex min-h-6 min-w-6 items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-offwhite">
             <ArrowLeft className="h-4 w-4" /> <span className="hidden sm:inline">All projects</span>
           </Link>
           <div className="flex items-center gap-2">

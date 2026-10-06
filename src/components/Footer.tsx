@@ -27,7 +27,7 @@ export default function Footer() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.coreMessage}</p>
             <a
               href={`mailto:${site.email}`}
-              className="mt-4 inline-flex items-center gap-2 text-sm text-accent underline-offset-4 hover:underline"
+              className="mt-4 inline-flex min-h-6 items-center gap-2 text-sm text-accent underline-offset-4 hover:underline"
             >
               <Mail className="h-4 w-4" />
               {site.email}

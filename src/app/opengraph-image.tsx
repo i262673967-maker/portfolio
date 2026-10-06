@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
-import { heroPoints, site } from "@/lib/data";
+import { brandPitch, heroPoints, site } from "@/lib/data";
 
 /* Social sharing card. ImageResponse ignores external CSS, so every value here
    is inline and mirrors the tokens in globals.css (base #08090c, accent #38bdf8).
    Typographic only — no stock art and no invented results. */
-export const alt = `${site.brand} — ${site.tagline}`;
+export const alt = `${site.brand} — ${brandPitch}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,8 +47,8 @@ export default function OpengraphImage() {
             letterSpacing: -2,
           }}
         >
-          <span>Websites for local</span>
-          <span style={{ color: accent }}>businesses.</span>
+          <span>Modern websites for</span>
+          <span style={{ color: accent }}>local businesses.</span>
         </div>
         <div style={{ display: "flex", fontSize: 27, lineHeight: 1.45, color: muted, maxWidth: 940 }}>
           {site.supportingMessage}

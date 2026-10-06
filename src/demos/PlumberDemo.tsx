@@ -127,7 +127,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--d-accent)]/12 text-[var(--d-accent)]">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <h3 className="mt-4 font-display text-base font-bold">{s.title}</h3>
+                <h3 className="mt-4 font-display text-[1rem] font-bold">{s.title}</h3>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-current/65">{s.body}</p>
               </div>
             );

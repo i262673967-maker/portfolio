@@ -22,7 +22,7 @@ export default function Footer() {
                 height={36}
                 className="h-9 w-9 rounded-full object-contain"
               />
-              <span className="font-display text-base font-semibold tracking-tight">{site.brand}</span>
+              <span className="font-display text-[1rem] font-semibold tracking-tight">{site.brand}</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.coreMessage}</p>
             <a
@@ -32,15 +32,15 @@ export default function Footer() {
               <Mail className="h-4 w-4" />
               {site.email}
             </a>
-            <div>
-              <Link
-                href="/#contact"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[13px] font-semibold text-ink transition-colors hover:bg-offwhite"
-              >
-                {cta.nav}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+            {/* Compact text action: the big audit button belongs to the page
+                sections, not to the footer chrome. */}
+            <Link
+              href="/#contact"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-offwhite transition-colors hover:text-accent"
+            >
+              {cta.nav}
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
           {cols.map((col) => (

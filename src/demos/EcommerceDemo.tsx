@@ -48,7 +48,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
 
       <header className="sticky relative top-0 z-20 border-b border-white/8 bg-[var(--d-bg)]/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 @5xl:px-8">
-          <span className="font-display text-base font-semibold tracking-[0.2em]">MAISON</span>
+          <span className="font-display text-[1rem] font-semibold tracking-[0.2em]">MAISON</span>
           <DemoNav
             anchor={anchor}
             items={[

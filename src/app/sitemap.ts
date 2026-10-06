@@ -1,15 +1,14 @@
 import type { MetadataRoute } from "next";
-import { hasRealDomain, projects, siteBase } from "@/lib/data";
+import { absoluteUrl, projects } from "@/lib/data";
 
-/* Sitemap — every URL is built from siteUrl in data.ts, so connecting a real
-   domain and redeploying updates this file automatically. With no domain
-   resolved it stays empty rather than listing placeholder URLs. */
+/* Sitemap — every URL comes from NEXT_PUBLIC_SITE_URL through absoluteUrl(), the
+   same helper the canonical tags use, so the two can never disagree. The build
+   cannot run without that env var (see next.config.ts), so these URLs are real. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  if (!hasRealDomain) return [];
   const lastModified = new Date();
   return [
-    { url: `${siteBase}/`, lastModified },
-    { url: `${siteBase}/projects`, lastModified },
-    ...projects.map((p) => ({ url: `${siteBase}/work/${p.slug}`, lastModified })),
+    { url: absoluteUrl("/"), lastModified },
+    { url: absoluteUrl("/projects"), lastModified },
+    ...projects.map((p) => ({ url: absoluteUrl(`/work/${p.slug}`), lastModified })),
   ];
 }

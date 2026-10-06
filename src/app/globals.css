@@ -4,6 +4,9 @@
    Design tokens — premium dark studio
    --------------------------------------------------------------- */
 @theme {
+  /* WARNING: a colour token named `base` makes Tailwind v4 resolve `text-base`
+     to this colour instead of the usual 1rem font size — the text turns
+     near-black on a near-black background. Write sizes as `text-[1rem]`. */
   --color-base: #08090c;
   --color-base-2: #0c0e13;
   --color-ink: #08090c;
@@ -98,26 +101,11 @@ body {
   color: var(--color-offwhite);
 }
 
-@utility glass {
-  background: color-mix(in oklab, #ffffff 4%, transparent);
-  border: 1px solid var(--color-line);
-  backdrop-filter: blur(10px);
-}
-
-@utility hairline {
-  border: 1px solid var(--color-line);
-}
-
 /* Subtle grain / vignette backdrop */
 @utility studio-bg {
   background-image:
     radial-gradient(60rem 40rem at 80% -10%, color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 60%),
     radial-gradient(50rem 40rem at 0% 10%, color-mix(in oklab, var(--color-warm) 6%, transparent), transparent 55%);
-}
-
-@utility hide-scrollbar {
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
 }
 
 /* Demo sites render inside device frames using container queries.

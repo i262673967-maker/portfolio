@@ -26,26 +26,29 @@ export default function Hero() {
             </p>
 
             <h1
-              className="heading-display mt-5 text-[2.5rem] leading-[1.03] sm:text-5xl lg:text-[3.4rem] reveal"
+              /* Fluid size tuned to this headline's measured wrap points: 4 text
+                 lines at 320 and 360, 3 at 390 (was 4 at 36px). The fixed sm:/lg:
+                 steps from 640px up are untouched. */
+              className="heading-display mt-5 text-balance text-[clamp(1.875rem,1.5rem_+_1.1vw,2.15rem)] leading-[1.04] sm:text-5xl lg:text-[3.4rem] reveal"
               style={staged(0.06, 18)}
             >
               Your Website Might Be{" "}
               <span className="relative inline-block text-accent">
-                Costing You Customers
+                Costing You Customers.
                 <span
                   className="absolute -bottom-1 left-0 h-[3px] w-full origin-left rounded-full bg-gradient-to-r from-accent to-warm"
                   style={{ animation: "underline-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both" }}
                 />
               </span>
-              .
             </h1>
 
             <p
               className="mt-6 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px] reveal"
               style={staged(0.14)}
             >
-              I build fast, modern websites for local businesses — and fix the ones
-              that are outdated, slow, confusing, or difficult to use on mobile.
+              Fast, mobile-friendly websites for plumbers, electricians,
+              renovators and other local trades — built to make it easier for
+              visitors to call or enquire.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2 reveal" style={staged(0.2)}>

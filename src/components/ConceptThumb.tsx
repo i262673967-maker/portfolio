@@ -1,11 +1,10 @@
 import type { Project } from "@/lib/data";
 
-/* Stand-in for the framed demo inside a card. Only two of these are ever
-   animated on screen at once, but five in the page HTML meant five whole
-   concept websites prerendered — ~170 KB of markup and dozens of borrowed
-   section headings on the homepage. This draws the same idea from the
-   project's own palette, name and industry in a few hundred bytes, with no
-   headings and no invented copy. */
+/* Stand-in for the framed demo inside a project card. Rendering the real
+   concept websites in five cards meant five whole sites in the page HTML —
+   ~170 KB of markup and dozens of borrowed section headings. This draws the
+   same idea from the project's own palette, name and industry in a few hundred
+   bytes, with no headings and no invented copy. */
 export default function ConceptThumb({ project }: { project: Project }) {
   const { bg, fg, accent } = project.palette;
   const action = project.keySections[1] ?? project.keySections[0];

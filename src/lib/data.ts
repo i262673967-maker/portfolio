@@ -3,30 +3,27 @@
    Everything editable lives here. Add / remove projects, services, etc.
    without touching components.
 
-   Anything still marked TODO is intentionally NOT invented — fill it in
-   before publishing.
+   Nothing in here is invented: copy left blank (PRICE_FROM) stays blank rather
+   than being filled with a claim. The site domain comes from NEXT_PUBLIC_SITE_URL.
    ----------------------------------------------------------------------- */
 
-/* Site domain, resolved at build time in this order:
-   1. NEXT_PUBLIC_SITE_URL — set it yourself (e.g. https://example.com).
-   2. VERCEL_PROJECT_PRODUCTION_URL — Vercel's own production URL, no config needed.
-   3. The TODO placeholder below, which keeps sitemap/robots switched off.
-   Only server files read this (layout metadata, sitemap.ts, robots.ts), so a
-   build-time env var is safe here. */
-const envHost =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : undefined);
+/* Site domain — ONE source of truth, one env var.
+   NEXT_PUBLIC_SITE_URL is required: next.config.ts aborts the build when it is
+   missing, so there is no fallback domain here that could silently ship a
+   placeholder into canonicals, Open Graph tags, sitemap or robots.
+   Set it in .env.local for local builds and in the Vercel project's
+   Environment Variables for production. */
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!.replace(/\/+$/, "");
 
-export const siteUrl = (envHost ?? "https://TODO-your-domain.com").replace(/\/+$/, "");
-
-/* Every absolute URL on this site is derived from siteUrl in one place, so
-   setting the real domain updates metadata, Open Graph, canonicals, sitemap and
-   robots at once. Nothing hardcodes a domain that does not exist yet. */
-export const siteBase = siteUrl;
-export const hasRealDomain = !siteUrl.includes("TODO");
-export const absoluteUrl = (path = "/") => `${siteBase}/${path.replace(/^\//, "")}`;
+/* Every absolute URL on this site is derived from siteUrl in one place, so one
+   env var updates metadata, Open Graph, canonicals, sitemap and robots at once. */
+/* The site root is returned without a trailing slash because that is the form
+   Next writes into the canonical tag — so the sitemap entry and the canonical
+   for "/" stay byte-identical instead of differing by one character. */
+export const absoluteUrl = (path = "/") => {
+  const p = path.replace(/^\/+/, "").replace(/\/+$/, "");
+  return p ? `${siteUrl}/${p}` : siteUrl;
+};
 
 /* Web3Forms access key — public by design: it only lets a visitor send a message
    to the inbox you configured at web3forms.com, and they rate-limit submissions.
@@ -60,18 +57,23 @@ export const site = {
     "Easy to use",
   ],
 
-  /* Kept deliberately small and low-contrast: the stack is a detail, not the
-     pitch. Only tools this project actually runs on (see package.json). */
-  tools: "Next.js, React, TypeScript, Tailwind CSS, Framer Motion",
+  /* Replaces the pricing section. No prices are published. */
+  quoteOffer: "Not sure what your website needs? Start with a free audit.",
+
+  /* The founder note in the about section — three lines, no photo, and nothing
+     that isn't already stated elsewhere on the site: what kind of business this
+     is for, how a project starts, and who actually does the work. */
+  founderNote: [
+    "This studio exists for local businesses — the kind whose customers search, compare, and then phone.",
+    "Every project starts the same way: a free look at what's wrong or missing, before anything is designed.",
+    "One person does the work, so what you asked for is what gets built.",
+  ],
 
   /* Paired with the "You work directly with me." heading in the about
      section — stated as a fact about how the work is delivered, never as a
      client count, year count or certification. */
   directWork:
     "There is no account manager in the middle and no handover to someone else — the person you brief is the person who designs and builds the site.",
-
-  /* Replaces the pricing section. No prices are published. */
-  quoteOffer: "Free quote within 24 hours. Tell me what you need.",
 
   /* Shown under the "Focus" label, never as years or client counts — no
      experience figure, client count or award is claimed anywhere on this site. */
@@ -83,6 +85,14 @@ export const site = {
   /* Empty on purpose — the socials UI hides itself when this is []. */
   socials: [] as { label: string; href: string }[],
 };
+
+/* One brand line, three uses: the homepage tab title, the social-card headline
+   and the Open Graph image. Kept as a constant so they cannot drift apart. */
+export const brandPitch = "Modern websites for local businesses";
+
+/* The homepage's meta / Open Graph / Twitter description, verbatim. */
+export const homeDescription =
+  "Modern, mobile-first websites for local businesses, plus a free website audit that shows you what's costing you customers.";
 
 export const nav = [
   { label: "Projects", href: "/projects" },
@@ -566,32 +576,10 @@ export const services: Service[] = [
     body: "A modern storefront for local shops that want to sell online as well as in person.",
     icon: "cart",
   },
-  {
-    title: "Mobile Optimization",
-    body: "Responsive layouts that actually work on phones — big buttons, readable text, no sideways scrolling.",
-    icon: "smartphone",
-  },
 ];
 
-/* What every website this studio builds is held up against. */
-export const principles = [
-  {
-    title: "Clear Message",
-    body: "A visitor understands what the business does within seconds. No guessing, no clever wording in the way of the point.",
-  },
-  {
-    title: "Strong First Impression",
-    body: "The business looks established and professional the moment the page loads — because that first look decides whether anyone keeps reading.",
-  },
-  {
-    title: "Easy Contact",
-    body: "The way to enquire, book, or buy is obvious from anywhere on the page, and it works on every screen size.",
-  },
-  {
-    title: "Mobile-First Experience",
-    body: "Most customers arrive on a phone. The site is built for that screen first, not squeezed down afterwards.",
-  },
-];
+/* Mobile-first is a standard applied to every service above, not a service a
+   visitor has to know to ask for — it lives in whyWork and qualityChecklist. */
 
 /* What a prospect recognises about their own site before they read anything
    about mine. Symptom-first, one line each — no invented statistics. */
@@ -674,19 +662,22 @@ export const qualityChecklist = [
   "Conversion-focused structure",
 ];
 
-/* Local businesses this studio builds for. Ordered so a visitor finds their own
-   trade in the first line or two. */
+/* The nine industries approved for this section, in the site's existing
+   label style. "Gyms & Fitness" and "Home Services" are new labels — they
+   were approved as part of this list, not carried over from the old chips. */
 export const clientTypes = [
   "Plumbers & Heating",
   "Electricians",
-  "Builders & Contractors",
-  "Renovation Companies",
+  "Builders & Renovators",
   "Restaurants & Cafés",
   "Salons & Barbers",
-  "Cleaning Services",
+  "Gyms & Fitness",
   "Garages & Auto",
+  "Home Services",
   "Local Shops & Retail",
-  "Professional Services",
-  "Landscaping & Gardens",
-  "Dentists & Clinics",
 ];
+
+/* Optional. While this is empty nothing is published anywhere; set it to a
+   figure like "£350" and one "Starting from" line appears under the services.
+   TODO(Ismail): fill in only when you actually have a published floor price. */
+export const PRICE_FROM = "";

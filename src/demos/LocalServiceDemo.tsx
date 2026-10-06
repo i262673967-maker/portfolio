@@ -96,7 +96,7 @@ export default function LocalServiceDemo({ project, preview }: DemoProps) {
           <div className="mt-8 grid gap-4 @md:grid-cols-2 @5xl:grid-cols-3">
             {c.services.map((s) => (
               <div key={s.title} className="rounded-2xl border border-[var(--d-line)] bg-[var(--d-soft)] p-5 transition-colors hover:border-[var(--d-accent)]/40">
-                <h3 className="font-display text-base font-semibold">{s.title}</h3>
+                <h3 className="font-display text-[1rem] font-semibold">{s.title}</h3>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-current/60">{s.body}</p>
               </div>
             ))}

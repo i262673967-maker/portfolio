@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Monitor, Tablet, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
-import { projects } from "@/lib/data";
+import { featuredProjects, projects } from "@/lib/data";
 import { Reveal, SectionHeading } from "./ui";
 
 const devices: { id: Device; label: string; icon: typeof Monitor }[] = [
@@ -15,19 +15,21 @@ const devices: { id: Device; label: string; icon: typeof Monitor }[] = [
   { id: "mobile", label: "Mobile", icon: Smartphone },
 ];
 
+/* The homepage work section: the three strongest concepts, each previewable
+   the way a customer would see it. The other projects live on /projects. */
 export default function Showcase() {
   const [active, setActive] = useState(0);
   const [device, setDevice] = useState<Device>("desktop");
-  const project = projects[active];
+  const project = featuredProjects[active];
 
   return (
-    <section id="websites" className="relative border-y border-line bg-base-2 py-20 sm:py-28">
+    <section id="work" className="relative border-y border-line bg-base-2 py-20 sm:py-28">
       <div className="container-shell">
         <Reveal>
           <SectionHeading
-            eyebrow="Live Preview Mode"
+            eyebrow="Concept Projects · Live Preview"
             title={<>See The Websites From Your Customer&apos;s Perspective.</>}
-            copy="Pick a concept, then switch between desktop, tablet, and mobile. The same site reflows exactly as it would on a real device."
+            copy="Each of these is a fully-designed website for a fictional local business — labelled as a concept, never presented as a live client. Pick one, then switch between desktop, tablet, and mobile. The same site reflows exactly as it would on a real device."
             align="center"
           />
         </Reveal>
@@ -35,7 +37,7 @@ export default function Showcase() {
         {/* Project selector */}
         <Reveal delay={0.05}>
           <div className="mt-10 flex flex-wrap justify-center gap-2">
-            {projects.map((p, i) => (
+            {featuredProjects.map((p, i) => (
               <button
                 key={p.slug}
                 type="button"
@@ -47,7 +49,9 @@ export default function Showcase() {
                     : "border-line text-muted hover:border-line-strong hover:text-offwhite"
                 }`}
               >
-                <span className="font-mono text-[11px] opacity-60">{p.index}</span>{" "}
+                {/* 80% is the floor: below that the numeral falls under 4.5:1 on
+                    both the surface and footer backgrounds. */}
+                <span className="font-mono text-[11px] opacity-80">{p.index}</span>{" "}
                 {p.name}
               </button>
             ))}
@@ -88,7 +92,10 @@ export default function Showcase() {
         </Reveal>
 
         {/* Preview */}
-        <div className="mt-10">
+        <div className="relative mt-10">
+          <span className="absolute -top-3 left-4 z-30 rounded-full border border-line-strong bg-base/90 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-accent backdrop-blur">
+            Concept Project
+          </span>
           <div key={`${project.slug}-${device}`} className="reveal">
             <DeviceMockup device={device}>
               <LazyDemo demo={project.demo} project={project} />
@@ -101,7 +108,7 @@ export default function Showcase() {
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href={`/demos/${project.slug}`}
-              className="group inline-flex items-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent"
+              className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent"
             >
               <ExternalLink className="h-4 w-4" />
               Open Full Demo
@@ -109,9 +116,16 @@ export default function Showcase() {
             </Link>
             <Link
               href={`/work/${project.slug}`}
-              className="inline-flex items-center gap-2 rounded-full border border-line-strong px-6 py-3 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line-strong px-6 py-3 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
             >
-              View Project
+              View case study
+            </Link>
+            <Link
+              href="/projects"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 px-2 text-sm font-semibold text-muted transition-colors hover:text-offwhite"
+            >
+              All {projects.length} concept projects
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Reveal>

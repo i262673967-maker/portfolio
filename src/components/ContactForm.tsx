@@ -15,7 +15,7 @@ const label = "mb-1.5 block font-mono text-[10px] uppercase tracking-widest text
 const err = "mt-1.5 text-[12px] text-warm";
 
 type Status = "idle" | "sending" | "sent" | "error";
-type FieldErrors = { website?: string; name?: string; email?: string };
+type FieldErrors = { website?: string; email?: string };
 
 /* Accepts what a business owner actually types — "joesplumbing.com", "www.joe.com/Contact",
    or a full URL — and normalises it to something verifiable. */
@@ -41,6 +41,7 @@ export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [noSite, setNoSite] = useState(false);
   const [form, setForm] = useState({
     website: "",
     name: "",
@@ -73,24 +74,27 @@ export default function ContactForm() {
 
   const invalidCount = Object.values(fieldErrors).filter(Boolean).length;
 
+  /* Only two things are ever required: where to look, and where to reply.
+     "No website yet" is a valid answer — the note carries the business instead. */
   function validate(): { website: string; errors: FieldErrors } {
     const next: FieldErrors = {};
-    const website = normaliseWebsite(form.website);
-    if (!website) next.website = "Enter your website link, for example yourbusiness.com";
-    if (!form.name.trim()) next.name = "Please add your name so I know who to reply to";
+    const website = noSite ? "" : (normaliseWebsite(form.website) ?? "");
+    if (!noSite && !website)
+      next.website = "Enter your website link, for example yourbusiness.com — or tick the box below if you don't have one yet.";
     if (!EMAIL.test(form.email.trim())) next.email = "Enter a valid email so I can send the audit";
-    return { website: website ?? "", errors: next };
+    return { website, errors: next };
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const { website, errors } = validate();
     setFieldErrors(errors);
-    if (!website) {
-      const first = (["website", "name", "email"] as const).find((k) => errors[k]);
-      if (first === "website") websiteRef.current?.focus();
-      else if (first === "name") nameRef.current?.focus();
-      else if (first === "email") emailRef.current?.focus();
+    if (errors.website) {
+      websiteRef.current?.focus();
+      return;
+    }
+    if (errors.email) {
+      emailRef.current?.focus();
       return;
     }
     if (keyMissing) {
@@ -108,11 +112,11 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: web3formsAccessKey,
-          subject: `Free website audit request — ${domain}`,
-          from_name: form.name.trim(),
+          subject: `Free website audit request — ${domain || "no website yet"}`,
+          from_name: form.name.trim() || form.email.trim(),
           name: form.name.trim(),
           email: form.email.trim(),
-          website,
+          website: website || "No website yet",
           note: form.note.trim() || "—",
           botcheck: form.botcheck,
         }),
@@ -138,7 +142,7 @@ export default function ContactForm() {
             <SectionHeading
               eyebrow="Free Website Audit"
               title="Request your free audit"
-              copy="Send me your link and your best contact. I'll review your website and tell you exactly what's holding it back — free, no commitment."
+              copy="Send me your website link — or your business, if you don't have a site yet — and the email to reply to. I'll tell you exactly what's holding it back. Free, no commitment."
             />
             <div className="mt-8 space-y-4">
               <div className="flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
@@ -178,13 +182,17 @@ export default function ContactForm() {
                 <CheckCircle2 className="h-12 w-12 text-accent" />
                 <h3 className="mt-4 font-display text-xl font-semibold">Audit request received</h3>
                 <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-muted">
-                  Thanks. I&apos;ll review your website and identify the biggest areas that could be
-                  improved, then reply to {form.email.trim() || "your email"}.
+                  Thanks.{" "}
+                  {noSite
+                    ? "I'll put together what your business needs a website to do"
+                    : "I'll review your website and identify the biggest areas that could be improved"}
+                  , then reply to {form.email.trim() || "your email"}.
                 </p>
                 <button
                   onClick={() => {
                     setStatus("idle");
                     setFieldErrors({});
+                    setNoSite(false);
                     setForm({ website: "", name: "", email: "", note: "", botcheck: "" });
                   }}
                   className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
@@ -209,51 +217,66 @@ export default function ContactForm() {
                   <label htmlFor={fid("website")} className={label}>
                     Website URL
                   </label>
-                  <input
-                    id={fid("website")}
-                    ref={websiteRef}
-                    required
-                    type="url"
-                    inputMode="url"
-                    name="website"
-                    autoComplete="url"
-                    value={form.website}
-                    onChange={set("website")}
-                    aria-invalid={fieldErrors.website ? true : undefined}
-                    aria-describedby={fieldErrors.website ? fid("website-err") : undefined}
-                    className={input}
-                    placeholder="yourbusiness.com"
-                  />
+                  {noSite ? (
+                    <p className="rounded-xl border border-dashed border-line-input px-4 py-3 text-[13px] leading-relaxed text-muted">
+                      No website yet — that&apos;s fine. Tell me about the business below instead.
+                    </p>
+                  ) : (
+                    <input
+                      id={fid("website")}
+                      ref={websiteRef}
+                      required
+                      type="url"
+                      inputMode="url"
+                      name="website"
+                      autoComplete="url"
+                      value={form.website}
+                      onChange={set("website")}
+                      aria-invalid={fieldErrors.website ? true : undefined}
+                      aria-describedby={fieldErrors.website ? fid("website-err") : undefined}
+                      className={input}
+                      placeholder="yourbusiness.com"
+                    />
+                  )}
                   {fieldErrors.website && (
                     <p id={fid("website-err")} className={err}>
                       {fieldErrors.website}
                     </p>
                   )}
+                  <label
+                    htmlFor={fid("nosite")}
+                    className="mt-2 flex min-h-11 cursor-pointer select-none items-center gap-2.5 text-[13px] text-muted hover:text-offwhite"
+                  >
+                    <input
+                      id={fid("nosite")}
+                      type="checkbox"
+                      name="nosite"
+                      checked={noSite}
+                      onChange={(e) => {
+                        setNoSite(e.target.checked);
+                        setFieldErrors((fe) => ({ ...fe, website: undefined }));
+                      }}
+                      className="h-6 w-6 shrink-0 rounded border-line-input bg-base-2 accent-accent"
+                    />
+                    I don&apos;t have a website yet
+                  </label>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label htmlFor={fid("name")} className={label}>
-                      Name
+                      Name (optional)
                     </label>
                     <input
                       id={fid("name")}
                       ref={nameRef}
-                      required
                       name="name"
                       autoComplete="name"
                       value={form.name}
                       onChange={set("name")}
-                      aria-invalid={fieldErrors.name ? true : undefined}
-                      aria-describedby={fieldErrors.name ? fid("name-err") : undefined}
                       className={input}
                       placeholder="Your name"
                     />
-                    {fieldErrors.name && (
-                      <p id={fid("name-err")} className={err}>
-                        {fieldErrors.name}
-                      </p>
-                    )}
                   </div>
                   <div>
                     <label htmlFor={fid("email")} className={label}>
@@ -284,7 +307,7 @@ export default function ContactForm() {
 
                 <div>
                   <label htmlFor={fid("note")} className={label}>
-                    Anything I should know? (optional)
+                    {noSite ? "About your business (optional)" : "Anything I should know? (optional)"}
                   </label>
                   <textarea
                     id={fid("note")}
@@ -293,7 +316,11 @@ export default function ContactForm() {
                     value={form.note}
                     onChange={set("note")}
                     className={input}
-                    placeholder="What you want the website to do for your business…"
+                    placeholder={
+                      noSite
+                        ? "What your business does, and what you'd like a website to do for it…"
+                        : "What you want the website to do for your business…"
+                    }
                   />
                 </div>
 
@@ -340,7 +367,8 @@ export default function ContactForm() {
                     <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
                   <p className="mt-3 text-center text-[12px] leading-relaxed text-faint">
-                    No commitment and no obligation — you just get an honest look at your website.
+                    No commitment and no obligation — just an honest read, whether
+                    you have a website or not.
                   </p>
                 </div>
               </form>

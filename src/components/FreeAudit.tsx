@@ -39,7 +39,7 @@ export default function FreeAudit() {
 
         <Reveal delay={0.1}>
           <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
                   Website Health
@@ -49,8 +49,8 @@ export default function FreeAudit() {
                   <span className="text-[16px] font-semibold text-faint">/100</span>
                 </p>
               </div>
-              <span className="rounded-full border border-warm/40 bg-warm/[0.1] px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-warm">
-                Sample Audit
+              <span className="rounded-full border border-warm/40 bg-warm/[0.1] px-3 py-1.5 text-right font-mono text-[10px] uppercase leading-[1.5] tracking-widest text-warm">
+                Sample audit · illustrative example
               </span>
             </div>
 
@@ -84,7 +84,7 @@ export default function FreeAudit() {
             </ol>
 
             <p className="mt-5 rounded-xl border border-dashed border-line-strong px-3.5 py-3 text-[12px] leading-relaxed text-faint">
-              Illustrative example of the report format on a fictional site. Not a real client,
+              The report format, shown on a fictional site. Not a real client,
               and not a measured result.
             </p>
           </div>

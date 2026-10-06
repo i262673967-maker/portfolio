@@ -123,7 +123,7 @@ export default function Navbar() {
                     href={item.href}
                     aria-current={isCurrent(item.href) ? "page" : undefined}
                     onClick={() => setOpen(false)}
-                    className={`block rounded-lg px-3 py-3 text-base transition-colors hover:bg-white/5 ${
+                    className={`block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-white/5 ${
                       isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
                     }`}
                   >

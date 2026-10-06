@@ -34,9 +34,9 @@ export default function ProjectCard({
           <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-offwhite">
             {project.name}
           </h3>
-          <p className="mt-0.5 text-[13px] text-muted">
-            {project.businessType} · {project.industry}
-          </p>
+          {/* Just the industry: the name already carries the trade, so pairing it
+              with businessType read as "VoltWise Electrical — Electrical Services". */}
+          <p className="mt-0.5 text-[13px] text-muted">{project.industry}</p>
 
           {detailed ? (
             <>

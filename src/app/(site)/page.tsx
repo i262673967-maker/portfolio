@@ -7,37 +7,37 @@ import {
   Problems,
   Process,
   Services,
-  Standards,
   TrustStrip,
   WhyWork,
 } from "@/components/Marketing";
-import FeaturedWork from "@/components/FeaturedWork";
 import FreeAudit from "@/components/FreeAudit";
 import Showcase from "@/components/Showcase";
 import ContactForm from "@/components/ContactForm";
-import { site } from "@/lib/data";
+import { pageMeta } from "@/lib/metadata";
+import { brandPitch, homeDescription, site } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: { absolute: `${site.brand} — Websites for Local Businesses` },
-  description: site.supportingMessage,
-  alternates: { canonical: "/" },
-};
+export const metadata: Metadata = pageMeta({
+  tab: { absolute: `${site.brand} — ${brandPitch}` },
+  share: `${site.brand} — ${brandPitch}`,
+  description: homeDescription,
+  path: "/",
+});
 
+/* Funnel order: what's wrong → the free look → the work that proves it → how
+   it's built → who you're dealing with → the one ask. */
 export default function HomePage() {
   return (
     <div>
       <Hero />
       <TrustStrip />
-      <FeaturedWork />
       <Problems />
       <FreeAudit />
       <Showcase />
       <BeforeAfter />
       <Services />
       <Process />
-      <Standards />
-      <About />
       <WhyWork />
+      <About />
       <FinalCta />
       <ContactForm />
     </div>

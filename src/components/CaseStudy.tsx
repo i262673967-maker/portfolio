@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Monitor, Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
-import { Demo } from "@/demos";
+import LazyDemo from "./LazyDemo";
 import { cta, type Project } from "@/lib/data";
 
 export default function CaseStudy({ project, prev, next }: { project: Project; prev?: Project; next?: Project }) {
@@ -56,7 +56,7 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
         <div className="mt-8">
           <div key={device} className="reveal">
             <DeviceMockup device={device}>
-              <Demo demo={project.demo} project={project} />
+              <LazyDemo demo={project.demo} project={project} />
             </DeviceMockup>
           </div>
         </div>
@@ -106,7 +106,11 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
                 {Object.entries(project.palette).map(([k, v]) => (
                   <div key={k} className="flex-1">
                     <div className="h-10 rounded-lg border border-line" style={{ background: v }} />
-                    <span className="mt-1 block font-mono text-[9px] uppercase text-faint">{k}</span>
+                    {/* The data keys are code shorthand (bg/fg); a visitor reading
+                        the case study needs the role each colour plays. */}
+                    <span className="mt-1 block font-mono text-[9px] uppercase text-faint">
+                      {k === "bg" ? "background" : k === "fg" ? "text" : k}
+                    </span>
                   </div>
                 ))}
               </div>

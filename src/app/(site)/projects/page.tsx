@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import ProjectGallery from "@/components/ProjectGallery";
-import { cta, projects } from "@/lib/data";
+import { pageMeta } from "@/lib/metadata";
+import { cta, projects, site } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "Concept Projects",
+export const metadata: Metadata = pageMeta({
+  tab: "Concept Projects",
+  share: `Concept Projects · ${site.brand}`,
   description:
     "Concept websites for local businesses — renovation, plumbing, electrical, dining and retail. Each has a case study and a live preview.",
-  alternates: { canonical: "/projects" },
-};
+  path: "/projects",
+});
 
 export default function ProjectsPage() {
   return (
@@ -44,7 +46,7 @@ export default function ProjectsPage() {
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
             <Link
-              href="/#websites"
+              href="/#work"
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line-strong px-5 py-3 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
             >
               <ExternalLink className="h-4 w-4" /> Live preview

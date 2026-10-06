@@ -142,7 +142,7 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
           >
             Modern Dining. <span className="italic text-[var(--d-accent)]">Made Memorable.</span>
           </DemoHeading>
-          <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-current/70 @5xl:text-base">
+          <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-current/70 @5xl:text-[1rem]">
             Fire-led cooking, seasonal produce, and a room designed for lingering. Open Wednesday to
             Sunday, from six until late.
           </p>
@@ -178,12 +178,12 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
             {MENU.map(([name, desc, price]) => (
               <div key={name} className="border-b border-[var(--d-line)] py-5">
                 <div className="flex items-baseline gap-3">
-                  <h3 className="font-display text-[15px] font-semibold tracking-tight @3xl:text-base">{name}</h3>
+                  <h3 className="font-display text-[15px] font-semibold tracking-tight @3xl:text-[1rem]">{name}</h3>
                   <span
                     aria-hidden="true"
                     className="min-w-6 flex-1 -translate-y-[3px] border-b border-dotted border-current/25"
                   />
-                  <span className="font-display text-[15px] font-semibold text-[var(--d-accent)] @3xl:text-base">
+                  <span className="font-display text-[15px] font-semibold text-[var(--d-accent)] @3xl:text-[1rem]">
                     {price}
                   </span>
                 </div>

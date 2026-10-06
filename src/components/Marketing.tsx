@@ -6,21 +6,19 @@ import {
   Check,
   Gauge,
   History,
-  Mail,
   MonitorSmartphone,
   MousePointerClick,
   RefreshCw,
   ShoppingCart,
-  Smartphone,
   Target,
   Wrench,
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
 import {
+  PRICE_FROM,
   clientTypes,
   cta,
   finalCta,
-  principles,
   problems,
   processSteps,
   qualityChecklist,
@@ -35,7 +33,6 @@ const iconMap: Record<string, typeof Building2> = {
   target: Target,
   cart: ShoppingCart,
   refresh: RefreshCw,
-  smartphone: Smartphone,
   history: History,
   mobile: MonitorSmartphone,
   gauge: Gauge,
@@ -57,7 +54,10 @@ export function TrustStrip() {
   const row = [...items, ...items];
   return (
     <section className="border-y border-line bg-base-2 py-5">
-      <div className="relative overflow-hidden">
+      {/* The row is duplicated to make the loop seamless, so a screen reader
+          would otherwise announce every service twice. The same list is in the
+          Services section below, so nothing is lost by hiding this one. */}
+      <div className="relative overflow-hidden" aria-hidden="true">
         <div className="flex w-max animate-marquee items-center gap-10 pr-10">
           {row.map((item, i) => (
             <span key={i} className="flex items-center gap-10 whitespace-nowrap">
@@ -98,7 +98,7 @@ export function Problems() {
                   <span className="grid h-10 w-10 place-items-center rounded-lg bg-warm/10 text-warm">
                     <Icon className="h-5 w-5" />
                   </span>
-                  <h3 className="mt-4 font-display text-base font-semibold tracking-tight text-offwhite">
+                  <h3 className="mt-4 font-display text-[1rem] font-semibold tracking-tight text-offwhite">
                     {p.title}
                   </h3>
                   <p className="mt-2 text-[13px] leading-relaxed text-muted">{p.body}</p>
@@ -183,18 +183,18 @@ export function BeforeAfter() {
             </div>
           </Reveal>
 
-          {/* TODO(Ismail): replace this honest placeholder card with real
-              before/after measurements once you have a launched client site
-              and their permission. Until then no numbers are shown. */}
+          {/* Deliberately empty of numbers: this slot is filled with measured
+              results from launched client projects, with their permission, and
+              with nothing invented until then. */}
           <Reveal delay={0.12} className="lg:col-span-1">
             <div className="flex h-full flex-col justify-center rounded-2xl border border-dashed border-line-strong p-6">
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-                Reserved for real results
+                Proof, when it&apos;s real.
               </p>
               <p className="mt-5 text-sm leading-relaxed text-muted">
-                Measured before-and-after results from real client projects will
-                be published in this slot. No numbers, no testimonials, and no
-                client names are invented here in the meantime.
+                These concept projects demonstrate the work. As real client
+                projects launch, this area will be replaced with verified
+                results.
               </p>
             </div>
           </Reveal>
@@ -288,7 +288,8 @@ export function Services() {
           </div>
         </Reveal>
 
-        {/* Replaces the old pricing section — no published prices. */}
+        {/* Replaces the old pricing section — no published prices unless
+            PRICE_FROM is filled in, and then only a single starting line. */}
         <Reveal delay={0.08}>
           <div className="mt-6 rounded-2xl border border-line bg-surface p-8 text-center sm:p-12">
             <h3 className="font-display text-2xl font-semibold tracking-tight text-offwhite sm:text-3xl">
@@ -298,11 +299,19 @@ export function Services() {
               Every business needs something different, so every quote is scoped
               with you rather than picked off a price list.
             </p>
+            {PRICE_FROM.trim() !== "" && (
+              <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.18em] text-faint">
+                Starting from {PRICE_FROM.trim()}
+              </p>
+            )}
+            {/* The audit is the section right below this one, so the band hands
+                off to it with a plain text link rather than a second filled
+                button competing with the hero CTA. */}
             <Link
-              href="/#contact"
-              className="group mt-6 inline-flex items-center gap-2 rounded-full bg-offwhite px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-accent"
+              href="/#audit"
+              className="group mt-5 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
             >
-              {cta.primary}
+              Start with the free audit
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
@@ -330,7 +339,7 @@ export function Process() {
             <Reveal key={p.step} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-line bg-surface p-5">
                 <span className="font-display text-2xl font-bold text-accent">{p.step}</span>
-                <h3 className="mt-3 font-display text-base font-semibold tracking-tight text-offwhite">
+                <h3 className="mt-3 font-display text-[1rem] font-semibold tracking-tight text-offwhite">
                   {p.title}
                 </h3>
                 <p className="mt-2 text-[13px] leading-relaxed text-muted">{p.body}</p>
@@ -343,38 +352,42 @@ export function Process() {
   );
 }
 
-/* Merged "Principles + Checklist + Industries" section. */
-export function Standards() {
+/* Five reasons to work with me rather than with a template or an agency, plus
+   the standard every one of them is checked against — the checklist the old
+   separate "How I Build" section carried, stated once instead of twice. */
+export function WhyWork() {
   return (
-    <section className="border-y border-line bg-base-2 py-20 sm:py-28">
+    <section id="why" className="border-y border-line bg-base-2 py-20 sm:py-28">
       <div className="container-shell">
-        <Reveal>
-          <SectionHeading
-            eyebrow="How I Build"
-            title="What Every Website Is Built Around"
-            copy="Four principles hold up every project, whatever the industry. Below them is the exact checklist each site is checked against before it ships."
-          />
-        </Reveal>
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Why Work With Me"
+              title="One person, one clear promise: built for your business."
+              copy="No template, no middlemen, and nothing on this page that didn't actually happen."
+            />
+          </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {principles.map((p, i) => (
-            <Reveal key={p.title} delay={(i % 2) * 0.06}>
-              <div className="h-full rounded-2xl border border-line bg-surface p-6">
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-accent/10 font-display text-sm font-bold text-accent">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-offwhite">
-                  {p.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
-              </div>
-            </Reveal>
-          ))}
+          <Reveal delay={0.08}>
+            <ol className="divide-y divide-line border-y border-line">
+              {whyWork.map((w) => (
+                <li key={w.title} className="flex gap-5 py-5">
+                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
+                  <div>
+                    <h3 className="font-display text-[1rem] font-semibold tracking-tight text-offwhite">
+                      {w.title}
+                    </h3>
+                    <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{w.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
         </div>
 
-        <Reveal>
-          <div className="rounded-2xl border border-line bg-surface p-6">
-            <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
+        <Reveal delay={0.1}>
+          <div className="mt-12 rounded-2xl border border-line bg-surface p-6">
+            <h3 className="font-display text-[1rem] font-semibold tracking-tight text-offwhite">
               Every site I ship meets this checklist
             </h3>
             <ul className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -392,43 +405,9 @@ export function Standards() {
   );
 }
 
-/* Five reasons to work with me rather than with a template or an agency. */
-export function WhyWork() {
-  return (
-    <section id="why" className="border-y border-line bg-base-2 py-20 sm:py-28">
-      <div className="container-shell grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Why Work With Me"
-            title="One person, one clear promise: built for your business."
-            copy="No template, no middlemen, and nothing on this page that didn't actually happen."
-          />
-        </Reveal>
-
-        <Reveal delay={0.08}>
-          <ol className="divide-y divide-line border-y border-line">
-            {whyWork.map((w) => (
-              <li key={w.title} className="flex gap-5 py-5">
-                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
-                <div>
-                  <h3 className="font-display text-base font-semibold tracking-tight text-offwhite">
-                    {w.title}
-                  </h3>
-                  <p className="mt-1.5 text-[14px] leading-relaxed text-muted">{w.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* Honest about section — logo instead of a photo, no invented facts. */
+/* Honest about section — logo instead of a photo, no invented facts, and no
+   location or timezone: this studio is contacted through the form and email. */
 export function About() {
-  const stack = isTodo(site.tools) ? "" : site.tools;
-
   return (
     <section id="about" className="py-20 sm:py-28">
       <div className="container-shell grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
@@ -437,8 +416,12 @@ export function About() {
             <Image
               src="/logo.png"
               alt={`${site.brand} logo`}
-              width={400}
-              height={400}
+              /* 240 is the largest it is ever displayed (max-w-[15rem]), so the
+                 optimizer is asked for 240/480px instead of 828px. Square either
+                 way, so the aspect ratio and layout do not move. */
+              width={240}
+              height={240}
+              sizes="(min-width: 1024px) 240px, 55vw"
               className="h-auto w-full max-w-[15rem] rounded-full object-contain"
             />
           </div>
@@ -446,7 +429,16 @@ export function About() {
 
         <Reveal delay={0.08}>
           <SectionHeading eyebrow="About" title={site.role} />
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted">{site.bio}</p>
+          <div className="mt-5 max-w-xl">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
+              Who you&apos;re dealing with
+            </p>
+            <div className="mt-3 space-y-3 text-[15px] leading-relaxed text-muted">
+              {site.founderNote.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-6 max-w-xl rounded-2xl border border-accent/30 bg-accent/[0.06] p-5">
             <p className="font-display text-[15px] font-semibold leading-snug text-offwhite">
@@ -496,12 +488,6 @@ export function About() {
                 </span>
               ))}
             </div>
-            {stack && (
-              <p className="mt-4 text-[12px] leading-relaxed text-faint">
-                Built on a modern stack — {stack} — because it stays fast and
-                maintainable. The framework is never the point.
-              </p>
-            )}
           </div>
 
           {site.socials.length > 0 && (
@@ -520,14 +506,6 @@ export function About() {
             </div>
           )}
 
-          <a
-            href={`mailto:${site.email}`}
-            className="group mt-8 inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
-          >
-            <Mail className="h-4 w-4 text-accent" />
-            Email me directly
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
         </Reveal>
       </div>
     </section>

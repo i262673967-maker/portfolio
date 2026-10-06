@@ -15,6 +15,9 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   return {
     title: project ? `${project.name} — Concept Demo` : "Concept Demo",
     description: project?.summary,
+    /* The full-screen preview is a tool, not a page a prospect should land on
+       from search — the /work case study is that. Crawlers still follow its links. */
+    robots: { index: false, follow: true },
     alternates: { canonical: `/demos/${slug}` },
   };
 }

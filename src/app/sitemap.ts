@@ -11,6 +11,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteBase}/`, lastModified },
     { url: `${siteBase}/projects`, lastModified },
     ...projects.map((p) => ({ url: `${siteBase}/work/${p.slug}`, lastModified })),
-    ...projects.map((p) => ({ url: `${siteBase}/demos/${p.slug}`, lastModified })),
   ];
 }

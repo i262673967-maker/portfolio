@@ -80,6 +80,12 @@ export default function Hero() {
           <div
             className="relative mx-auto w-full max-w-[560px] reveal"
             style={staged(0.2, 24)}
+            /* Decoration, not a real site to explore: the three frames illustrate what the
+               work looks like, and their links already exist on the pages they point to.
+               `inert` keeps them out of the tab order as well as the accessibility tree —
+               aria-hidden alone would leave focusable controls hidden from a screen reader. */
+            aria-hidden="true"
+            inert
           >
             <div className="relative pb-[6%]">
               <div className="relative z-10">

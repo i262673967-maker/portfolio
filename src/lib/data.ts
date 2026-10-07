@@ -666,13 +666,20 @@ export const qualityChecklist = [
   "Conversion-focused structure",
 ];
 
-/* The nine industries approved for this section, in the site's existing
-   label style. "Gyms & Fitness" and "Home Services" are new labels — they
-   were approved as part of this list, not carried over from the old chips. */
-export const clientTypes = [
-  "Plumbers & Heating",
+/* The trades the site leads with — confirmed 2026-10-07 as the five names to
+   put in front of a visitor. Rendered as chips in the services band. */
+export const tradeTypes = [
+  "Plumbers",
   "Electricians",
-  "Builders & Renovators",
+  "Roofers",
+  "HVAC",
+  "Builders & Contractors",
+];
+
+/* Everything else the section covers, kept as one plain line under the chips so
+   the trades stay the loudest thing in the band. Labels carried over from the
+   previous nine-chip list; "Home Services" was approved as part of that list. */
+export const otherBusinessTypes = [
   "Restaurants & Cafés",
   "Salons & Barbers",
   "Gyms & Fitness",
@@ -796,7 +803,7 @@ export const faqItems = [
   },
   {
     q: "Do you handle hosting and the domain?",
-    a: "Hosting is covered by the care plans below the packages — that is what the monthly fee pays for, so the website stays online and monitored without you having to think about it. If you already have a domain, it stays where it is and the website simply points to it.",
+    a: "Hosting is included in the care plans. Without a care plan, I hand over the site files and you host it yourself (free options exist). A new domain costs about $12–20 a year, registered in your name and paid by you. If you already have a domain, it stays where it is.",
   },
   {
     q: "Will this get me to number one on Google?",

@@ -157,6 +157,13 @@ export function CarePlans() {
             <p className="mx-auto max-w-xl text-[14px] leading-relaxed text-muted">
               Care plans are optional.
             </p>
+            <Link
+              href="/#contact"
+              className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-offwhite"
+            >
+              {cta.primary}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </Reveal>
       </div>

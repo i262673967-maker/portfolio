@@ -15,14 +15,15 @@ import {
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
 import {
-  clientTypes,
   cta,
   finalCta,
+  otherBusinessTypes,
   problems,
   processSteps,
   qualityChecklist,
   services,
   site,
+  tradeTypes,
   whyWork,
 } from "@/lib/data";
 
@@ -275,7 +276,7 @@ export function Services() {
               the kind of website they need to see.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
-              {clientTypes.map((c) => (
+              {tradeTypes.map((c) => (
                 <span
                   key={c}
                   className="rounded-full border border-line bg-base-2 px-3 py-1.5 text-[12px] text-muted"
@@ -284,6 +285,11 @@ export function Services() {
                 </span>
               ))}
             </div>
+            {/* Everything outside the trades is one plain line, not a second set
+                of chips, so the five trade names stay the loudest thing here. */}
+            <p className="mt-3 text-[12px] leading-relaxed text-faint">
+              Other local business types: {otherBusinessTypes.join(", ")}.
+            </p>
           </div>
         </Reveal>
 

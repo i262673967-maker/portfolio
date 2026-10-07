@@ -7,7 +7,13 @@ import type { Project } from "@/lib/data";
    bytes, with no headings and no invented copy. */
 export default function ConceptThumb({ project }: { project: Project }) {
   const { bg, fg, accent } = project.palette;
-  const action = project.keySections[1] ?? project.keySections[0];
+  /* The chip stands in for the concept's own hero button, so it takes that
+     button's label. keySections are internal structure names: reading one as a
+     button put "Services" under the "Electrical Services" industry. */
+  const action =
+    project.content?.ctaPrimary.replace(/\s*→\s*$/, "") ||
+    project.keySections[1] ||
+    project.keySections[0];
 
   return (
     <div

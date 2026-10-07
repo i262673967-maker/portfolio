@@ -309,7 +309,7 @@ export const projects: Project[] = [
     strategy:
       "Emergency-first. Someone searching this has a problem right now, so the page answers three things before anything else: can you help, how fast, what will it cost. Everything after that is reassurance.",
     designDirection: ["Bold", "Urgent", "Call-first", "High-contrast"],
-    keySections: ["Hero", "Emergency CTA", "Services", "Prices", "Coverage", "FAQ", "Contact"],
+    keySections: ["Hero", "Emergency callouts", "Services", "Prices", "Coverage", "FAQ", "Contact"],
     mobileNotes: [
       "Built for the phone screen first — most callouts are searched on mobile",
       "Booking action stays reachable with one thumb from every section",

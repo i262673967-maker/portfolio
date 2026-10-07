@@ -125,8 +125,8 @@ export function Problems() {
   );
 }
 
-/* Generic vs custom website comparison, plus an honest reserved slot for
-   real measured results once they exist. */
+/* Generic vs custom website comparison, plus what the concept projects
+   themselves demonstrate — stated as design qualities, never as results. */
 export function BeforeAfter() {
   return (
     <section className="py-20 sm:py-28">
@@ -183,18 +183,32 @@ export function BeforeAfter() {
             </div>
           </Reveal>
 
-          {/* Deliberately empty of numbers: this slot is filled with measured
-              results from launched client projects, with their permission, and
-              with nothing invented until then. */}
+          {/* What the concepts actually show. Deliberately free of numbers: no
+              client results, testimonials, traffic or revenue are claimed here,
+              because there are no client projects to claim them from yet. */}
           <Reveal delay={0.12} className="lg:col-span-1">
-            <div className="flex h-full flex-col justify-center rounded-2xl border border-dashed border-line-strong p-6">
+            <div className="h-full rounded-2xl border border-line bg-surface p-6">
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
-                Proof, when it&apos;s real.
+                What these projects demonstrate
               </p>
-              <p className="mt-5 text-sm leading-relaxed text-muted">
-                These concept projects demonstrate the work. As real client
-                projects launch, this area will be replaced with verified
-                results.
+              <ul className="mt-5 space-y-3 text-sm text-offwhite/90">
+                {[
+                  "Mobile-first design, previewed at phone, tablet and desktop widths",
+                  "One clear call to action, repeated at every decision point",
+                  "Structure ordered around how a customer decides",
+                  "An industry-specific look — own palette, own copy, own section order",
+                  "Clear navigation and content hierarchy, in plain language",
+                  "Fast, clean layouts with nothing decorative above the main action",
+                ].map((t) => (
+                  <li key={t} className="flex gap-2.5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 text-[12px] leading-relaxed text-faint">
+                Concept projects for fictional businesses. No client results,
+                testimonials or numbers are claimed here.
               </p>
             </div>
           </Reveal>
@@ -301,7 +315,7 @@ export function Services() {
               {site.quoteOffer}
             </h3>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-              Not sure which package fits?
+              Prices for a new site, a redesign, or a fix are one section down.
             </p>
             {/* A plain text link rather than a second filled button competing
                 with the hero CTA. */}

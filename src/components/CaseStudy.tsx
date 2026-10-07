@@ -8,6 +8,10 @@ import DeviceMockup, { type Device } from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
 import { cta, type Project } from "@/lib/data";
 
+/* The palette keys are code shorthand (bg/fg); a visitor needs the role each
+   colour plays, stated in the words a client would use. */
+const PALETTE_ROLE: Record<string, string> = { bg: "Background", fg: "Text", accent: "Accent" };
+
 export default function CaseStudy({ project, prev, next }: { project: Project; prev?: Project; next?: Project }) {
   const [device, setDevice] = useState<Device>("desktop");
 
@@ -106,11 +110,10 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
                 {Object.entries(project.palette).map(([k, v]) => (
                   <div key={k} className="flex-1">
                     <div className="h-10 rounded-lg border border-line" style={{ background: v }} />
-                    {/* The data keys are code shorthand (bg/fg); a visitor reading
-                        the case study needs the role each colour plays. */}
                     <span className="mt-1 block font-mono text-[9px] uppercase text-faint">
-                      {k === "bg" ? "background" : k === "fg" ? "text" : k}
+                      {PALETTE_ROLE[k] ?? k}
                     </span>
+                    <span className="block font-mono text-[9px] text-faint">{v}</span>
                   </div>
                 ))}
               </div>

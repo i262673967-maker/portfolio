@@ -36,6 +36,11 @@ function normaliseWebsite(raw: string): string | null {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/* The error block renders this sentence followed by the mailto link, so the
+   address is the link and it reads as one line ending in the address. Raw service
+   replies never reach a visitor — they go to console.error. */
+const SEND_FAILED = "Sorry, your request didn't send. Please try again, or email me directly at";
+
 /* A field's own label, so the summary banner can name the field instead of
    pointing vaguely at "the highlighted field". */
 const FIELD_LABEL: Record<keyof FieldErrors, string> = {
@@ -141,25 +146,24 @@ export default function ContactForm() {
         }),
       });
       /* A reply that isn't JSON means something between here and the service answered
-         instead of the service (a captive portal or a blocked request), so say that
-         rather than swallowing it: every branch below names its own reason. */
+         instead of the service (a captive portal or a blocked request). Every branch
+         keeps the visitor-facing sentence generic and logs the detail. */
       const data = (await res.json().catch(() => null)) as { success?: boolean; message?: string } | null;
       if (data?.success) {
         setStatus("sent");
         return;
       }
-      const reason = data?.message || `HTTP ${res.status}`;
-      setStatus("error");
-      setErrorMsg(
-        data
-          ? `Something went wrong sending your request (${reason}). Please email me directly instead.`
-          : `The form service returned a reply I couldn't read (${reason}). Please email me directly instead.`
+      console.error(
+        "Audit form send failed — HTTP status and raw response:",
+        res.status,
+        data ?? "unreadable response body"
       );
-    } catch {
       setStatus("error");
-      setErrorMsg(
-        "Your browser couldn't reach the form service. Please check your connection, or email me directly instead."
-      );
+      setErrorMsg(SEND_FAILED);
+    } catch (err) {
+      console.error("Audit form request failed — the fetch never reached the service:", err);
+      setStatus("error");
+      setErrorMsg(SEND_FAILED);
     }
   }
 
@@ -382,6 +386,7 @@ export default function ContactForm() {
                       >
                         {site.email}
                       </a>
+                      .
                     </p>
                   </motion.div>
                 )}

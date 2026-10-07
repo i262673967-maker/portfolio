@@ -52,7 +52,7 @@ export default function Navbar() {
         scrolled ? "border-b border-line bg-base/80 backdrop-blur-xl" : "border-b border-transparent"
       }`}
     >
-      <div className="container-shell flex h-16 items-center justify-between">
+      <div className="container-shell flex h-16 items-center justify-between gap-2.5 xl:gap-4">
         <Link href="/#home" className="group flex min-h-11 items-center gap-2.5" onClick={() => setOpen(false)}>
           <Image
             src="/logo.png"
@@ -66,13 +66,20 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+        {/* Eight links at `lg`. Measured at exactly 1024px: the logo + the full
+            row + the audit pill need every pixel the container has, so the
+            labels wrapped to two lines and the wordmark sat against the first
+            link. `whitespace-nowrap` keeps each link on one line, the tighter
+            1024–1279 padding plus a small row gap buys the breathing room, and
+            from `xl` the original px-3.5 / gap-1 spacing returns. No link is
+            dropped or hidden at any width. */}
+        <nav aria-label="Primary" className="hidden items-center gap-0.5 whitespace-nowrap lg:flex xl:gap-1">
           {nav.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               aria-current={isCurrent(item.href) ? "page" : undefined}
-              className={`rounded-full px-3.5 py-2 text-[13px] transition-colors hover:bg-white/5 hover:text-offwhite ${
+              className={`rounded-full px-1.5 py-2 text-[13px] transition-colors hover:bg-white/5 hover:text-offwhite xl:px-3.5 ${
                 isCurrent(item.href) ? "text-offwhite" : "text-muted"
               }`}
             >
@@ -84,7 +91,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link
             href="/#contact"
-            className="group hidden min-h-11 items-center gap-1.5 rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
+            className="group hidden min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
           >
             {cta.nav}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />

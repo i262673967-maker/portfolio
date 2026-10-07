@@ -12,6 +12,8 @@ import {
 } from "@/components/Marketing";
 import FreeAudit from "@/components/FreeAudit";
 import Showcase from "@/components/Showcase";
+import { CarePlans, Pricing } from "@/components/Pricing";
+import { Faq } from "@/components/Faq";
 import ContactForm from "@/components/ContactForm";
 import { pageMeta } from "@/lib/metadata";
 import { brandPitch, homeDescription, site } from "@/lib/data";
@@ -23,7 +25,8 @@ export const metadata: Metadata = pageMeta({
   path: "/",
 });
 
-/* Funnel order: what's wrong → the free look → the work that proves it → how
+/* Funnel order: what's wrong → the free look → the work that proves it → what it
+   costs and how to keep it running → the questions that stop people asking → how
    it's built → who you're dealing with → the one ask. */
 export default function HomePage() {
   return (
@@ -35,6 +38,9 @@ export default function HomePage() {
       <Showcase />
       <BeforeAfter />
       <Services />
+      <Pricing />
+      <CarePlans />
+      <Faq />
       <Process />
       <WhyWork />
       <About />

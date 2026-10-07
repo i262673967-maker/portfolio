@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Send, Mail, Search, CheckCircle2, AlertCircle } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
@@ -348,7 +349,7 @@ export default function ContactForm() {
                       {errorMsg}{" "}
                       <a
                         href={`mailto:${site.email}?subject=${encodeURIComponent("Free website audit request")}`}
-                        className="font-semibold text-accent underline-offset-4 hover:underline"
+                        className="font-semibold text-accent underline decoration-accent/50 underline-offset-4 hover:decoration-accent"
                       >
                         {site.email}
                       </a>
@@ -369,6 +370,20 @@ export default function ContactForm() {
                   <p className="mt-3 text-center text-[12px] leading-relaxed text-faint">
                     No commitment and no obligation — just an honest read, whether
                     you have a website or not.
+                  </p>
+                  {/* Consent sits next to the button it applies to. A Next Link, not
+                      a raw anchor: this is a client component, and a plain <a> would
+                      hard-reload the page and lose a half-filled form. min-h-11 keeps
+                      the tap target reachable. */}
+                  <p className="mt-1.5 text-center text-[12px] leading-relaxed text-faint">
+                    By submitting, you agree to the{" "}
+                    <Link
+                      href="/privacy"
+                      className="inline-flex min-h-11 items-center text-accent underline decoration-accent/50 underline-offset-4 hover:decoration-accent"
+                    >
+                      Privacy Policy
+                    </Link>
+                    .
                   </p>
                 </div>
               </form>

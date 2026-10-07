@@ -3,8 +3,9 @@
    Everything editable lives here. Add / remove projects, services, etc.
    without touching components.
 
-   Nothing in here is invented: copy left blank (PRICE_FROM) stays blank rather
-   than being filled with a claim. The site domain comes from NEXT_PUBLIC_SITE_URL.
+   Nothing in here is invented: the prices, care plans and FAQ answers are the
+   only published figures and come from Ismail directly. The site domain comes
+   from NEXT_PUBLIC_SITE_URL.
    ----------------------------------------------------------------------- */
 
 /* Site domain — ONE source of truth, one env var.
@@ -39,7 +40,7 @@ export const site = {
     "I build new websites and fix slow, outdated ones for local businesses.",
   supportingMessage:
     "You get a fast, mobile-friendly website that makes your business look credible — or the one you already have properly fixed.",
-  email: "ismailweb.studio@gmail.com",
+  email: "ismail.webstudio@gmail.com",
 
   /* No phone, WhatsApp or location is collected or shown anywhere on this site. */
   /* Free website audit — the main call to action across the site. */
@@ -57,7 +58,8 @@ export const site = {
     "Easy to use",
   ],
 
-  /* Replaces the pricing section. No prices are published. */
+  /* The headline of the band that closes the services section. It hands off to
+     the pricing and care plan sections, which follow it on the page. */
   quoteOffer: "Not sure what your website needs? Start with a free audit.",
 
   /* The founder note in the about section — three lines, no photo, and nothing
@@ -98,6 +100,8 @@ export const nav = [
   { label: "Projects", href: "/projects" },
   { label: "Free Audit", href: "/#audit" },
   { label: "Services", href: "/#services" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "FAQ", href: "/#faq" },
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
@@ -677,7 +681,150 @@ export const clientTypes = [
   "Local Shops & Retail",
 ];
 
-/* Optional. While this is empty nothing is published anywhere; set it to a
-   figure like "£350" and one "Starting from" line appears under the services.
-   TODO(Ismail): fill in only when you actually have a published floor price. */
-export const PRICE_FROM = "";
+/* -------------------------------------------------------------------------
+   FOUNDING CLIENT PRICING — Ismail's own rates, confirmed 2026-10-07.
+   These are the only prices published anywhere on the site. There is
+   deliberately no higher "standard" price shown beside them, struck through
+   or otherwise: no anchor price, no savings figure, in this file, in the
+   components, or in any meta description.
+   ----------------------------------------------------------------------- */
+export type Package = {
+  name: string;
+  price: string;
+  /** The recommended tier, rendered with the accent border and "Most popular" badge. */
+  featured?: boolean;
+  features: string[];
+};
+
+export const pricingPackages: Package[] = [
+  {
+    name: "Starter",
+    price: "$500",
+    features: [
+      "3 pages",
+      "Mobile-first design",
+      "Contact form",
+      "Click-to-call button",
+      "Basic local SEO setup",
+    ],
+  },
+  {
+    name: "Business",
+    price: "$900",
+    featured: true,
+    features: [
+      "5–8 pages",
+      "Service-area pages",
+      "Reviews section",
+      "Google Business Profile link-up",
+      "Speed optimization",
+      "Analytics setup",
+    ],
+  },
+  {
+    name: "Premium",
+    price: "$1,500",
+    features: [
+      "Everything in Business",
+      "Up to 12 pages",
+      "Quote-request form with email alerts",
+      "Advanced conversion layout",
+    ],
+  },
+];
+
+/* One source for the package terms the pricing band publishes. */
+export const packageTerms = {
+  included: "Every package includes 2 rounds of revisions and 30 days of free bug fixes.",
+  payment: "50% to start, 50% before launch, by bank transfer or Payoneer.",
+  approval: "Nothing goes live until you approve it.",
+};
+
+export type CarePlan = {
+  name: string;
+  price: string;
+  /** Rendered after the price, e.g. "/mo". */
+  period?: string;
+  featured?: boolean;
+  features: string[];
+};
+
+export const carePlans: CarePlan[] = [
+  {
+    name: "Essential",
+    price: "$59",
+    period: "/mo",
+    features: [
+      "Hosting",
+      "SSL",
+      "Uptime monitoring",
+      "Security checks",
+      "Up to 30 minutes of edits",
+    ],
+  },
+  {
+    name: "Growth",
+    price: "$99",
+    period: "/mo",
+    featured: true,
+    features: ["Everything in Essential", "Up to 1 hour of edits", "Speed check", "Monthly report"],
+  },
+  {
+    name: "Premium",
+    price: "$149",
+    period: "/mo",
+    features: ["Everything in Growth", "Up to 2 hours of edits", "Priority support"],
+  },
+];
+
+/* The questions a local business owner actually asks, answered with what Ismail
+   confirmed on 2026-10-07 and with what this site's code actually does. The
+   FAQPage JSON-LD in src/components/Faq.tsx is generated from this array, so the
+   markup can never claim an answer the page doesn't show. */
+export const faqItems = [
+  {
+    q: "How long does a website take?",
+    a: "Usually 1–2 weeks once I have your logo, photos and business details.",
+  },
+  {
+    q: "Who owns the website and domain?",
+    a: "You own your domain, registered in your name, and the final site once it's paid in full. I keep my own tools and templates. If you leave the care plan, I hand over the site files.",
+  },
+  {
+    q: "How does payment work?",
+    a: "50% to start, 50% before launch. I send an invoice and you pay securely through Payoneer by bank transfer or card. Nothing goes live until final payment is received.",
+  },
+  {
+    q: "Do you handle hosting and the domain?",
+    a: "Hosting is covered by the care plans below the packages — that is what the monthly fee pays for, so the website stays online and monitored without you having to think about it. If you already have a domain, it stays where it is and the website simply points to it.",
+  },
+  {
+    q: "Will this get me to number one on Google?",
+    a: "No. A specific ranking can't be promised by anyone, and I won't quote you a figure I can't stand behind. What is in my control is a fast, clear, mobile-first website with proper structure, real content and obvious ways to contact you — which is what makes search listings and enquiries possible in the first place.",
+  },
+  {
+    q: "How many changes can I ask for?",
+    a: "Two rounds of revisions, plus 30 days of free bug fixes. It works best if you gather the full list of what you'd like changed before each round rather than sending it piecemeal.",
+  },
+  {
+    q: "I already have a website. Can you fix it instead of rebuilding?",
+    a: "Yes. Fixing an existing site is its own service: slow loading, broken mobile layout, forms that don't send, outdated design and basic on-page work. Send me the link and the free audit tells you what's wrong before you commit to anything.",
+  },
+  {
+    q: "What do you need from me to start?",
+    a: "Your logo if you have one, your photos if you have them, a list of the services you offer, your contact details, the areas you cover, and any reviews you're able to share. Missing pieces aren't a blocker — the audit shows what's needed.",
+  },
+  {
+    q: "Can I edit the site myself?",
+    a: "Yes. I can show you how to make small edits and provide a simple step-by-step guide. Or I handle small changes under your care plan.",
+  },
+  {
+    q: "Do you build online shops or larger sites?",
+    a: "Yes. These are quoted individually after a short brief.",
+  },
+  {
+    q: "Do I have to take a care plan?",
+    a: "No. The care plans are optional — take one only if you want edits, monitoring and hosting handled for you rather than asked for each time.",
+  },
+];
+

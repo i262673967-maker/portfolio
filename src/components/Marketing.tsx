@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
 import {
-  PRICE_FROM,
   clientTypes,
   cta,
   finalCta,
@@ -288,30 +287,23 @@ export function Services() {
           </div>
         </Reveal>
 
-        {/* Replaces the old pricing section — no published prices unless
-            PRICE_FROM is filled in, and then only a single starting line. */}
+        {/* Founding client pricing is the section right below this one, so this
+            band only hands off to the action that decides which package fits. */}
         <Reveal delay={0.08}>
           <div className="mt-6 rounded-2xl border border-line bg-surface p-8 text-center sm:p-12">
             <h3 className="font-display text-2xl font-semibold tracking-tight text-offwhite sm:text-3xl">
               {site.quoteOffer}
             </h3>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-              Every business needs something different, so every quote is scoped
-              with you rather than picked off a price list.
+              Not sure which package fits?
             </p>
-            {PRICE_FROM.trim() !== "" && (
-              <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.18em] text-faint">
-                Starting from {PRICE_FROM.trim()}
-              </p>
-            )}
-            {/* The audit is the section right below this one, so the band hands
-                off to it with a plain text link rather than a second filled
-                button competing with the hero CTA. */}
+            {/* A plain text link rather than a second filled button competing
+                with the hero CTA. */}
             <Link
-              href="/#audit"
+              href="/#contact"
               className="group mt-5 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
             >
-              Start with the free audit
+              Start with a free audit
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>

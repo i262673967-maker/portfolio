@@ -4,8 +4,26 @@ import { ArrowRight, Mail } from "lucide-react";
 import { cta, site } from "@/lib/data";
 
 const cols = [
-  { title: "Navigate", links: [["Projects", "/projects"], ["Free Audit", "/#audit"], ["Services", "/#services"], ["Process", "/#process"]] },
-  { title: "Studio", links: [["About", "/#about"], ["Contact", "/#contact"], [site.auditTitle, "/#audit"]] },
+  {
+    title: "Navigate",
+    links: [
+      ["Projects", "/projects"],
+      ["Free Audit", "/#audit"],
+      ["Services", "/#services"],
+      ["Pricing", "/#pricing"],
+      ["FAQ", "/#faq"],
+      ["Process", "/#process"],
+    ],
+  },
+  {
+    title: "Studio",
+    links: [
+      ["About", "/#about"],
+      ["Contact", "/#contact"],
+      [site.auditTitle, "/#audit"],
+      ["Privacy Policy", "/privacy"],
+    ],
+  },
 ];
 
 export default function Footer() {

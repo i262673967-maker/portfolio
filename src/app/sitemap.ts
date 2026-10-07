@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: absoluteUrl("/"), lastModified },
     { url: absoluteUrl("/projects"), lastModified },
+    { url: absoluteUrl("/privacy"), lastModified },
     ...projects.map((p) => ({ url: absoluteUrl(`/work/${p.slug}`), lastModified })),
   ];
 }

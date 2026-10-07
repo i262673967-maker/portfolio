@@ -36,6 +36,23 @@ function normaliseWebsite(raw: string): string | null {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/* A field's own label, so the summary banner can name the field instead of
+   pointing vaguely at "the highlighted field". */
+const FIELD_LABEL: Record<keyof FieldErrors, string> = {
+  website: "Website URL",
+  email: "Email",
+};
+
+/* focus() on its own leaves the field at the bottom edge of a phone screen and
+   pushes the message underneath it off-screen, so the visitor is told a field is
+   wrong with no way to read why. Scrolling to the middle keeps the message visible. */
+function revealField(el: HTMLElement | null) {
+  if (!el) return;
+  el.focus({ preventScroll: true });
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+}
+
 export default function ContactForm() {
   const uid = useId();
   const fid = (k: string) => `${uid}-${k}`;
@@ -73,7 +90,8 @@ export default function ContactForm() {
     if (status === "sent") sentRef.current?.focus();
   }, [status]);
 
-  const invalidCount = Object.values(fieldErrors).filter(Boolean).length;
+  const invalidFields = (Object.keys(fieldErrors) as (keyof FieldErrors)[]).filter((k) => fieldErrors[k]);
+  const invalidCount = invalidFields.length;
 
   /* Only two things are ever required: where to look, and where to reply.
      "No website yet" is a valid answer — the note carries the business instead. */
@@ -91,11 +109,11 @@ export default function ContactForm() {
     const { website, errors } = validate();
     setFieldErrors(errors);
     if (errors.website) {
-      websiteRef.current?.focus();
+      revealField(websiteRef.current);
       return;
     }
     if (errors.email) {
-      emailRef.current?.focus();
+      revealField(emailRef.current);
       return;
     }
     if (keyMissing) {
@@ -122,15 +140,26 @@ export default function ContactForm() {
           botcheck: form.botcheck,
         }),
       });
-      const data = await res.json();
-      if (data.success) {
+      /* A reply that isn't JSON means something between here and the service answered
+         instead of the service (a captive portal or a blocked request), so say that
+         rather than swallowing it: every branch below names its own reason. */
+      const data = (await res.json().catch(() => null)) as { success?: boolean; message?: string } | null;
+      if (data?.success) {
         setStatus("sent");
-      } else {
-        throw new Error(data.message || "Something went wrong.");
+        return;
       }
+      const reason = data?.message || `HTTP ${res.status}`;
+      setStatus("error");
+      setErrorMsg(
+        data
+          ? `Something went wrong sending your request (${reason}). Please email me directly instead.`
+          : `The form service returned a reply I couldn't read (${reason}). Please email me directly instead.`
+      );
     } catch {
       setStatus("error");
-      setErrorMsg("Something went wrong sending your request. Please email me directly instead.");
+      setErrorMsg(
+        "Your browser couldn't reach the form service. Please check your connection, or email me directly instead."
+      );
     }
   }
 
@@ -209,8 +238,8 @@ export default function ContactForm() {
                     className="rounded-xl border border-warm/40 bg-warm/[0.08] px-4 py-3 text-[13px] leading-relaxed text-offwhite/90"
                   >
                     Please check the{" "}
-                    {invalidCount === 1 ? "highlighted field" : `${invalidCount} highlighted fields`} below,
-                    then send it again.
+                    {invalidFields.map((k) => FIELD_LABEL[k]).join(" and ")}{" "}
+                    {invalidCount === 1 ? "field" : "fields"} below, then send it again.
                   </p>
                 )}
 

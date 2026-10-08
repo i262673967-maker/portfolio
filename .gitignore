@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# local status notes and one-off harness files
+/scratch/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

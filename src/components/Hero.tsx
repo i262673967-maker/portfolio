@@ -81,18 +81,20 @@ export default function Hero() {
           </div>
 
           <div
-            className="relative mx-auto w-full max-w-[560px] reveal"
+            className="peek-host relative mx-auto w-full max-w-[560px] reveal"
             style={staged(0.2, 24)}
             /* Decoration, not a real site to explore: the three frames illustrate what the
                work looks like, and their links already exist on the pages they point to.
-               `inert` keeps them out of the tab order as well as the accessibility tree —
-               aria-hidden alone would leave focusable controls hidden from a screen reader. */
+               `inert` belongs to the inner block below rather than here, because an inert
+               element is never hit-testable and the hover drift has to be triggered from
+               outside it. `aria-hidden` on this wrapper keeps the whole subtree out of the
+               accessibility tree either way — aria-hidden alone would leave focusable
+               controls hidden from a screen reader. */
             aria-hidden="true"
-            inert
           >
-            <div className="relative pb-[6%]">
+            <div className="relative pb-[6%]" inert>
               <div className="relative z-10">
-                <DeviceMockup device="desktop">
+                <DeviceMockup device="desktop" hoverPeek>
                   <LazyDemo demo="renovation" project={byDemo("renovation")} />
                 </DeviceMockup>
               </div>
@@ -101,7 +103,7 @@ export default function Hero() {
                 className="absolute -bottom-10 -right-4 z-20 hidden w-[46%] sm:block lg:-right-10 reveal"
                 style={staged(0.5, 20)}
               >
-                <DeviceMockup device="tablet" chrome={false}>
+                <DeviceMockup device="tablet" chrome={false} hoverPeek>
                   <LazyDemo demo="ecommerce" project={byDemo("ecommerce")} />
                 </DeviceMockup>
               </div>
@@ -110,7 +112,7 @@ export default function Hero() {
                 className="absolute -bottom-14 -left-2 z-30 hidden w-[30%] sm:block lg:-left-8 reveal"
                 style={staged(0.62, 20)}
               >
-                <DeviceMockup device="mobile" chrome={false}>
+                <DeviceMockup device="mobile" chrome={false} hoverPeek>
                   <LazyDemo demo="restaurant" project={byDemo("restaurant")} />
                 </DeviceMockup>
               </div>

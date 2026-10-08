@@ -17,10 +17,13 @@ export default function DeviceMockup({
   device,
   children,
   chrome = true,
+  hoverPeek = false,
 }: {
   device: Device;
   children: React.ReactNode;
   chrome?: boolean;
+  /** Decorative frames get a hover drift; interactive ones already scroll. */
+  hoverPeek?: boolean;
 }) {
   const spec = SPEC[device];
   const screenRef = useRef<HTMLDivElement>(null);
@@ -81,7 +84,18 @@ export default function DeviceMockup({
                   { width: "100%", height: "100%" }
             }
           >
-            {children}
+            {hoverPeek ? (
+              /* Shifted by a share of the frame's own visible height, so one
+                 gesture means the same distance on every device width. */
+              <div
+                className="demo-peek"
+                style={{ "--demo-peek": `${Math.round(innerHeight * 0.55)}px` } as React.CSSProperties}
+              >
+                {children}
+              </div>
+            ) : (
+              children
+            )}
           </div>
         </div>
       </div>

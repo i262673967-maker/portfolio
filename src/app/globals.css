@@ -118,6 +118,21 @@ body {
   &::-webkit-scrollbar { display: none; }
 }
 
+/* The hero frames are decoration, so their subtree is inert and an inert element
+   is never hit-testable — :hover would never fire on it. The pointer is therefore
+   caught on `.peek-host` outside the inert subtree, and the page inside drifts up
+   by just over half a frame to say there is more below it. Mouse-capable devices
+   only, and never when the visitor has asked for reduced motion. */
+.demo-peek {
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .peek-host:hover .demo-peek {
+    transform: translateY(calc(var(--demo-peek, 0px) * -1));
+  }
+}
+
 /* Entrance animation with no JavaScript dependency: the element's resting
    state is fully visible and the animation only plays on top of it, so crawlers,
    disabled JS and old engines that never run the bundle still show all content. */

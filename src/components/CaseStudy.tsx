@@ -60,7 +60,7 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
         <div className="mt-8">
           <div key={device} className="reveal">
             <DeviceMockup device={device}>
-              <LazyDemo demo={project.demo} project={project} />
+              <LazyDemo eager demo={project.demo} project={project} />
             </DeviceMockup>
           </div>
         </div>

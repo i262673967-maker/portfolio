@@ -13,12 +13,25 @@ import type { DemoKey, Project } from "@/lib/data";
 
    `armed` is module-level because switching project or device re-keys the frame
    and remounts this component. Once the visitor has looked at one preview, every
-   later mount starts already showing the site instead of flashing the skeleton. */
+   later mount starts already showing the site instead of flashing the skeleton.
+
+   `eager` skips the wait entirely. The preview in the work section and on a case
+   study is the thing the visitor came to look at, so a skeleton there is a flash
+   they would actually see; the hero frames are decoration, and they keep the
+   deferred mount. */
 let armed = false;
 
-export default function LazyDemo({ demo, project }: { demo: DemoKey; project: Project }) {
+export default function LazyDemo({
+  demo,
+  project,
+  eager = false,
+}: {
+  demo: DemoKey;
+  project: Project;
+  eager?: boolean;
+}) {
   const host = useRef<HTMLDivElement>(null);
-  const [show, setShow] = useState(armed);
+  const [show, setShow] = useState(armed || eager);
 
   useEffect(() => {
     if (show) return;

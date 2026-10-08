@@ -98,7 +98,7 @@ export default function Showcase() {
           </span>
           <div key={`${project.slug}-${device}`} className="reveal">
             <DeviceMockup device={device}>
-              <LazyDemo demo={project.demo} project={project} />
+              <LazyDemo eager demo={project.demo} project={project} />
             </DeviceMockup>
           </div>
         </div>

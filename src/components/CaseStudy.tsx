@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Monitor, Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
@@ -51,7 +50,10 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
                 onClick={() => setDevice(id)}
                 className={`relative inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors ${device === id ? "text-ink" : "text-muted hover:text-offwhite"}`}
               >
-                {device === id && <motion.span layoutId="cs-pill" className="absolute inset-0 rounded-full bg-accent" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute inset-0 rounded-full bg-accent transition-opacity duration-200 ${device === id ? "opacity-100" : "opacity-0"}`}
+                />
                 <Icon className="relative z-10 h-4 w-4" /><span className="relative z-10">{label}</span>
               </button>
             ))}

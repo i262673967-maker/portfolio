@@ -22,9 +22,9 @@ const nextConfig: NextConfig = {
 
   /* Baseline response headers on every route, including the prerendered pages
      and /_next assets. Deliberately minimal: the CSP carries frame-ancestors
-     only, so nothing restricts the inline styles framer-motion and the device
-     frames rely on, and the concept demos (which render inside this document,
-     never in an iframe) are untouched. */
+     only, so nothing restricts the inline styles the device frames and the
+     reveal animations rely on, and the concept demos (which render inside this
+     document, never in an iframe) are untouched. */
   async headers() {
     return [
       {

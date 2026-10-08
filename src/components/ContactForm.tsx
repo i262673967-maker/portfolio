@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Send, Mail, Search, CheckCircle2, AlertCircle } from "lucide-react";
 import { Reveal, SectionHeading } from "./ui";
 import { cta, formEndpoint, site, web3formsAccessKey } from "@/lib/data";
@@ -205,13 +204,11 @@ export default function ContactForm() {
         <Reveal delay={0.08}>
           <div className="relative rounded-2xl border border-line bg-surface p-6 sm:p-8">
             {status === "sent" ? (
-              <motion.div
+              <div
                 ref={sentRef}
-                initial={{ opacity: 0, scale: 0.97 }}
-                animate={{ opacity: 1, scale: 1 }}
                 role="status"
                 tabIndex={-1}
-                className="flex min-h-[360px] flex-col items-center justify-center text-center"
+                className="pop-in flex min-h-[360px] flex-col items-center justify-center text-center"
               >
                 <CheckCircle2 className="h-12 w-12 text-accent" />
                 <h3 className="mt-4 font-display text-xl font-semibold">Audit request received</h3>
@@ -233,7 +230,7 @@ export default function ContactForm() {
                 >
                   Request another audit
                 </button>
-              </motion.div>
+              </div>
             ) : (
               <form onSubmit={onSubmit} noValidate className="grid gap-4">
                 {invalidCount > 0 && (
@@ -371,11 +368,9 @@ export default function ContactForm() {
                 />
 
                 {status === "error" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <div
                     role="alert"
-                    className="flex items-start gap-2.5 rounded-xl border border-warm/40 bg-warm/[0.08] p-4"
+                    className="nudge-in flex items-start gap-2.5 rounded-xl border border-warm/40 bg-warm/[0.08] p-4"
                   >
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warm" />
                     <p className="text-[13px] leading-relaxed text-offwhite/90">
@@ -388,7 +383,7 @@ export default function ContactForm() {
                       </a>
                       .
                     </p>
-                  </motion.div>
+                  </div>
                 )}
 
                 <div>

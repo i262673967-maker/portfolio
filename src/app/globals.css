@@ -171,6 +171,79 @@ body {
   }
 }
 
+/* Mobile menu, without an animation library: the panel stays mounted so it
+   closes as smoothly as it opens, and `grid-template-rows: 0fr -> 1fr` animates
+   an unknown height. `visibility` transitions in steps (delayed on the way out)
+   so the closed list leaves the tab order and the accessibility tree without
+   vanishing mid-animation, and `inert` says the same thing to anything that
+   ignores visibility. The list staggers in only while the menu is open, so the
+   animation replays on every open instead of running once at page load. */
+.menu-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.25s ease-in-out, visibility 0s linear 0.25s;
+}
+
+body[data-nav-open="true"] .menu-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.25s ease-in-out, visibility 0s;
+}
+
+.menu-panel > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+body[data-nav-open="true"] .menu-item {
+  animation: menu-item-in 0.25s ease-out both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+/* Two entrances that used to come from a motion library: the confirmation that
+   replaces the form after a send, and the failure notice above the button. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes nudge-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility pop-in {
+  animation: pop-in 0.22s ease-out both;
+}
+
+@utility nudge-in {
+  animation: nudge-in 0.2s ease-out both;
+}
+
 /* Anchor targets clear the fixed header when jumped to from the nav. */
 section[id],
 footer[id] {

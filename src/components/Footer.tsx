@@ -16,11 +16,12 @@ const cols = [
     ],
   },
   {
+    /* The audit link lives in Navigate, which mirrors the navbar. Pointing here
+       instead of repeating it above. */
     title: "Studio",
     links: [
       ["About", "/#about"],
       ["Contact", "/#contact"],
-      [site.auditTitle, "/#audit"],
       ["Privacy Policy", "/privacy"],
     ],
   },

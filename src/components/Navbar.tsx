@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { cta, nav, site } from "@/lib/data";
 
@@ -109,46 +108,42 @@ export default function Navbar() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-line bg-base/95 backdrop-blur-xl lg:hidden"
-          >
-            <nav id="mobile-menu" aria-label="Site sections" className="container-shell flex flex-col gap-1 py-4">
-              {nav.map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.04 * i }}
-                >
-                  <Link
-                    href={item.href}
-                    aria-current={isCurrent(item.href) ? "page" : undefined}
-                    onClick={() => setOpen(false)}
-                    className={`block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-white/5 ${
-                      isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </motion.div>
-              ))}
+      {/* Always mounted and animated by CSS (see .menu-panel in globals.css): the
+          open state already lives on body[data-nav-open], so the panel reads it
+          from there and no animation library is needed. Closed means visibility
+          hidden plus inert, which takes the duplicate links out of the tab order
+          and the accessibility tree without hiding them mid-transition. */}
+      <div
+        className="menu-panel border-t border-line bg-base/95 backdrop-blur-xl lg:hidden"
+        inert={!open}
+      >
+        <div>
+          <nav id="mobile-menu" aria-label="Site sections" className="container-shell flex flex-col gap-1 py-4">
+            {nav.map((item, i) => (
               <Link
-                href="/#contact"
+                key={item.label}
+                href={item.href}
+                aria-current={isCurrent(item.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
-                className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-2"
+                style={{ "--i": i } as React.CSSProperties}
+                className={`menu-item block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-white/5 ${
+                  isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
+                }`}
               >
-                {cta.primary} <ArrowRight className="h-4 w-4" />
+                {item.label}
               </Link>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            ))}
+            <Link
+              href="/#contact"
+              onClick={() => setOpen(false)}
+              style={{ "--i": nav.length } as React.CSSProperties}
+              className="menu-item mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-2"
+            >
+              {cta.primary} <ArrowRight className="h-4 w-4" />
+            </Link>
+          </nav>
+        </div>
+      </div>
     </header>
   );
 }

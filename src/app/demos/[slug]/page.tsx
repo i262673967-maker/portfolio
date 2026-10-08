@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Search } from "lucide-react";
 import { Demo } from "@/demos";
-import { cta, projects } from "@/lib/data";
+import { pageMeta } from "@/lib/metadata";
+import { cta, homeDescription, projects, site } from "@/lib/data";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -12,13 +13,17 @@ export function generateStaticParams() {
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await props.params;
   const project = projects.find((p) => p.slug === slug);
+  const name = project?.name ?? site.brand;
   return {
-    title: project ? `${project.name} — Concept Demo` : "Concept Demo",
-    description: project?.summary,
+    ...pageMeta({
+      tab: project ? `${project.name} — Concept Demo` : "Concept Demo",
+      share: `${name} — Concept Demo · ${site.brand}`,
+      description: project?.summary ?? homeDescription,
+      path: `/demos/${slug}`,
+    }),
     /* The full-screen preview is a tool, not a page a prospect should land on
        from search — the /work case study is that. Crawlers still follow its links. */
     robots: { index: false, follow: true },
-    alternates: { canonical: `/demos/${slug}` },
   };
 }
 

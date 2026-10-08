@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Monitor, Tablet, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
@@ -75,13 +74,15 @@ export default function Showcase() {
                       device === d.id ? "text-ink" : "text-muted hover:text-offwhite"
                     }`}
                   >
-                    {device === d.id && (
-                      <motion.span
-                        layoutId="device-pill"
-                        className="absolute inset-0 rounded-full bg-accent"
-                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                      />
-                    )}
+                    {/* Always mounted, faded by opacity: the highlight leaves the
+                        old button as it enters the new one, which is what a
+                        shared-layout pill looked like, without the library. */}
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute inset-0 rounded-full bg-accent transition-opacity duration-200 ${
+                        device === d.id ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
                     <Icon className="relative z-10 h-4 w-4" />
                     <span className="relative z-10 hidden sm:inline">{d.label}</span>
                   </button>

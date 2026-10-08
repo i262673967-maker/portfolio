@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { MotionProvider } from "@/components/ui";
 import { brandPitch, homeDescription, site, siteUrl } from "@/lib/data";
 
 const sora = Sora({ variable: "--font-sora", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -49,7 +48,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
       className={`${sora.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-base text-offwhite">
-        <MotionProvider>{props.children}</MotionProvider>
+        {props.children}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -19,7 +19,7 @@ export default function ProjectCard({
     >
       {/* The card previews a website that contains its own links, so the card
           itself can't be an <a>. A stretched overlay keeps it clickable. */}
-      <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)]">
+      <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_24px_60px_-30px_rgba(23,26,31,0.18)]">
         <div className="relative overflow-hidden border-b border-line bg-base-2 p-3">
           <span className="absolute left-4 top-4 z-20 rounded-full border border-line-strong bg-base/80 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-accent backdrop-blur">
             Concept Project
@@ -55,7 +55,7 @@ export default function ProjectCard({
               <p className="mt-2 text-[13px] leading-relaxed text-muted">{project.summary}</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {project.designDirection.slice(0, 3).map((d) => (
-                  <span key={d} className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-muted">
+                  <span key={d} className="rounded-full bg-base-2 px-2.5 py-1 text-[11px] text-muted">
                     {d}
                   </span>
                 ))}

@@ -20,13 +20,13 @@ const staged = (delay: number, y = 14) =>
 export default function Hero() {
   return (
     <section id="home" className="studio-bg relative overflow-hidden pt-28 pb-16 sm:pt-32 lg:pt-40 lg:pb-24">
-      <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,#171a1f08_1px,transparent_1px),linear-gradient(to_bottom,#171a1f08_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
 
       <div className="container-shell relative">
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
           <div>
             <p className="eyebrow">
-              Websites for Local Businesses
+              Independent Web Design for Local Trades
             </p>
 
             <h1
@@ -35,9 +35,9 @@ export default function Hero() {
                  steps from 640px up are untouched. */
               className="heading-display mt-5 text-balance text-[clamp(1.875rem,1.5rem_+_1.1vw,2.15rem)] leading-[1.04] sm:text-5xl lg:text-[3.4rem]"
             >
-              Your Website Might Be{" "}
+              Websites Built to Win{" "}
               <span className="relative inline-block text-accent">
-                Costing You Customers.
+                The Next Local Job.
                 <span
                   className="absolute -bottom-1 left-0 h-[3px] w-full origin-left rounded-full bg-gradient-to-r from-accent to-warm"
                   style={{ animation: "underline-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both" }}
@@ -46,9 +46,7 @@ export default function Hero() {
             </h1>
 
             <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              Fast, mobile-friendly websites for plumbers, electricians, roofers,
-              HVAC, renovators, contractors and other local trades — built to make
-              it easier for visitors to call or enquire.
+              Thoughtful, mobile-first websites for plumbers, electricians, roofers and home-service businesses. Clear services, stronger first impressions, and an easier path from local search to a call or quote request.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
@@ -62,13 +60,13 @@ export default function Hero() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/#contact"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)]"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(181,71,36,0.22)]"
               >
                 <Search className="h-4 w-4" /> {cta.primary}
               </Link>
               <Link
                 href="/#work"
-                className="group inline-flex items-center justify-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-[15px] font-semibold text-offwhite transition-colors hover:bg-white/5"
+                className="group inline-flex items-center justify-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-[15px] font-semibold text-offwhite transition-colors hover:bg-ink/5"
               >
                 {cta.secondary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -104,7 +102,7 @@ export default function Hero() {
                 style={staged(0.5, 20)}
               >
                 <DeviceMockup device="tablet" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="ecommerce" project={byDemo("ecommerce")} />
+                  <LazyDemo idle demo="electrician" project={byDemo("electrician")} />
                 </DeviceMockup>
               </div>
 
@@ -113,7 +111,7 @@ export default function Hero() {
                 style={staged(0.62, 20)}
               >
                 <DeviceMockup device="mobile" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="restaurant" project={byDemo("restaurant")} />
+                  <LazyDemo idle demo="plumber" project={byDemo("plumber")} />
                 </DeviceMockup>
               </div>
             </div>

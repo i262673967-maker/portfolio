@@ -2,13 +2,9 @@ import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import {
   About,
-  BeforeAfter,
   FinalCta,
-  Problems,
   Process,
   Services,
-  TrustStrip,
-  WhyWork,
 } from "@/components/Marketing";
 import FreeAudit from "@/components/FreeAudit";
 import Showcase from "@/components/Showcase";
@@ -32,17 +28,13 @@ export default function HomePage() {
   return (
     <div>
       <Hero />
-      <TrustStrip />
-      <Problems />
-      <FreeAudit />
       <Showcase />
-      <BeforeAfter />
+      <FreeAudit />
       <Services />
+      <Process />
       <Pricing />
       <CarePlans />
       <Faq />
-      <Process />
-      <WhyWork />
       <About />
       <FinalCta />
       <ContactForm />

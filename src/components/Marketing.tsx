@@ -247,14 +247,14 @@ export function Services() {
                   {featured && (
                     <>
                       <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-accent/10 blur-3xl" />
-                      <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-ink">
+                      <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-white">
                         Start Here
                       </span>
                     </>
                   )}
                   <span
                     className={`grid h-10 w-10 place-items-center rounded-lg ${
-                      featured ? "bg-accent text-ink" : "bg-white/5 text-accent"
+                      featured ? "bg-accent text-ink" : "bg-base-2 text-accent"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -495,7 +495,7 @@ export function About() {
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {site.customerQualities.map((q) => (
-                <span key={q} className="rounded-full bg-white/5 px-3 py-1.5 text-[12px] text-muted">
+                <span key={q} className="rounded-full bg-base-2 px-3 py-1.5 text-[12px] text-muted">
                   {q}
                 </span>
               ))}
@@ -541,7 +541,7 @@ export function FinalCta() {
               </p>
               <Link
                 href="/#contact"
-                className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-offwhite"
+                className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-offwhite"
               >
                 {cta.primary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

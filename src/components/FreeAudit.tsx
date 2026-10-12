@@ -102,7 +102,7 @@ export default function FreeAudit() {
             </div>
             <Link
               href="/#contact"
-              className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5"
+              className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5"
             >
               {cta.primary}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

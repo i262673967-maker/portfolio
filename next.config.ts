@@ -1,19 +1,9 @@
 import path from "node:path";
 import type { NextConfig } from "next";
 
-/* The site's canonical URLs, Open Graph tags, sitemap and robots are all built
-   from NEXT_PUBLIC_SITE_URL, and a placeholder domain is worse than no build:
-   crawlers would index URLs that do not exist. So the build fails here, before
-   anything is compiled, with the fix spelled out.
-   Local: put it in .env.local. Vercel: Project Settings → Environment Variables
-   (Production + Preview), then redeploy. */
-if (!process.env.NEXT_PUBLIC_SITE_URL) {
-  throw new Error(
-    "NEXT_PUBLIC_SITE_URL is missing — build aborted so no placeholder domain can ship.\n" +
-      '  .env.local            → NEXT_PUBLIC_SITE_URL="https://your-production-domain"\n' +
-      "  Vercel                → Project Settings → Environment Variables → Production",
-  );
-}
+/* Canonical URLs use NEXT_PUBLIC_SITE_URL when configured. The site data has
+   the actual production-domain fallback, so branch preview builds can succeed
+   even when Vercel's Preview environment does not define the variable. */
 
 const nextConfig: NextConfig = {
   /* A stray package-lock.json in the user home directory makes Turbopack infer

@@ -82,6 +82,7 @@ export default function LocalServiceDemo({ project, preview }: DemoProps) {
                 from={img.from}
                 to={img.to}
                 label={img.label}
+                image={img.image}
               />
             ))}
           </div>
@@ -121,7 +122,7 @@ export default function LocalServiceDemo({ project, preview }: DemoProps) {
         <div className="mt-6 grid gap-4 @md:grid-cols-2 @5xl:grid-cols-3">
           {gallery.map((g) => (
             <figure key={g.title} className="group">
-              <Swatch className="h-44 w-full @5xl:h-52" from={g.from} to={g.to} />
+              <Swatch className="h-44 w-full @5xl:h-52" from={g.from} to={g.to} label={g.title} image={g.image} />
               <figcaption className="mt-2 text-[13px] text-current/70">{g.title}</figcaption>
             </figure>
           ))}

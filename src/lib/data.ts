@@ -14,7 +14,7 @@
    placeholder into canonicals, Open Graph tags, sitemap or robots.
    Set it in .env.local for local builds and in the Vercel project's
    Environment Variables for production. */
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!.replace(/\/+$/, "");
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://ismailwebstudio.vercel.app").replace(/\/+$/, "");
 
 /* Every absolute URL on this site is derived from siteUrl in one place, so one
    env var updates metadata, Open Graph, canonicals, sitemap and robots at once. */
@@ -35,11 +35,11 @@ export const formEndpoint = "https://api.web3forms.com/submit";
 export const site = {
   brand: "Ismail Web Studio",
   role: "Web Designer & Developer",
-  tagline: "New Websites & Website Fixes for Local Businesses",
+  tagline: "Websites built for the next local job",
   coreMessage:
-    "I build new websites and fix slow, outdated ones for local businesses.",
+    "I design clear, mobile-first websites for local trades that make it easier to win calls and quote requests.",
   supportingMessage:
-    "You get a fast, mobile-friendly website that makes your business look credible — or the one you already have properly fixed.",
+    "From a first website to a much-needed redesign, the goal is simple: help local customers understand your service and contact you without friction.",
   email: "ismail.webstudio@gmail.com",
 
   /* No phone, WhatsApp or location is collected or shown anywhere on this site. */
@@ -90,21 +90,18 @@ export const site = {
 
 /* One brand line, three uses: the homepage tab title, the social-card headline
    and the Open Graph image. Kept as a constant so they cannot drift apart. */
-export const brandPitch = "Modern websites for local businesses";
+export const brandPitch = "Websites built for the next local job";
 
 /* The homepage's meta / Open Graph / Twitter description, verbatim. */
 export const homeDescription =
-  "Modern, mobile-first websites for local businesses, plus a free website audit that shows you what's costing you customers.";
+  "Distinctive, mobile-first websites for plumbers, electricians, roofers and local trades. Get a free website audit before you commit.";
 
 export const nav = [
-  { label: "Projects", href: "/projects" },
-  { label: "Free Audit", href: "/#audit" },
+  { label: "Work", href: "/projects" },
   { label: "Services", href: "/#services" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
 ];
 
 /* One conversion path: a single primary action everywhere it appears. `nav`
@@ -115,7 +112,7 @@ export const cta = {
   secondary: "See My Work",
 };
 
-export const heroPoints = ["Mobile-first", "Fast", "Business-focused"];
+export const heroPoints = ["Built for your trade", "Calls & quote requests", "Mobile-first"];
 
 /* What a free audit looks at. Nothing here promises rankings or revenue. */
 export const auditChecks = [
@@ -169,11 +166,11 @@ export type ServiceDemoContent = {
   ctaPrimary: string;
   ctaSecondary: string;
   stats: { value: string; label: string }[];
-  heroImages: { from: string; to: string; label: string }[];
+  heroImages: { from: string; to: string; label: string; image?: string }[];
   servicesTitle: string;
   services: { title: string; body: string }[];
   galleryTitle: string;
-  gallery: { title: string; from: string; to: string }[];
+  gallery: { title: string; from: string; to: string; image?: string }[];
   whyTitle: string;
   whyIntro: string;
   whyPoints: string[];
@@ -199,6 +196,7 @@ export type Project = {
   mobileNotes: string[];
   conversionNotes: string[];
   accent: string; // hex used to tint the case study
+  coverImage: string; // licensed Unsplash image used in the project card
   palette: { bg: string; fg: string; accent: string };
   content?: ServiceDemoContent; // required for the local-service demo layout
 };
@@ -211,6 +209,7 @@ export const projects: Project[] = [
     index: "01",
     demo: "renovation",
     name: "Atlas Renovation Co.",
+    coverImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80",
     businessType: "Local Service Business",
     industry: "Home Renovation",
     category: "Service",
@@ -247,9 +246,9 @@ export const projects: Project[] = [
         { value: "One", label: "Dedicated project lead" },
       ],
       heroImages: [
-        { from: "#b98f63", to: "#6f5137", label: "Kitchen remodel" },
-        { from: "#8a9a7b", to: "#4d5a44", label: "Bath" },
-        { from: "#c9b79c", to: "#8a7a63", label: "Extension" },
+        { from: "#b98f63", to: "#6f5137", label: "Kitchen remodel", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1100&q=80" },
+        { from: "#8a9a7b", to: "#4d5a44", label: "Bath", image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800&q=80" },
+        { from: "#c9b79c", to: "#8a7a63", label: "Extension", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" },
       ],
       servicesTitle: "Services built around your home",
       services: [
@@ -260,11 +259,11 @@ export const projects: Project[] = [
         { title: "Interiors", body: "Colour, lighting, and materials that hold together." },
         { title: "Project Management", body: "A single point of contact, on schedule." },
       ],
-      galleryTitle: "Recent Projects",
+      galleryTitle: "Renovation Project Concepts",
       gallery: [
-        { title: "Hillside Kitchen", from: "#b98f63", to: "#5f452e" },
-        { title: "Marble Bath", from: "#9aa7ad", to: "#4c585e" },
-        { title: "Garden Extension", from: "#8a9a7b", to: "#414f39" },
+        { title: "Hillside Kitchen", from: "#b98f63", to: "#5f452e", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" },
+        { title: "Marble Bath", from: "#9aa7ad", to: "#4c585e", image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=900&q=80" },
+        { title: "Garden Extension", from: "#8a9a7b", to: "#414f39", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" },
       ],
       whyTitle: "Why homeowners choose Atlas",
       whyIntro:
@@ -299,6 +298,7 @@ export const projects: Project[] = [
     index: "02",
     demo: "plumber",
     name: "FlowRight Plumbing",
+    coverImage: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1400&q=80",
     businessType: "Local Trade",
     industry: "Plumbing & Heating",
     category: "Trade",
@@ -336,9 +336,9 @@ export const projects: Project[] = [
         { value: "Fixed", label: "Price before we start" },
       ],
       heroImages: [
-        { from: "#a9cfee", to: "#3f7bb5", label: "Boiler service" },
-        { from: "#dbeaf7", to: "#87b3d8", label: "Bathroom" },
-        { from: "#84bade", to: "#2f628f", label: "Leak trace" },
+        { from: "#a9cfee", to: "#3f7bb5", label: "Boiler service", image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1000&q=80" },
+        { from: "#dbeaf7", to: "#87b3d8", label: "Bathroom", image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800&q=80" },
+        { from: "#84bade", to: "#2f628f", label: "Leak trace", image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=800&q=80" },
       ],
       servicesTitle: "What we get called for",
       services: [
@@ -349,11 +349,11 @@ export const projects: Project[] = [
         { title: "Drain Unblocking", body: "Sinks, toilets, and outside drains cleared properly." },
         { title: "Landlord Work", body: "Certification and repairs for rental properties." },
       ],
-      galleryTitle: "Jobs From This Month",
+      galleryTitle: "Example Plumbing Scenarios",
       gallery: [
-        { title: "Boiler swap", from: "#bcd9f0", to: "#4a80b6" },
-        { title: "Bathroom refit", from: "#dcecf8", to: "#7cadd6" },
-        { title: "Leak trace", from: "#95c6e6", to: "#33688f" },
+        { title: "Boiler swap", from: "#bcd9f0", to: "#4a80b6", image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=900&q=80" },
+        { title: "Bathroom refit", from: "#dcecf8", to: "#7cadd6", image: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=900&q=80" },
+        { title: "Leak trace", from: "#95c6e6", to: "#33688f", image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=900&q=80" },
       ],
       whyTitle: "Why locals call FlowRight",
       whyIntro:
@@ -390,6 +390,7 @@ export const projects: Project[] = [
     index: "03",
     demo: "electrician",
     name: "VoltWise Electrical",
+    coverImage: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1400&q=80",
     businessType: "Local Trade",
     industry: "Electrical Services",
     category: "Trade",
@@ -426,9 +427,9 @@ export const projects: Project[] = [
         { value: "Certified", label: "Every job tested" },
       ],
       heroImages: [
-        { from: "#c08a2a", to: "#4a3410", label: "Consumer unit" },
-        { from: "#8f9094", to: "#3b3c40", label: "EV charger" },
-        { from: "#d8b469", to: "#6b5325", label: "Rewire" },
+        { from: "#c08a2a", to: "#4a3410", label: "Consumer unit", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1000&q=80" },
+        { from: "#8f9094", to: "#3b3c40", label: "EV charger", image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80" },
+        { from: "#d8b469", to: "#6b5325", label: "Rewire", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80" },
       ],
       servicesTitle: "Electrical work we do",
       services: [
@@ -439,11 +440,11 @@ export const projects: Project[] = [
         { title: "Lighting", body: "Indoor, outdoor, and smart lighting that's wired to last." },
         { title: "Commercial Testing", body: "Inspection and testing for shops and small offices." },
       ],
-      galleryTitle: "Recent Work",
+      galleryTitle: "Illustrative Electrical Work",
       gallery: [
-        { title: "Consumer unit upgrade", from: "#c08a2a", to: "#4a3410" },
-        { title: "EV charger install", from: "#8f9094", to: "#3b3c40" },
-        { title: "Kitchen rewire", from: "#d8b469", to: "#6b5325" },
+        { title: "Consumer unit upgrade", from: "#c08a2a", to: "#4a3410", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=80" },
+        { title: "EV charger install", from: "#8f9094", to: "#3b3c40", image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=80" },
+        { title: "Kitchen rewire", from: "#d8b469", to: "#6b5325", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=900&q=80" },
       ],
       whyTitle: "Why people choose VoltWise",
       whyIntro:
@@ -478,6 +479,7 @@ export const projects: Project[] = [
     index: "04",
     demo: "restaurant",
     name: "Ember & Oak",
+    coverImage: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80",
     businessType: "Restaurant / Hospitality",
     industry: "Local Dining",
     category: "Hospitality",
@@ -507,6 +509,7 @@ export const projects: Project[] = [
     index: "05",
     demo: "ecommerce",
     name: "Maison Objects",
+    coverImage: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=80",
     businessType: "Local Retail / E-commerce",
     industry: "Premium Lifestyle",
     category: "E-commerce",
@@ -576,9 +579,9 @@ export const services: Service[] = [
     icon: "target",
   },
   {
-    title: "E-commerce Websites",
-    body: "A modern storefront for local shops that want to sell online as well as in person.",
-    icon: "cart",
+    title: "Service-Area Pages",
+    body: "Clear pages for the services you offer and the areas you cover, written for real customers rather than duplicated city keywords.",
+    icon: "target",
   },
 ];
 

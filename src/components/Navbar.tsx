@@ -78,7 +78,7 @@ export default function Navbar() {
               key={item.label}
               href={item.href}
               aria-current={isCurrent(item.href) ? "page" : undefined}
-              className={`rounded-full px-1.5 py-2 text-[13px] transition-colors hover:bg-white/5 hover:text-offwhite xl:px-3.5 ${
+              className={`rounded-full px-1.5 py-2 text-[13px] transition-colors hover:bg-ink/5 hover:text-offwhite xl:px-3.5 ${
                 isCurrent(item.href) ? "text-offwhite" : "text-muted"
               }`}
             >
@@ -90,7 +90,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Link
             href="/#contact"
-            className="group hidden min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
+            className="group hidden min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-accent-2 sm:inline-flex"
           >
             {cta.nav}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -126,7 +126,7 @@ export default function Navbar() {
                 aria-current={isCurrent(item.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 style={{ "--i": i } as React.CSSProperties}
-                className={`menu-item block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-white/5 ${
+                className={`menu-item block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-ink/5 ${
                   isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
                 }`}
               >
@@ -137,7 +137,7 @@ export default function Navbar() {
               href="/#contact"
               onClick={() => setOpen(false)}
               style={{ "--i": nav.length } as React.CSSProperties}
-              className="menu-item mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-2"
+              className="menu-item mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-accent-2"
             >
               {cta.primary} <ArrowRight className="h-4 w-4" />
             </Link>

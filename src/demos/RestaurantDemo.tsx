@@ -29,16 +29,16 @@ const MENU: [dish: string, description: string, price: string][] = [
   ["Burnt honey tart", "Crème fraîche, thyme ice cream", "12"],
 ];
 
-/* Fictional placeholder imagery: gradients with captions, never stock photos. */
-const HERO_IMAGE: [label: string, from: string, to: string] = ["Evening service", "#c98a4f", "#4a2f1c"];
-const GALLERY: [label: string, from: string, to: string][] = [
-  ["Dining room", "#8a5a3b", "#3d2819"],
-  ["Cellar", "#a9713f", "#4a3220"],
-  ["The pass", "#e0a45e", "#6b4423"],
+/* Licensed Unsplash photography gives this fictional concept a believable visual direction. */
+const HERO_IMAGE: [label: string, from: string, to: string, image?: string] = ["Evening service", "#c98a4f", "#4a2f1c", "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80"];
+const GALLERY: [label: string, from: string, to: string, image?: string][] = [
+  ["Dining room", "#8a5a3b", "#3d2819", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=80"],
+  ["Cellar", "#a9713f", "#4a3220", "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"],
+  ["The pass", "#e0a45e", "#6b4423", "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"],
 ];
 
 /* The story section's own frame, so it doesn't repeat a gallery caption. */
-const STORY_IMAGE = { label: "The open kitchen", from: "#a9713f", to: "#3a2418" };
+const STORY_IMAGE = { label: "The open kitchen", from: "#a9713f", to: "#3a2418", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=80" };
 
 const OLIVE = "#7c8460";
 
@@ -157,6 +157,7 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
             className="h-56 w-full rounded-[3px] @3xl:h-72 @5xl:h-[26rem]"
             from={HERO_IMAGE[1]}
             to={HERO_IMAGE[2]}
+            image={HERO_IMAGE[3]}
           />
           <Caption>{HERO_IMAGE[0]}</Caption>
         </figure>
@@ -214,7 +215,7 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
             </div>
           </div>
           <figure>
-            <Swatch className="h-64 w-full rounded-[3px] @5xl:h-[30rem]" from={STORY_IMAGE.from} to={STORY_IMAGE.to} />
+            <Swatch className="h-64 w-full rounded-[3px] @5xl:h-[30rem]" from={STORY_IMAGE.from} to={STORY_IMAGE.to} image={STORY_IMAGE.image} />
             <Caption>{STORY_IMAGE.label}</Caption>
           </figure>
         </div>
@@ -228,15 +229,17 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
               className="h-52 w-full rounded-[3px] transition-transform duration-500 hover:scale-[1.015] @3xl:h-full @3xl:min-h-[24rem]"
               from={GALLERY[2][1]}
               to={GALLERY[2][2]}
+              image={GALLERY[2][3]}
             />
             <Caption>{GALLERY[2][0]}</Caption>
           </figure>
-          {GALLERY.slice(0, 2).map(([label, from, to]) => (
+          {GALLERY.slice(0, 2).map(([label, from, to, image]) => (
             <figure key={label}>
               <Swatch
                 className="h-36 w-full rounded-[3px] transition-transform duration-500 hover:scale-[1.015] @3xl:h-[11.2rem]"
                 from={from}
                 to={to}
+                image={image}
               />
               <Caption>{label}</Caption>
             </figure>

@@ -104,23 +104,34 @@ export function Swatch({
   from,
   to,
   label,
+  image,
 }: {
   className?: string;
   from: string;
   to: string;
   label?: string;
+  image?: string;
 }) {
   const mid = (luminance(from) + luminance(to)) / 2;
   return (
     <div
       className={`relative overflow-hidden rounded-xl ${className}`}
-      style={{ backgroundImage: `linear-gradient(135deg, ${from}, ${to})` }}
+      role={image ? "img" : undefined}
+      aria-label={image ? (label ?? "Concept project image") : undefined}
+      style={{
+        backgroundColor: from,
+        backgroundImage: image
+          ? `linear-gradient(0deg, rgba(14,17,20,0.62), rgba(14,17,20,0.04) 70%), url("${image}"), linear-gradient(135deg, ${from}, ${to})`
+          : `linear-gradient(135deg, ${from}, ${to})`,
+        backgroundSize: image ? "cover, cover, cover" : undefined,
+        backgroundPosition: image ? "center, center, center" : undefined,
+      }}
     >
-      <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_45%)]" />
+      <div className={`absolute inset-0 [background-image:radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_45%)] ${image ? "opacity-10" : "opacity-30"}`} />
       {label && (
         <span
           className="absolute bottom-2 left-2.5 font-mono text-[9px] uppercase tracking-widest"
-          style={{ color: mid > 0.45 ? "rgba(24,32,42,0.72)" : "rgba(255,255,255,0.7)" }}
+          style={{ color: image ? "#ffffff" : mid > 0.45 ? "rgba(24,32,42,0.72)" : "rgba(255,255,255,0.7)", textShadow: image ? "0 1px 8px rgba(0,0,0,0.55)" : undefined }}
         >
           {label}
         </span>

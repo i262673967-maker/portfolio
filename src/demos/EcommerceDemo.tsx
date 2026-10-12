@@ -116,7 +116,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
             </p>
             <Btn href={anchor.href("shop")} className="mt-6 px-6 py-2.5">Shop the Collection →</Btn>
           </div>
-          <Swatch className="h-56 w-full @5xl:h-72" from="#e0c3a5" to="#8a6b4f" label="Autumn collection" />
+          <Swatch className="h-56 w-full @5xl:h-72" from="#e0c3a5" to="#8a6b4f" label="Autumn collection" image={project.coverImage} />
         </div>
       </section>
 
@@ -164,7 +164,7 @@ export default function EcommerceDemo({ project, preview }: DemoProps) {
 
       <section id={anchor.id("story")} className="border-y scroll-mt-16 border-white/8 bg-white/[0.02]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 @5xl:grid-cols-2 @5xl:items-center @5xl:px-8 @5xl:py-16">
-          <Swatch className="h-48 w-full @5xl:h-64" from="#cbb9a4" to="#6f6353" label="Our story" />
+          <Swatch className="h-48 w-full @5xl:h-64" from="#cbb9a4" to="#6f6353" label="Our story" image={project.coverImage} />
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--d-accent)]">Our story</p>
             <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight @3xl:text-3xl">Made slowly, in small batches</h2>

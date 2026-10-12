@@ -32,7 +32,7 @@ export function Pricing() {
                 {p.featured && (
                   <>
                     <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-accent/10 blur-3xl" />
-                    <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-ink">
+                    <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-white">
                       Most popular
                     </span>
                   </>
@@ -69,7 +69,7 @@ export function Pricing() {
             </p>
             <Link
               href="/#contact"
-              className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-offwhite"
+              className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-offwhite"
             >
               {cta.primary}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -123,7 +123,7 @@ export function CarePlans() {
                 {p.featured && (
                   <>
                     <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-accent/10 blur-3xl" />
-                    <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-ink">
+                    <span className="absolute right-4 top-4 rounded-full bg-accent px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-white">
                       Most popular
                     </span>
                   </>
@@ -159,7 +159,7 @@ export function CarePlans() {
             </p>
             <Link
               href="/#contact"
-              className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:bg-offwhite"
+              className="group mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-7 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-offwhite"
             >
               {cta.primary}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

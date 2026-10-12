@@ -18,7 +18,7 @@ export default function ConceptThumb({ project }: { project: Project }) {
   return (
     <div
       aria-hidden="true"
-      className="relative flex aspect-[16/10] w-full flex-col overflow-hidden rounded-xl border border-line"
+      className="relative flex aspect-[16/10] w-full flex-col overflow-hidden rounded-xl border border-line shadow-[0_12px_32px_rgba(23,26,31,0.09)]"
       style={{ background: bg, color: fg }}
     >
       <div className="flex items-center gap-2 border-b px-3 py-2" style={{ borderColor: `${fg}1f` }}>
@@ -41,7 +41,7 @@ export default function ConceptThumb({ project }: { project: Project }) {
           <span className="block h-2 w-[38%] rounded-full" style={{ background: fg, opacity: 0.25 }} />
           {action && (
             <span
-              className="mt-2 inline-block self-start rounded-full px-3 py-1 text-[10px] font-semibold"
+              className="mt-2 inline-block self-start rounded-md px-3 py-1 text-[10px] font-semibold"
               style={{ background: accent, color: bg }}
             >
               {action}

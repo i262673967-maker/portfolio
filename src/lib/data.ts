@@ -35,11 +35,11 @@ export const formEndpoint = "https://api.web3forms.com/submit";
 export const site = {
   brand: "Ismail Web Studio",
   role: "Web Designer & Developer",
-  tagline: "New Websites & Website Fixes for Local Businesses",
+  tagline: "Websites built for the next local job",
   coreMessage:
-    "I build new websites and fix slow, outdated ones for local businesses.",
+    "I design clear, mobile-first websites for local trades that make it easier to win calls and quote requests.",
   supportingMessage:
-    "You get a fast, mobile-friendly website that makes your business look credible — or the one you already have properly fixed.",
+    "From a first website to a much-needed redesign, the goal is simple: help local customers understand your service and contact you without friction.",
   email: "ismail.webstudio@gmail.com",
 
   /* No phone, WhatsApp or location is collected or shown anywhere on this site. */
@@ -90,21 +90,18 @@ export const site = {
 
 /* One brand line, three uses: the homepage tab title, the social-card headline
    and the Open Graph image. Kept as a constant so they cannot drift apart. */
-export const brandPitch = "Modern websites for local businesses";
+export const brandPitch = "Websites built for the next local job";
 
 /* The homepage's meta / Open Graph / Twitter description, verbatim. */
 export const homeDescription =
-  "Modern, mobile-first websites for local businesses, plus a free website audit that shows you what's costing you customers.";
+  "Distinctive, mobile-first websites for plumbers, electricians, roofers and local trades. Get a free website audit before you commit.";
 
 export const nav = [
-  { label: "Projects", href: "/projects" },
-  { label: "Free Audit", href: "/#audit" },
+  { label: "Work", href: "/projects" },
   { label: "Services", href: "/#services" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
 ];
 
 /* One conversion path: a single primary action everywhere it appears. `nav`
@@ -115,7 +112,7 @@ export const cta = {
   secondary: "See My Work",
 };
 
-export const heroPoints = ["Mobile-first", "Fast", "Business-focused"];
+export const heroPoints = ["Built for your trade", "Calls & quote requests", "Mobile-first"];
 
 /* What a free audit looks at. Nothing here promises rankings or revenue. */
 export const auditChecks = [
@@ -576,9 +573,9 @@ export const services: Service[] = [
     icon: "target",
   },
   {
-    title: "E-commerce Websites",
-    body: "A modern storefront for local shops that want to sell online as well as in person.",
-    icon: "cart",
+    title: "Service-Area Pages",
+    body: "Clear pages for the services you offer and the areas you cover, written for real customers rather than duplicated city keywords.",
+    icon: "target",
   },
 ];
 

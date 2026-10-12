@@ -102,10 +102,10 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
 
           {/* Hero visual: one dominant tile, two supporting, in a white frame. */}
           <div className={`${cards} p-3 @5xl:p-4`}>
-            <Swatch className="h-40 w-full @5xl:h-56" from={c.heroImages[0].from} to={c.heroImages[0].to} label={c.heroImages[0].label} />
+            <Swatch className="h-40 w-full @5xl:h-56" from={c.heroImages[0].from} to={c.heroImages[0].to} label={c.heroImages[0].label} image={c.heroImages[0].image} />
             <div className="mt-3 grid grid-cols-2 gap-3">
               {c.heroImages.slice(1).map((img) => (
-                <Swatch key={img.label} className="h-24 @5xl:h-28" from={img.from} to={img.to} label={img.label} />
+                <Swatch key={img.label} className="h-24 @5xl:h-28" from={img.from} to={img.to} label={img.label} image={img.image} />
               ))}
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                   i === 0 ? "h-52 @5xl:h-full @5xl:min-h-[22rem]" : "h-28 @3xl:h-32"
                 }`}
                 from={g.from}
-                to={g.to}
+                to={g.to} label={g.title} image={g.image}
               />
               <figcaption className="mt-2 text-[13px] font-medium text-current/70">{g.title}</figcaption>
             </figure>

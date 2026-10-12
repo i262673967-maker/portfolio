@@ -57,7 +57,7 @@ export default function StickyCta() {
         <Link
           href="/#contact"
           tabIndex={show ? undefined : -1}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-[15px] font-semibold text-ink"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-[15px] font-semibold text-white"
         >
           <Search className="h-4 w-4" /> {cta.primary}
         </Link>

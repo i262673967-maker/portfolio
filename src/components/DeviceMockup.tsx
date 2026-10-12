@@ -44,7 +44,7 @@ export default function DeviceMockup({
   return (
     <div className="mx-auto w-full" style={{ maxWidth: spec.max }}>
       <div
-        className={`relative rounded-[1.4rem] border border-line-strong bg-surface-2 p-2 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9)] ${
+        className={`relative rounded-[1.4rem] border border-line-strong bg-surface-2 p-2 shadow-[0_24px_64px_-28px_rgba(23,26,31,0.22)] ${
           device === "mobile" ? "rounded-[2rem] p-2.5" : ""
         }`}
       >
@@ -57,11 +57,11 @@ export default function DeviceMockup({
           style={{ aspectRatio: `${spec.ratio}`, marginTop: device === "mobile" ? 8 : 0 }}
         >
           {chrome && device === "desktop" && (
-            <div className="absolute inset-x-0 top-0 z-20 flex items-center gap-1.5 border-b border-white/8 bg-surface/90 px-3 py-1.5 backdrop-blur">
+            <div className="absolute inset-x-0 top-0 z-20 flex items-center gap-1.5 border-b border-line bg-surface/90 px-3 py-1.5 backdrop-blur">
               <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
               <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
               <span className="h-2 w-2 rounded-full bg-[#28c840]" />
-              <span className="ml-2 hidden truncate rounded-full bg-white/5 px-2 py-0.5 font-mono text-[9px] text-muted sm:block">
+              <span className="ml-2 hidden truncate rounded-full bg-base-2 px-2 py-0.5 font-mono text-[9px] text-muted sm:block">
                 {spec.label.toLowerCase()}-preview.demo
               </span>
             </div>

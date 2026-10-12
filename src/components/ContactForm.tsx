@@ -226,7 +226,7 @@ export default function ContactForm() {
                     setNoSite(false);
                     setForm({ website: "", name: "", email: "", note: "", botcheck: "" });
                   }}
-                  className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
+                  className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-ink/5"
                 >
                   Request another audit
                 </button>
@@ -391,7 +391,7 @@ export default function ContactForm() {
                     type="submit"
                     disabled={status === "sending"}
                     aria-busy={status === "sending" ? true : undefined}
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60"
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60"
                   >
                     {status === "sending" ? "Sending…" : cta.primary}
                     <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

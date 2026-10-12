@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Design tokens — premium dark studio
+   Design tokens — warm editorial studio
    --------------------------------------------------------------- */
 @theme {
   /* WARNING: a colour token named `base` makes Tailwind v4 resolve `text-base`
@@ -105,7 +105,7 @@ body {
   color: var(--color-offwhite);
 }
 
-/* Subtle grain / vignette backdrop */
+/* Restrained atmosphere for the warm-paper brand — no neon glow blobs. */
 @utility studio-bg {
   background-image:
     radial-gradient(46rem 30rem at 100% 0%, color-mix(in oklab, var(--color-accent) 8%, transparent), transparent 62%),

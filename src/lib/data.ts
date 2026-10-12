@@ -14,7 +14,7 @@
    placeholder into canonicals, Open Graph tags, sitemap or robots.
    Set it in .env.local for local builds and in the Vercel project's
    Environment Variables for production. */
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!.replace(/\/+$/, "");
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://ismailwebstudio.vercel.app").replace(/\/+$/, "");
 
 /* Every absolute URL on this site is derived from siteUrl in one place, so one
    env var updates metadata, Open Graph, canonicals, sitemap and robots at once. */

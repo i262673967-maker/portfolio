@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
           <div>
             <p className="eyebrow">
-              Websites for Local Businesses
+              Independent Web Design for Local Trades
             </p>
 
             <h1
@@ -35,9 +35,9 @@ export default function Hero() {
                  steps from 640px up are untouched. */
               className="heading-display mt-5 text-balance text-[clamp(1.875rem,1.5rem_+_1.1vw,2.15rem)] leading-[1.04] sm:text-5xl lg:text-[3.4rem]"
             >
-              Your Website Might Be{" "}
+              Websites Built to Win{" "}
               <span className="relative inline-block text-accent">
-                Costing You Customers.
+                The Next Local Job.
                 <span
                   className="absolute -bottom-1 left-0 h-[3px] w-full origin-left rounded-full bg-gradient-to-r from-accent to-warm"
                   style={{ animation: "underline-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both" }}
@@ -46,9 +46,7 @@ export default function Hero() {
             </h1>
 
             <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              Fast, mobile-friendly websites for plumbers, electricians, roofers,
-              HVAC, renovators, contractors and other local trades — built to make
-              it easier for visitors to call or enquire.
+              Thoughtful, mobile-first websites for plumbers, electricians, roofers and home-service businesses. Clear services, stronger first impressions, and an easier path from local search to a call or quote request.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
@@ -62,7 +60,7 @@ export default function Hero() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/#contact"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)]"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(181,71,36,0.22)]"
               >
                 <Search className="h-4 w-4" /> {cta.primary}
               </Link>
@@ -104,7 +102,7 @@ export default function Hero() {
                 style={staged(0.5, 20)}
               >
                 <DeviceMockup device="tablet" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="ecommerce" project={byDemo("ecommerce")} />
+                  <LazyDemo idle demo="electrical" project={byDemo("electrical")} />
                 </DeviceMockup>
               </div>
 
@@ -113,7 +111,7 @@ export default function Hero() {
                 style={staged(0.62, 20)}
               >
                 <DeviceMockup device="mobile" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="restaurant" project={byDemo("restaurant")} />
+                  <LazyDemo idle demo="plumbing" project={byDemo("plumbing")} />
                 </DeviceMockup>
               </div>
             </div>

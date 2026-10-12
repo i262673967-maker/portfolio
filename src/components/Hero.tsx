@@ -102,7 +102,7 @@ export default function Hero() {
                 style={staged(0.5, 20)}
               >
                 <DeviceMockup device="tablet" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="electrical" project={byDemo("electrical")} />
+                  <LazyDemo idle demo="electrician" project={byDemo("electrician")} />
                 </DeviceMockup>
               </div>
 
@@ -111,7 +111,7 @@ export default function Hero() {
                 style={staged(0.62, 20)}
               >
                 <DeviceMockup device="mobile" chrome={false} hoverPeek>
-                  <LazyDemo idle demo="plumbing" project={byDemo("plumbing")} />
+                  <LazyDemo idle demo="plumber" project={byDemo("plumber")} />
                 </DeviceMockup>
               </div>
             </div>

@@ -511,7 +511,8 @@ body {
 
   @supports (animation-timeline: scroll()) {
     .demo-header-fire,
-    .demo-header-lune {
+    .demo-header-lune,
+    .demo-header-dental {
       animation: ember-header 1ms linear both;
       animation-timeline: scroll(nearest block);
       animation-range: 0 5rem;

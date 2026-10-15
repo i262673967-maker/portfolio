@@ -6,6 +6,7 @@ import SalonDemo from "./SalonDemo";
 import PlumberDemo from "./PlumberDemo";
 import RenovationDemo from "./RenovationDemo";
 import RestaurantDemo from "./RestaurantDemo";
+import DentalDemo from "./DentalDemo";
 
 export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
   /* Atlas is an editorial studio site, not a service brochure, so it owns a
@@ -21,6 +22,9 @@ export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
      flow, not a storefront — so it owns its own layout. */
   salon: SalonDemo,
   restaurant: RestaurantDemo,
+  /* Rowanwood is a printed leaflet: a status board, a hairline treatment index
+     and a two-column section rhythm. It shares nothing with the other four. */
+  dental: DentalDemo,
 };
 
 /* preview=true (the default) means the concept is shown as a preview inside a

@@ -1,4 +1,4 @@
-import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Fraunces, Inter, Jost, Space_Grotesk } from "next/font/google";
+import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Fraunces, Inter, Jost, Newsreader, Public_Sans, Space_Grotesk } from "next/font/google";
 import type { DemoKey } from "@/lib/data";
 
 /* Each concept site gets its own type pairing — display for headings, body for
@@ -129,6 +129,31 @@ const jost = Jost({
   variable: "--font-jost",
 });
 
+/* Rowanwood's patient-leaflet pairing. Newsreader is a workhorse literary serif
+   with real optical sizes — the voice of a printed information sheet you are
+   handed in a waiting room, and visibly none of the other three serifs here (it
+   is not Cormorant's thin garamond, not Bodoni's didone contrast, not Fraunces'
+   wonky display cut). Public Sans is the typeface a government health service
+   would choose: designed for forms, small print and long strings of numbers, and
+   the most legible thing on this site at 13px. Both `preload: false`, scoped to
+   this wrapper, so no other page fetches either file. */
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+});
+
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-public-sans",
+});
+
 export const demoFonts: Record<DemoKey, DemoFontSlot> = {
   renovation: {
     className: `${fraunces.variable} ${dmSans.variable}`,
@@ -156,5 +181,10 @@ export const demoFonts: Record<DemoKey, DemoFontSlot> = {
     className: `${bodoni.variable} ${jost.variable}`,
     display: "var(--font-bodoni), ui-serif, Georgia, serif",
     body: "var(--font-jost), ui-sans-serif, system-ui, sans-serif",
+  },
+  dental: {
+    className: `${newsreader.variable} ${publicSans.variable}`,
+    display: "var(--font-newsreader), ui-serif, Georgia, serif",
+    body: "var(--font-public-sans), ui-sans-serif, system-ui, sans-serif",
   },
 };

@@ -154,7 +154,8 @@ export type DemoKey =
   | "plumber"
   | "electrician"
   | "restaurant"
-  | "salon";
+  | "salon"
+  | "dental";
 
 /* Content for the local-service demo layout (renovation / plumber / electrician).
    Each fictional business gets its own copy, palette and structure emphasis so
@@ -460,6 +461,141 @@ export type ServiceDemoContent = {
          held — the request cannot reach a book from this page. */
       confirm: { title: string; lead: string; edit: string };
     };
+  };
+
+  /* --- Dental-concept fields ---------------------------------------------------
+     A practice earns or loses the visit in the same two places every other local
+     business does: what it costs, and whether anyone will explain it to you. So
+     this layout is built as a printed patient leaflet — a status board, an index
+     of what happens and how long it takes, and a request form — rather than a
+     brochure of promises.
+
+     All OPTIONAL and read only by DentalDemo, so the four other concepts are
+     untouched. The practice name, street, hours and number are invented for the
+     fiction; the number stays inside the 555-01XX range reserved for made-up
+     businesses.
+
+     What is deliberately NOT here, and why: no practitioner names, credentials,
+     registrations or years of practice (a qualification attached to an invented
+     person is a fabricated credential, and the concept has no real dentist to
+     credit); no patient testimonials, star ratings, review counts or
+     before/after claims; no success rates or outcomes; and no price list. The
+     last one is the honest position rather than a dodge — the number depends on
+     what the examination finds, so the page says where the number appears
+     instead of inventing one. */
+  dental?: {
+    /* The board above the header: the four facts that decide whether to call. */
+    board: string[];
+    hero: {
+      src: string;
+      alt: string;
+      /* Split so the second line can carry the italic accent. */
+      headline: string;
+      accent: string;
+      eyebrow: string;
+      /* The paragraph that does the deciding, including the limitation the
+         practice does not hide. */
+      lede: string;
+      hoursLine: string;
+      facts: { label: string; value: string }[];
+      ctaPrimary: string;
+      ctaSecondary: string;
+      caption: string;
+    };
+    /* Three plates below the fold: a wide band for the practice statement, and
+       one in each of the two side rails. Without them the page is a single
+       photograph and a wall of text. */
+    plates: {
+      practice: { src: string; alt: string; caption: string };
+      index: { src: string; alt: string; caption: string };
+      visit: { src: string; alt: string; caption: string };
+    };
+    /* The band a person in pain lands on. It sends them to the phone and names
+       the one thing this kind of practice is not for. */
+    urgent: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      hospital: string;
+      phoneLabel: string;
+      phoneNote: string;
+      /* The label on the slower route out of this band. */
+      writeInstead: string;
+      /* Pressed from this band into the form's notes field, so the reason for
+         the call is already written when the form appears. */
+      prefill: string;
+      /* …and into the reason chips, which is why it has to be one of them. */
+      prefillReason: string;
+    };
+    /* The examination-first promise, set as the page's opening argument. */
+    intro: { eyebrow: string; title: string; body: string; aside: string };
+    /* Two groups of rows, each with what happens and how long it takes. No
+       prices, and the note underneath says why. */
+    index: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      groups: {
+        label: string;
+        rows: { name: string; time: string; what: string }[];
+      }[];
+      costNote: string;
+    };
+    /* The section that wins the nervous patient: four things the practice does,
+       each concrete enough to check. */
+    nerves: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      points: { title: string; body: string }[];
+      cta: string;
+      prefill: string;
+    };
+    /* The practical half: what to bring, how long, how to get in. */
+    visit: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      /* A short numbered run so the first appointment is predictable. */
+      steps: { no: string; title: string; body: string }[];
+      bring: { label: string; body: string }[];
+      access: string[];
+    };
+    faq: { eyebrow: string; title: string; lead: string; items: { q: string; a: string }[] };
+    booking: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      /* Why the visit, so the form asks for the right thing. */
+      reasons: string[];
+      /* A grid of days and parts of day, not a time picker: a request cannot
+         promise 14:07 on a Tuesday, and a chip that admits that is more
+         credible than a field that pretends otherwise. */
+      days: string[];
+      times: string[];
+      /* Existing or new — the practice books them differently. */
+      patientTypes: string[];
+      /* One legend per chip group, in the desk's own words. They are content
+         rather than markup because the phrasing is part of the fiction: a
+         practice that asks "Are you on our books?" and one that asks "Are you
+         registered here?" are not the same practice. */
+      legends: { reason: string; patient: string; day: string; time: string };
+      name: string;
+      phone: string;
+      email: string;
+      notes: string;
+      hints: { reason: string; when: string; phone: string; notes: string };
+      submit: string;
+      /* Beside the submit button: the last question before pressing it. */
+      note: string;
+      confirm: { title: string; lead: string; edit: string };
+    };
+    hours: { day: string; time: string }[];
+    address: string[];
+    phone: { display: string; href: string };
+    /* Says what the practice is, in the footer's own voice — the line that keeps
+       the fiction from reading as a real clinic. */
+    positioning: string;
   };
 
   /* --- Salon-concept fields ----------------------------------------------------
@@ -1767,6 +1903,357 @@ export const projects: Project[] = [
           phone: { display: "(555) 018-0142", href: "tel:+15550180142" },
           mapNote: "Illustrative map — not a real location.",
         },
+      },
+    },
+  },
+  {
+    slug: "rowanwood-dental",
+    index: "06",
+    demo: "dental",
+    name: "Rowanwood Dental",
+    businessType: "Dental Practice",
+    industry: "Dental Care",
+    category: "Service",
+    summary:
+      "A dental practice site that answers cost and fear before it asks for the appointment.",
+    objective:
+      "Make a nervous new patient trust the practice enough to book — without a single review, rating, before/after or credential on the page.",
+    strategy:
+      "Leaflet, not brochure. The page order follows what a patient actually decides on: whether they can be seen this week, what will happen in the chair, and what it will cost. Everything is stated as process — durations, steps, a written number handed over before treatment — because process is the only trust a practice can show without borrowing somebody else's testimonials.",
+    designDirection: ["Printed leaflet", "Clinical sage", "Hairline index", "Reassuring, not slick"],
+    keySections: [
+      "Status board",
+      "Hero",
+      "In pain today",
+      "The practice",
+      "Treatments index",
+      "Nervous patients",
+      "First appointment",
+      "FAQ",
+      "Request a visit",
+    ],
+    mobileNotes: [
+      "The pain band and its call action sit above the treatment index, not below it",
+      "Reason, day and part-of-day are chips, so the request form is answered with taps",
+      "The number is a button inside a device frame and explains why it cannot dial",
+      "A sticky Request bar keeps the form reachable, with the last section padded clear of it",
+    ],
+    conversionNotes: [
+      "Two routes, split honestly: call for pain, request for everything else",
+      "The no-price stance arrives with a reason and a promise, so it reads as honesty and not evasion",
+      "The confirmation reads the request back and says plainly that no appointment exists yet",
+    ],
+    accent: "#2E6F5E",
+    /* Cool clinical sage on a pale green-white — the one family of colours a
+       dental site reaches for is blue and white, and that is the look every
+       other concept here is already avoiding. */
+    palette: { bg: "#F4F6F3", fg: "#10201A", accent: "#2E6F5E", surface: "#E7EDE7" },
+    content: {
+      /* The dental layout renders nothing from the shared local-service base
+         except `navName`. Everything else it shows lives under `dental`. */
+      navName: "Rowanwood",
+      formNote:
+        "This form is part of a concept website. Nothing was sent and no appointment exists — a real practice would confirm the time by phone.",
+      dental: {
+        board: [
+          "Monday to Thursday 08:00 – 17:30 · Friday to 17:00",
+          "Saturday morning 09:00 – 13:00 · Closed Sunday",
+          "Two urgent slots held back every afternoon, until 16:00",
+          "Step-free entrance · Rowanwood House, 4 Ashgrove Lane",
+        ],
+        hero: {
+          src: "/demos/rowanwood-dental/room.webp",
+          alt: "An empty dental treatment room: a chair under an operating light, an instrument cart beside it, daylight from a window on the far wall, no people.",
+          headline: "An Examination First,",
+          accent: "A Written Number After.",
+          eyebrow: "General & family dentistry · Two chairs",
+          lede:
+            "A first visit is an examination and a conversation. We look, we tell you what we found, and you leave with a plan in writing with a number against every item on it. Nothing is started while you are still deciding. What we will not do is quote you before the examination, because the honest figure depends on what the examination finds.",
+          hoursLine: "Open Monday to Saturday · Urgent slots until 16:00",
+          facts: [
+            { label: "First visit", value: "60 minutes" },
+            { label: "The room", value: "Two chairs" },
+            { label: "The plan", value: "Written, before anything starts" },
+          ],
+          ctaPrimary: "Request a visit",
+          ctaSecondary: "In pain today?",
+          caption: "Room two, laid out for the first appointment of the day",
+        },
+        plates: {
+          practice: {
+            src: "/demos/rowanwood-dental/practice-room.webp",
+            alt: "An empty treatment room: a blue-upholstered dental chair with its instrument arm and delivery unit, a practising stool beside it, a window with blinds behind, and a yellow and blue abstract painting on the wall. No people.",
+            caption: "Room one, between appointments",
+          },
+          index: {
+            src: "/demos/rowanwood-dental/instruments.webp",
+            alt: "Five periodontal probes laid in a row on a white tray — two orange handles, one purple, two black — with their hooked tips pointing the same way.",
+            caption: "What a check-up is made of",
+          },
+          visit: {
+            src: "/demos/rowanwood-dental/waiting.webp",
+            alt: "An empty waiting area: teal sofas along two walls, a low table with magazines, a plant in the corner, a window looking into a treatment room, and a slatted reception desk on the right. No people.",
+            caption: "The waiting room, before the first patient",
+          },
+        },
+        urgent: {
+          eyebrow: "Pain",
+          title: "In Pain Today?",
+          body:
+            "Ring the practice rather than filling the form in. Two slots every afternoon are held back for pain and swelling, and the line is answered by whoever is at the front desk — not a call centre. Say when it started and where it is. That is enough to book one.",
+          hospital:
+            "A knocked-out tooth, a swelling in the face or jaw, difficulty swallowing, an injury you cannot see the shape of, or bleeding that will not stop: that is an emergency department, not a dental practice, and we would rather you went there now.",
+          phoneLabel: "Call the practice",
+          phoneNote: "This number belongs to a concept website and does not connect.",
+          writeInstead: "Write instead of calling",
+          prefill: "In pain today — please call me back.",
+          /* Must match one of booking.reasons exactly — see DentalDemo. */
+          prefillReason: "Pain or swelling",
+        },
+        intro: {
+          eyebrow: "The practice",
+          title: "Two Chairs, One Plan",
+          body:
+            "Rowanwood is a small general practice. One dentist takes a patient from the first appointment to the last, so nobody re-explains their history at every visit, and the room is quiet enough to hear what is being explained. Most of the work is the ordinary kind — checks, cleanings, fillings, and the crowns that come after them.",
+          aside:
+            "We are not a hospital and we do not keep every case. When something needs a specialist, we say so, write the referral, and tell you who to ring.",
+        },
+        index: {
+          eyebrow: "What happens",
+          title: "The Work, Listed",
+          lead:
+            "Every row below is an appointment you can ask about. The time is roughly how long the chair is occupied, not how long you spend in the building.",
+          groups: [
+            {
+              label: "Routine",
+              rows: [
+                {
+                  name: "New-patient examination",
+                  time: "60 min",
+                  what: "A full look, a conversation about what bothers you, and X-rays only if the examination calls for them. No treatment is started on this visit.",
+                },
+                {
+                  name: "Check-up",
+                  time: "25 min",
+                  what: "Teeth, gums, jaw and the soft tissues looked at, then what has changed since last time explained at the chair rather than at the door.",
+                },
+                {
+                  name: "Clean and polish",
+                  time: "40 min",
+                  what: "Scale, polish, and the two minutes of instruction that actually make the difference at home.",
+                },
+                {
+                  name: "A child's first visit",
+                  time: "30 min",
+                  what: "A look round, a count of teeth, and the chair tilted for practice if the child wants it. Treatment waits for a second visit.",
+                },
+              ],
+            },
+            {
+              label: "When something is wrong",
+              rows: [
+                {
+                  name: "Filling",
+                  time: "45 min",
+                  what: "Numb, out, filled. Which tooth, and what caused it, is said before anything is picked up.",
+                },
+                {
+                  name: "Crown",
+                  time: "2 visits · 60 + 45 min",
+                  what: "Prepared and worn as a temporary from the first visit, cemented at the second once the lab has sent the real one back.",
+                },
+                {
+                  name: "Root treatment",
+                  time: "60 – 90 min",
+                  what: "Done to save a tooth that would otherwise come out. Some need a second appointment to finish.",
+                },
+                {
+                  name: "Extraction",
+                  time: "30 – 45 min",
+                  what: "Straightforward ones in this chair. Anything surgical — a lower wisdom tooth, a root that has broken down — goes to a referral instead.",
+                },
+                {
+                  name: "Denture and bridge repairs",
+                  time: "30 min",
+                  what: "Re-fitted, re-lined or sent away. A same-day repair is not always possible, and the desk tells you which it is when you ring.",
+                },
+              ],
+            },
+          ],
+          costNote:
+            "There is no price list on this page, on purpose. The number depends on what the examination finds, so it is written down and handed over at the end of it — before anything is started, and before anything is charged.",
+        },
+        nerves: {
+          eyebrow: "Nervous patients",
+          title: "Say So When You Book",
+          body:
+            "It is the single most useful thing to tell the front desk, and it changes how the appointment is built. It is offered rather than assumed — plenty of people would rather not talk about it, and that is fine too.",
+          points: [
+            {
+              title: "The quietest slot in the day",
+              body: "Booked away from the corridor and the children's hour, with enough time in it that nobody is hurried out of the chair.",
+            },
+            {
+              title: "A hand up stops everything",
+              body: "Agreed before anything is picked up, honoured without a discussion about it afterwards, and repeated as often as you need.",
+            },
+            {
+              title: "Each step, before it happens",
+              body: "What is about to happen and what it will feel like. Ask us to skip the descriptions and we will do that too.",
+            },
+            {
+              title: "A first visit can be a look round",
+              body: "Come, sit in the chair, see the room, leave. No instruments and no examination, and it is not billed as treatment.",
+            },
+          ],
+          cta: "Tell us when you book",
+          prefill:
+            "I get anxious in the chair — please book the quietest slot you have and go slowly.",
+        },
+        visit: {
+          eyebrow: "Before you come",
+          title: "The First Appointment",
+          lead: "Sixty minutes, and most of it is looking and talking.",
+          steps: [
+            {
+              no: "01",
+              title: "You arrive",
+              body: "Front desk, a form on a tablet or a clipboard, and a short wait — the day is booked in sixty-minute blocks rather than packed in tens.",
+            },
+            {
+              no: "02",
+              title: "The examination",
+              body: "Teeth, gums, jaw and soft tissues, with X-rays only if what we find calls for them. Anything you ask gets answered at the chair.",
+            },
+            {
+              no: "03",
+              title: "The plan",
+              body: "What we found, what it means, and the options where there is more than one — written down with a number against each item before you leave.",
+            },
+          ],
+          bring: [
+            {
+              label: "Identification",
+              body: "Photo ID for the file. Nothing else is needed in order to be seen.",
+            },
+            {
+              label: "What you take",
+              body: "Medicines, inhalers and supplements included. It changes what is safe to do in the chair.",
+            },
+            {
+              label: "Old X-rays",
+              body: "From another practice, on a disc or a printout. They save taking the same picture twice.",
+            },
+            {
+              label: "Your questions",
+              body: "Written down is fine. Half of them are worth asking before you sit down.",
+            },
+          ],
+          access: [
+            "Step-free entrance from Ashgrove Lane and a lift to the first floor.",
+            "Two parking bays outside, one of them accessible.",
+            "A carer or a family member can sit in on any appointment.",
+            "Under sixteen, a parent stays in the room for the whole visit.",
+          ],
+        },
+        faq: {
+          eyebrow: "Questions",
+          title: "Asked At The Desk",
+          lead: "The questions the front desk answers most often, in the words it answers them in.",
+          items: [
+            {
+              q: "Do I need to be registered to be seen?",
+              a: "No. A new patient books the same sixty-minute examination as anyone else, and registration is offered after it if the practice turns out to be the right fit.",
+            },
+            {
+              q: "How soon can I get in?",
+              a: "Routine appointments are usually booked two to three weeks out. Pain is different: two slots each afternoon are held for it, and ringing before 16:00 usually means being seen the same day.",
+            },
+            {
+              q: "Will I be told off about my teeth?",
+              a: "No. A lecture is not treatment. The state of your mouth at a first visit is information for us, not a verdict on you.",
+            },
+            {
+              q: "Do you take insurance?",
+              a: "No plans are handled here. You get the written number at the end of the examination and pay after treatment — and if you would rather claim it back from an insurer, the paperwork supports that.",
+            },
+            {
+              q: "My tooth hurts only when I bite. Is that an emergency?",
+              a: "Usually not that night. Take something simple for the pain and ring in the morning. If your face or jaw starts to swell, or swallowing becomes difficult, stop reading and call immediately.",
+            },
+            {
+              q: "Can I bring the children?",
+              a: "Yes. The first visit is deliberately short, a parent stays in the room for anyone under sixteen, and a child who will not open their mouth today is not forced to.",
+            },
+          ],
+        },
+        booking: {
+          eyebrow: "Appointments",
+          title: "Request A Visit",
+          body:
+            "The form goes to the front desk, which rings you back to fix an actual time. It is the slower route, and the right one for anything that is not pain.",
+          reasons: [
+            "Check-up",
+            "Pain or swelling",
+            "Clean and polish",
+            "Something broke or fell out",
+            "Replacement teeth",
+            "A question about my teeth",
+          ],
+          days: [
+            "Any weekday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday morning",
+          ],
+          times: ["Morning", "Afternoon", "Late Thursday", "No preference"],
+          patientTypes: ["New patient", "Existing patient"],
+          legends: {
+            reason: "What is the visit for?",
+            patient: "Are you already on our books?",
+            day: "Which day suits?",
+            time: "Morning or afternoon?",
+          },
+          name: "Name",
+          phone: "Phone",
+          email: "Email",
+          notes: "Anything we should know",
+          hints: {
+            reason:
+              "Pick the closest one. It decides how long the appointment is booked for.",
+            when:
+              "A preference, not a confirmation — the desk rings to fix the actual time.",
+            phone:
+              "The number the desk calls back on. Digits, spaces or brackets are all fine.",
+            notes:
+              "Anxiety, a wheelchair, a carer coming with you, a tooth already treated, an old X-ray to bring.",
+          },
+          submit: "Request A Visit",
+          note: "No time is held until the practice rings you back.",
+          confirm: {
+            title: "Asked for, not booked",
+            lead:
+              "This is what the form received. Nothing left this page, so there is no appointment yet and nobody at the practice has been told to expect you.",
+            edit: "Change it",
+          },
+        },
+        hours: [
+          { day: "Monday – Thursday", time: "08:00 – 17:30" },
+          { day: "Friday", time: "08:00 – 17:00" },
+          { day: "Saturday", time: "09:00 – 13:00" },
+          { day: "Sunday", time: "Closed" },
+        ],
+        address: [
+          "Rowanwood Dental",
+          "Rowanwood House, 4 Ashgrove Lane",
+          "Meadowbank",
+        ],
+        phone: { display: "(555) 019-0164", href: "tel:+15550190164" },
+        positioning:
+          "General and family dentistry. Two chairs, one plan, and a number before anything starts.",
       },
     },
   },

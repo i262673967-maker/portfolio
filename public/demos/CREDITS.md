@@ -128,6 +128,31 @@ Files in `demos/maison-lune/`:
 - `QZMH-qUhyXI`, `uxgfj4Al-Lg` — the "Free to use under the Unsplash License" line
   was not present on the page, so unconfirmed. Rejected rather than assumed.
 
+## Rowanwood Dental — /demos/rowanwood-dental
+
+Files in `demos/rowanwood-dental/`:
+
+| File | Slot | Subject | Photographer | Unsplash page |
+| --- | --- | --- | --- | --- |
+| `room.webp` | Hero, tall | Empty treatment room: grey-and-white chair seen from behind, operating light on an arm, delivery unit, window with a blind | Katarzyna Zygnerska | https://unsplash.com/photos/a-white-dental-chair-in-a-room-with-a-window-44jaETSVX2I |
+| `practice-room.webp` | The practice, wide band | Empty room: blue-upholstered chair and practising stool, a yellow and blue abstract painting on the wall | Ozkan Guner | https://unsplash.com/photos/a-dentist-chair-in-a-room-with-a-painting-on-the-wall-aFqSRokmw2E |
+| `instruments.webp` | Treatment index rail | Five periodontal probes in a row on a white tray — orange, purple and black handles | Caroline LM | https://unsplash.com/photos/orange-and-black-audio-jack-hxXO3xKQHSg |
+| `waiting.webp` | First-appointment rail | Empty waiting area: teal sofas, a window into a treatment room, slatted reception desk | Benyamin Bohlouli | https://unsplash.com/photos/blue-couch-beside-green-potted-plant-B_sK_xgzwVA |
+
+`instruments.webp` is filed on Unsplash under the auto-generated title "orange and
+black audio jack". It is a set of dental probing instruments — confirmed by looking
+at the downloaded frame, which is the standard applied to every plate here.
+
+### Rowanwood Dental — shots considered and rejected
+
+- The best-matched "interior of an empty modern dental clinic" frames in the search
+  results carry the **Unsplash+** lock (`plus.unsplash.com`) or a Getty Images
+  attribution and offer no "Download free" — premium stock, not the Unsplash
+  License. Rejected on licence, the same test that retired Ember's `nJmTTcQrI2M`.
+- `1762625570087-6d98fca29531` (a treatment room with wall art) — free and faceless,
+  but the wall text is a legible lyric quoting a named band, and a CCTV dome sits in
+  the corner of the ceiling. A fictional practice cannot inherit either. Rejected.
+
 ## Notes
 
 - No face is visible in any of these photos. The FlowRight hero shows hands and
@@ -142,6 +167,9 @@ Files in `demos/maison-lune/`:
   and `marble.webp` contain no people at all. Its one person-led photograph,
   `braid.webp`, is a close crop of the back of a client's head — braids, an ear and
   a strand of neck hair — so no face is shown and nobody can be identified.
+- Rowanwood Dental's four plates contain no people at all — two empty rooms, a tray
+  of instruments and an empty waiting area — so no patient, dentist or receptionist
+  is depicted anywhere on that concept, and none is named either.
 - The before/after drag slider originally planned for this demo was **dropped**:
   no genuine licence-verifiable pair of the same space was available, and a
   "before" was not to be faked with a filter, crop, or desaturated copy.

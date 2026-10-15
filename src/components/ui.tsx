@@ -41,7 +41,7 @@ export function SectionHeading({
     <div className={`${a} ${className} max-w-2xl`}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h2 className="heading-display mt-3 text-3xl sm:text-4xl md:text-[2.75rem]">{title}</h2>
-      {copy && <p className="mt-4 text-[15px] leading-relaxed text-muted">{copy}</p>}
+      {copy && <p className="mt-4 text-[15px] leading-relaxed text-ink-muted">{copy}</p>}
     </div>
   );
 }

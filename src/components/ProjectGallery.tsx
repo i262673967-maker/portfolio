@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/lib/data";
 
-const filters = ["All", "Service", "Trade", "Hospitality", "E-commerce"] as const;
+const filters = ["All", "Service", "Trade", "Hospitality"] as const;
 type Filter = (typeof filters)[number];
 
 export default function ProjectGallery() {
@@ -23,10 +23,10 @@ export default function ProjectGallery() {
             type="button"
             onClick={() => setFilter(f)}
             aria-pressed={filter === f}
-            className={`min-h-11 rounded-full border px-4 py-1.5 text-[13px] transition-colors ${
+            className={`min-h-11 rounded-full border-2 px-4 py-1.5 text-[13px] transition-colors ${
               filter === f
-                ? "border-accent bg-accent/10 text-accent"
-                : "border-line text-muted hover:border-line-strong hover:text-offwhite"
+                ? "border-brand bg-brand text-on-brand"
+                : "border-line text-ink-muted hover:border-brand hover:text-ink"
             }`}
           >
             {f}

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { cta, nav, site } from "@/lib/data";
+import { nav, site } from "@/lib/data";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -47,8 +47,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? "border-b border-line bg-base/80 backdrop-blur-xl" : "border-b border-transparent"
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        scrolled || open
+          ? "border-b-2 border-line bg-paper"
+          : "border-b-2 border-transparent bg-transparent"
       }`}
     >
       <div className="container-shell flex h-16 items-center justify-between gap-2.5 xl:gap-4">
@@ -56,30 +58,26 @@ export default function Navbar() {
           <Image
             src="/logo.png"
             alt={`${site.brand} logo`}
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-full object-contain transition-transform group-hover:scale-105"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-contain transition-transform group-hover:scale-105"
           />
-          <span className="font-display text-sm font-semibold tracking-tight text-offwhite">
+          <span className="font-display text-[1rem] font-bold tracking-tight text-ink">
             {site.brand}
           </span>
         </Link>
 
-        {/* Eight links at `lg`. Measured at exactly 1024px: the logo + the full
-            row + the audit pill need every pixel the container has, so the
-            labels wrapped to two lines and the wordmark sat against the first
-            link. `whitespace-nowrap` keeps each link on one line, the tighter
-            1024–1279 padding plus a small row gap buys the breathing room, and
-            from `xl` the original px-3.5 / gap-1 spacing returns. No link is
-            dropped or hidden at any width. */}
+        {/* Five links at `lg`. `whitespace-nowrap` keeps each on one line; the
+           tighter 1024–1279 padding plus a small row gap buys breathing room, and
+           from `xl` the wider spacing returns. No link is dropped at any width. */}
         <nav aria-label="Primary" className="hidden items-center gap-0.5 whitespace-nowrap lg:flex xl:gap-1">
           {nav.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               aria-current={isCurrent(item.href) ? "page" : undefined}
-              className={`rounded-full px-1.5 py-2 text-[13px] transition-colors hover:bg-white/5 hover:text-offwhite xl:px-3.5 ${
-                isCurrent(item.href) ? "text-offwhite" : "text-muted"
+              className={`rounded-full px-2.5 py-2 text-[14px] font-medium transition-colors hover:bg-ink/[0.06] hover:text-ink xl:px-3.5 ${
+                isCurrent(item.href) ? "text-ink" : "text-ink-muted"
               }`}
             >
               {item.label}
@@ -89,11 +87,11 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/#contact"
-            className="group hidden min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full bg-offwhite px-4 py-2 text-[13px] font-semibold text-ink transition-colors hover:bg-accent sm:inline-flex"
+            href="/#audit"
+            className="btn-pop hidden min-h-11 items-center gap-1.5 whitespace-nowrap bg-brand px-4 py-2 text-[14px] font-semibold text-on-brand sm:inline-flex"
           >
-            {cta.nav}
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            Free Audit
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <button
             ref={menuButton}
@@ -101,7 +99,7 @@ export default function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
-            className="grid h-11 w-11 place-items-center rounded-lg border border-line text-offwhite lg:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border-2 border-line text-ink lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -113,10 +111,7 @@ export default function Navbar() {
           from there and no animation library is needed. Closed means visibility
           hidden plus inert, which takes the duplicate links out of the tab order
           and the accessibility tree without hiding them mid-transition. */}
-      <div
-        className="menu-panel border-t border-line bg-base/95 backdrop-blur-xl lg:hidden"
-        inert={!open}
-      >
+      <div className="menu-panel border-t-2 border-line bg-paper lg:hidden" inert={!open}>
         <div>
           <nav id="mobile-menu" aria-label="Site sections" className="container-shell flex flex-col gap-1 py-4">
             {nav.map((item, i) => (
@@ -126,20 +121,20 @@ export default function Navbar() {
                 aria-current={isCurrent(item.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 style={{ "--i": i } as React.CSSProperties}
-                className={`menu-item block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-white/5 ${
-                  isCurrent(item.href) ? "text-offwhite" : "text-offwhite/90"
+                className={`menu-item block rounded-lg px-3 py-3 text-[1rem] transition-colors hover:bg-ink/[0.06] ${
+                  isCurrent(item.href) ? "text-ink" : "text-ink"
                 }`}
               >
                 {item.label}
               </Link>
             ))}
             <Link
-              href="/#contact"
+              href="/#audit"
               onClick={() => setOpen(false)}
               style={{ "--i": nav.length } as React.CSSProperties}
-              className="menu-item mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-accent-2"
+              className="menu-item btn-pop mt-2 flex w-full items-center justify-center gap-1.5 bg-brand px-4 py-3.5 text-[15px] font-semibold text-on-brand"
             >
-              {cta.primary} <ArrowRight className="h-4 w-4" />
+              Free Audit <ArrowRight className="h-4 w-4" />
             </Link>
           </nav>
         </div>

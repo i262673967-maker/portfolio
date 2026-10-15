@@ -11,7 +11,7 @@ export default function ConceptThumb({ project }: { project: Project }) {
      button's label. keySections are internal structure names: reading one as a
      button put "Services" under the "Electrical Services" industry. */
   const action =
-    project.content?.ctaPrimary.replace(/\s*→\s*$/, "") ||
+    project.content?.ctaPrimary?.replace(/\s*→\s*$/, "") ||
     project.keySections[1] ||
     project.keySections[0];
 
@@ -27,13 +27,13 @@ export default function ConceptThumb({ project }: { project: Project }) {
           <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e]/70" />
           <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]/70" />
         </span>
-        <span className="truncate font-display text-[11px] font-semibold">{project.name}</span>
+        <span className="truncate font-display text-[12px] font-semibold">{project.name}</span>
         <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: accent }} />
       </div>
 
       <div className="grid flex-1 grid-cols-[1.4fr_1fr] gap-3 px-3 py-3">
         <div className="flex flex-col justify-center gap-1.5">
-          <span className="font-mono text-[9px] uppercase tracking-[0.16em]" style={{ color: accent }}>
+          <span className="font-mono text-[12px] uppercase tracking-[0.16em]" style={{ color: accent }}>
             {project.industry}
           </span>
           <span className="block h-2 rounded-full" style={{ width: "88%", background: fg, opacity: 0.85 }} />
@@ -41,7 +41,7 @@ export default function ConceptThumb({ project }: { project: Project }) {
           <span className="block h-2 w-[38%] rounded-full" style={{ background: fg, opacity: 0.25 }} />
           {action && (
             <span
-              className="mt-2 inline-block self-start rounded-full px-3 py-1 text-[10px] font-semibold"
+              className="mt-2 inline-block self-start rounded-full px-3 py-1 text-[12px] font-semibold"
               style={{ background: accent, color: bg }}
             >
               {action}

@@ -10,7 +10,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     <div className="flex min-h-screen flex-col">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-[14px] focus:font-semibold focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-[60] focus:rounded-full focus:bg-brand focus:px-5 focus:py-3 focus:text-[14px] focus:font-semibold focus:text-on-brand"
       >
         Skip to content
       </a>

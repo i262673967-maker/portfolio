@@ -42,7 +42,9 @@ export const site = {
     "You get a fast, mobile-friendly website that makes your business look credible — or the one you already have properly fixed.",
   email: "ismail.webstudio@gmail.com",
 
-  /* No phone, WhatsApp or location is collected or shown anywhere on this site. */
+  /* This studio shows no phone, WhatsApp or location of its own anywhere — the
+     rule is about the studio, not about the fictional businesses in the concept
+     demos, which carry invented contact details on purpose. */
   /* Free website audit — the main call to action across the site. */
   auditOffer: "Send me your link and I'll tell you exactly what's wrong — free.",
   auditTitle: "Free Website Audit",
@@ -97,12 +99,9 @@ export const homeDescription =
   "Modern, mobile-first websites for local businesses, plus a free website audit that shows you what's costing you customers.";
 
 export const nav = [
-  { label: "Projects", href: "/projects" },
-  { label: "Free Audit", href: "/#audit" },
+  { label: "Work", href: "/projects" },
   { label: "Services", href: "/#services" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "FAQ", href: "/#faq" },
-  { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];
@@ -155,32 +154,298 @@ export type DemoKey =
   | "plumber"
   | "electrician"
   | "restaurant"
-  | "ecommerce";
+  | "salon";
 
 /* Content for the local-service demo layout (renovation / plumber / electrician).
    Each fictional business gets its own copy, palette and structure emphasis so
-   the demos don't look like one recoloured template. */
+   the demos don't look like one recoloured template.
+
+   The base fields below are OPTIONAL. Every demo now owns its own layout
+   component, so each concept reads only the fields it actually renders; a
+   project carries nothing its demo cannot draw. `navName` is the one field all
+   five read (their headers and footers). */
 export type ServiceDemoContent = {
-  logoLetter: string;
+  logoLetter?: string;
   navName: string;
-  headline: string;
-  headlineAccent: string;
-  intro: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
-  stats: { value: string; label: string }[];
-  heroImages: { from: string; to: string; label: string }[];
-  servicesTitle: string;
-  services: { title: string; body: string }[];
-  galleryTitle: string;
-  gallery: { title: string; from: string; to: string }[];
-  whyTitle: string;
-  whyIntro: string;
-  whyPoints: string[];
-  faqTitle: string;
-  faqs: { q: string; a: string }[];
-  ctaTitle: string;
-  ctaBody: string;
+  headline?: string;
+  headlineAccent?: string;
+  intro?: string;
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+  servicesTitle?: string;
+  services?: { title: string; body: string }[];
+  galleryTitle?: string;
+  whyTitle?: string;
+  whyIntro?: string;
+  whyPoints?: string[];
+  faqTitle?: string;
+  faqs?: { q: string; a: string }[];
+  ctaTitle?: string;
+  ctaBody?: string;
+
+  /* Shown where a concept paints a form-status note: the honest line a visitor
+     gets after pressing a submit that cannot really submit. It lives per concept
+     so the wording can match the ask ("that's a request, not a booking"), and it
+     falls back to the shared site-wide DEMO_NOTE when a concept leaves it unset.
+     The footer disclaimer is separate and stays shared on every page. */
+  formNote?: string;
+
+  /* --- Renovation-concept fields -------------------------------------------
+     The editorial renovation layout needs a little more than the shared
+     local-service template reads: full-bleed photography, an opening statement,
+     project rows with scope instead of stats, and a named process. They live
+     here so the copy stays in one place with the rest of the fictional
+     business, and every one is OPTIONAL — the plumber and electrician concepts
+     read none of them and need no new content. */
+  imageSource?: string; // licence and photographer, shown where photos appear
+  hero?: {
+    src: string;
+    alt: string;
+    /* Every field below falls back, so a concept that only needs the
+       photograph — the plumber's hero — can supply just src and alt. */
+    caption?: string;
+    headline?: string;
+    accent?: string;
+  };
+  statement?: string;
+  work?: { eyebrow: string; lead: string; items: { title: string; type: string; scope: string; src: string; alt: string }[] };
+  process?: { eyebrow: string; title: string; intro: string; steps: { no: string; title: string; body: string }[] };
+  servicesEyebrow?: string;
+  servicesLead?: string;
+  servicePreviews?: string[]; // one decorative preview plate per service, by index
+  contact?: { eyebrow: string; name: string; email: string; projectType: string; message: string; submit: string; projectOptions: string[] };
+
+  /* --- Plumber-concept fields ------------------------------------------------
+     The call-first plumbing layout is built around a phone number, an urgent
+     band, a quoting explanation and a coverage panel. All OPTIONAL, so the
+     renovation, restaurant and salon concepts read none of it.
+
+     `phone` is the fictional business's number, never the studio's: the site's
+     own contact rules (see the studio config at the top of this file) still hold
+     — no phone, WhatsApp or location for Ismail Web Studio anywhere. Fictional
+     numbers stay inside the 555-01XX range reserved for made-up businesses. */
+  phone?: { display: string; href: string; label: string };
+  availability?: string;
+  trustChips?: string[];
+  emergency?: { title: string; body: string; callLabel: string; note: string };
+  quoting?: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    steps: { title: string; body: string }[];
+    note: string;
+  };
+  areas?: { eyebrow: string; title: string; intro: string; places: string[]; note: string };
+
+  /* The hero's mini booking card. `options` is read by index against
+     `services`, so picking a service in the card rewrites the "what happens
+     next" panel — the concept's signature interaction. `window` strings are
+     illustrative and always shown under `note`. */
+  callout?: {
+    title: string;
+    intro: string;
+    serviceLabel: string;
+    areaLabel: string;
+    areaPlaceholder: string;
+    timeLabel: string;
+    times: string[];
+    submit: string;
+    sendNote: string;
+    nextTitle: string;
+    note: string;
+    options: { next: string; window: string }[];
+  };
+
+  /* --- Electrician-concept fields ---------------------------------------------
+     The dark technical layout reads a dashboard-style status panel and a quote
+     helper that explains a job instead of pricing it. `phone` above is reused
+     here; everything below is OPTIONAL and read only by ElectricianDemo, so the
+     other concepts are untouched. */
+  status?: {
+    eyebrow: string;
+    title: string;
+    /* `tone: "live"` draws a pulsing dot, `note` a static one. A concept cannot
+       claim to be staffed right now, so only the invented rows get "live". */
+    rows: { label: string; value: string; tone: "live" | "note" }[];
+    note: string;
+  };
+  helper?: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    prompt: string;
+    checkLabel: string;
+    prepareLabel: string;
+    submit: string;
+    sendNote: string;
+    /* Index-aligned with nothing: each option carries its own two answers, so a
+       job type can never be paired with the wrong preparation note. */
+    options: { job: string; check: string; prepare: string }[];
+    note: string;
+  };
+
+  /* --- Restaurant-concept fields ------------------------------------------------
+     The fire-led dining layout is a menu, a room and a booking panel rather than
+     a service brochure, so it reads a course list, photography for a story split
+     and a lightbox gallery, and the hours an address a diner actually needs.
+
+     All OPTIONAL and read only by RestaurantDemo, so the three service concepts
+     and the storefront are untouched. Dishes, prices, the street and the phone
+     are invented for the fiction — the number stays inside the 555-01XX range and
+     the page carries the concept note everywhere it is needed. */
+  restaurant?: {
+    hero: {
+      src: string;
+      alt: string;
+      /* The headline is set in two parts so the second can carry the italic. */
+      headline: string;
+      accent: string;
+      /* The line a deciding diner looks for first: when the room is open. */
+      hoursLine: string;
+      caption: string;
+    };
+    intro: { eyebrow: string; body: string };
+    menu: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      /* Sits under the ledger: a menu this short cannot promise the dish on the
+         day is the dish on the card. */
+      note: string;
+      tabs: {
+        label: string;
+        blurb: string;
+        dishes: { name: string; desc: string; price: string }[];
+      }[];
+    };
+    story: {
+      eyebrow: string;
+      title: string;
+      paras: string[];
+      /* The asymmetric split: one tall plate, one smaller one offset over it. */
+      tall: { src: string; alt: string };
+      small: { src: string; alt: string };
+      caption: string;
+    };
+    gallery: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      items: { src: string; alt: string; caption: string }[];
+    };
+    events: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      points: string[];
+      cta: string;
+      src: string;
+      alt: string;
+    };
+    booking: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      /* The slots offered by the side, not a free clock: a restaurant releases
+         tables in services, and a grid of times says so more honestly than a
+         time picker that will accept 03:47. */
+      times: string[];
+      hours: { day: string; time: string }[];
+      address: string[];
+      phone: { display: string; href: string };
+      /* The submit ask itself — a restaurant books a table, so the button says
+         what pressing it does rather than reusing the page's generic CTA. */
+      submit: string;
+      /* Repeated beside the submit button: the last question before booking. */
+      note: string;
+    };
+  };
+
+  /* --- Salon-concept fields ----------------------------------------------------
+     Maison Lune is a soft, minimal beauty studio, so its layout is a service
+     menu, a booking flow, a small team and a room — not a product grid or a
+     service brochure. It reads the fields below; all OPTIONAL and read only by
+     SalonDemo, so the four other concepts are untouched.
+
+     Service names, durations, "from $" prices, stylist first names, the street,
+     the hours and the phone are invented for the fiction (as the dishes and the
+     product prices were). The number stays inside the 555-01XX range reserved
+     for made-up businesses and the page carries the concept note everywhere it
+     is needed. No review, star rating, before/after claim, "since <year>",
+     client count, award or certification is written anywhere — a studio this
+     quiet has none of those to show, and inventing them is exactly what the
+     honesty rule forbids. */
+  salon?: {
+    announcement: string;
+    hero: {
+      src: string;
+      alt: string;
+      eyebrow: string;
+      /* Split so the second part can carry the light-serif accent. */
+      headline: string;
+      accent: string;
+      sub: string;
+      /* The deciding line: whether the book is open. */
+      note: string;
+      ctaPrimary: string;
+      ctaSecondary: string;
+    };
+    /* The single large statement below the hero. */
+    statement: string;
+    menu: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      /* Each tab is a treatment family; items carry a duration and a "from $"
+         floor price, never a fixed quote. */
+      tabs: {
+        label: string;
+        items: { name: string; desc: string; duration: string; price: string }[];
+      }[];
+    };
+    booking: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      /* Four step labels; the flow walks service → stylist → time → review. */
+      steps: [string, string, string, string];
+      /* Placeholder calendar slots the concept generates — deliberately generic,
+         no fabricated availability. */
+      days: string[];
+      times: string[];
+      submit: string;
+      /* Repeated beside the final step: nothing here really books. */
+      note: string;
+    };
+    team: {
+      eyebrow: string;
+      title: string;
+      intro: string;
+      /* Initials, never face photographs — a monogram plate stands in. */
+      members: { name: string; initials: string; role: string; focus: string }[];
+    };
+    gallery: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      items: { src: string; alt: string; caption: string }[];
+    };
+    studio: {
+      eyebrow: string;
+      title: string;
+      points: { title: string; body: string }[];
+    };
+    offer: { title: string; body: string };
+    visit: {
+      eyebrow: string;
+      title: string;
+      address: string[];
+      hours: { day: string; time: string }[];
+      phone: { display: string; href: string };
+      /* The map panel cannot show a real place, so it names what it is. */
+      mapNote: string;
+    };
+  };
 };
 
 export type Project = {
@@ -190,7 +455,7 @@ export type Project = {
   name: string;
   businessType: string;
   industry: string;
-  category: "Service" | "Trade" | "Hospitality" | "E-commerce";
+  category: "Service" | "Trade" | "Hospitality";
   summary: string;
   objective: string;
   strategy: string;
@@ -199,7 +464,11 @@ export type Project = {
   mobileNotes: string[];
   conversionNotes: string[];
   accent: string; // hex used to tint the case study
-  palette: { bg: string; fg: string; accent: string };
+  /* `surface` and `accent2` are optional extras for a concept whose palette has
+     more than one colour in it — FlowRight's aqua and grey panels. DemoVars
+     emits them as --d-surface / --d-accent-2 and measures its text tokens
+     against the surface, so an extra colour can never quietly break contrast. */
+  palette: { bg: string; fg: string; accent: string; surface?: string; accent2?: string };
   content?: ServiceDemoContent; // required for the local-service demo layout
 };
 
@@ -231,26 +500,18 @@ export const projects: Project[] = [
       "Primary call to action repeated in the nav, after the gallery, and at the end",
       "Fixed-quote promise stated twice to remove the price anxiety that stops enquiries",
     ],
-    accent: "#c8a27a",
-    palette: { bg: "#0f0d0b", fg: "#f6f1ea", accent: "#c8a27a" },
+    accent: "#9A6B3F",
+    /* Light editorial theme: warm off-white paper, charcoal ink, muted bronze.
+       Every text colour the concept uses is derived from these three at render
+       time (see _shared.tsx), so the bronze only has to work as a fill. */
+    palette: { bg: "#F4F1EC", fg: "#1B1B1A", accent: "#9A6B3F" },
     content: {
-      logoLetter: "A",
       navName: "Atlas Renovation",
       headline: "Premium Local Service,",
       headlineAccent: "Without The Generic Website.",
       intro:
         "Full-home renovation crafted around how you actually live. Kitchens, bathrooms, and extensions — designed, managed, and finished to a standard you can point to.",
       ctaPrimary: "Book a Consultation →",
-      ctaSecondary: "View Projects",
-      stats: [
-        { value: "Fixed", label: "Transparent quotes" },
-        { value: "One", label: "Dedicated project lead" },
-      ],
-      heroImages: [
-        { from: "#b98f63", to: "#6f5137", label: "Kitchen remodel" },
-        { from: "#8a9a7b", to: "#4d5a44", label: "Bath" },
-        { from: "#c9b79c", to: "#8a7a63", label: "Extension" },
-      ],
       servicesTitle: "Services built around your home",
       services: [
         { title: "Kitchens", body: "Custom cabinetry, worktops, and layouts designed for how you cook." },
@@ -261,20 +522,8 @@ export const projects: Project[] = [
         { title: "Project Management", body: "A single point of contact, on schedule." },
       ],
       galleryTitle: "Recent Projects",
-      gallery: [
-        { title: "Hillside Kitchen", from: "#b98f63", to: "#5f452e" },
-        { title: "Marble Bath", from: "#9aa7ad", to: "#4c585e" },
-        { title: "Garden Extension", from: "#8a9a7b", to: "#414f39" },
-      ],
-      whyTitle: "Why homeowners choose Atlas",
       whyIntro:
         "We treat your home like our own. Clear quotes, honest timelines, and a finish that stands up close.",
-      whyPoints: [
-        "Fixed, transparent quotes",
-        "Dust-controlled worksites",
-        "One dedicated project lead",
-        "Workmanship guarantee",
-      ],
       faqTitle: "Questions, answered",
       faqs: [
         {
@@ -292,6 +541,107 @@ export const projects: Project[] = [
       ],
       ctaTitle: "Ready to talk about your project?",
       ctaBody: "Book a free consultation and get a clear, fixed quote.",
+
+      /* The consultation form cannot really reach a business, so the status line
+         says plainly what happened when it was pressed. */
+      formNote:
+        "This form is part of a concept website: nothing has been sent and no consultation is booked. A real business site would confirm the enquiry here.",
+
+      /* Renovation-concept layout content. Scope is composed from the service
+         descriptions above rather than written fresh, and the process steps
+         restate the promises already made in the services — no new claims. */
+      imageSource:
+        "Interior photography here stands in for project imagery. It is concept material, not a record of completed work.",
+      hero: {
+        src: "/demos/atlas-renovation/hero-kitchen.webp",
+        alt: "A renovated kitchen with pale cabinets and a timber-topped island, lit from the side.",
+        caption: "Kitchens · Bathrooms · Extensions",
+        headline: "Spaces that feel",
+        accent: "inevitable.",
+      },
+      statement:
+        "We treat your home like our own. Clear quotes, honest timelines, and a finish that stands up close.",
+      work: {
+        eyebrow: "Selected work",
+        lead: "A kitchen, a bathroom, and an extension — the three rooms people most often start with.",
+        items: [
+          {
+            title: "Hillside Kitchen",
+            type: "Kitchen",
+            scope: "Custom cabinetry, worktops, and layouts designed for how you cook.",
+            src: "/demos/atlas-renovation/work-kitchen.webp",
+            alt: "A bright kitchen with pale cabinets and a patterned tile backsplash behind the counter.",
+          },
+          {
+            title: "Marble Bath",
+            type: "Bathroom",
+            scope: "Wet rooms, tiling, and fixtures with a spa-like finish.",
+            src: "/demos/atlas-renovation/work-bathroom.webp",
+            alt: "A modern bathroom with two basins set into a long counter and a large mirror.",
+          },
+          {
+            title: "Garden Extension",
+            type: "Extension",
+            scope: "Added space that feels original to the property.",
+            src: "/demos/atlas-renovation/living-openplan.webp",
+            alt: "An open-plan living and dining space under a high pitched ceiling with tall windows.",
+          },
+        ],
+      },
+      process: {
+        eyebrow: "How we work",
+        title: "Four stages, one lead",
+        intro:
+          "The same route on every project, so you always know which stage the work is in and who to ask about it.",
+        steps: [
+          {
+            no: "01",
+            title: "Consult",
+            body: "We walk the space with you and talk through what the home has to do for you.",
+          },
+          {
+            no: "02",
+            title: "Design",
+            body: "Layout, materials and finishes are settled on drawings you can read before anything starts.",
+          },
+          {
+            no: "03",
+            title: "Build",
+            body: "One dedicated project lead runs the works and keeps the site dust-controlled.",
+          },
+          {
+            no: "04",
+            title: "Handover",
+            body: "We go through the finished work with you, backed by the workmanship guarantee.",
+          },
+        ],
+      },
+      servicesEyebrow: "Services",
+      servicesLead: "Six ways we take a house from plans to a finish.",
+      servicePreviews: [
+        "/demos/atlas-renovation/work-kitchen.webp",
+        "/demos/atlas-renovation/work-bathroom.webp",
+        "/demos/atlas-renovation/living-openplan.webp",
+        "/demos/atlas-renovation/hero-kitchen.webp",
+        "/demos/atlas-renovation/hero-kitchen.webp",
+        "/demos/atlas-renovation/living-openplan.webp",
+      ],
+      contact: {
+        eyebrow: "Start a project",
+        name: "Your name",
+        email: "Email",
+        projectType: "Project type",
+        message: "What are you thinking of?",
+        submit: "Request a consultation",
+        projectOptions: [
+          "Kitchen",
+          "Bathroom",
+          "Extension",
+          "Full renovation",
+          "Interiors",
+          "Not sure yet",
+        ],
+      },
     },
   },
   {
@@ -319,9 +669,17 @@ export const projects: Project[] = [
       "The booking call to action appears above the fold, mid-page, and again at the end",
       "\"Fixed price before we start\" is the single objection the page is built to answer",
     ],
-    accent: "#0b6bcb",
-    /* Bright theme: cool white surfaces, deep navy text, professional blue. */
-    palette: { bg: "#f4f8fb", fg: "#0f2337", accent: "#0b6bcb" },
+    accent: "#1d5bff",
+    /* Bright, call-first, utility-clear: white page, ink-navy text, one electric
+       blue for action, aqua only where it can be a fill, and grey panels to hold
+       cards apart without borders. Text tokens are derived against all of them. */
+    palette: {
+      bg: "#ffffff",
+      fg: "#0b1b33",
+      accent: "#1d5bff",
+      surface: "#f3f6fb",
+      accent2: "#19c3d6",
+    },
     content: {
       logoLetter: "F",
       navName: "FlowRight Plumbing",
@@ -331,15 +689,6 @@ export const projects: Project[] = [
         "Local plumbers for emergencies, boiler services, and bathroom installs. You get a fixed price before we start, and a van on the road fast.",
       ctaPrimary: "Book a Callout →",
       ctaSecondary: "See Our Prices",
-      stats: [
-        { value: "24/7", label: "Emergency callouts" },
-        { value: "Fixed", label: "Price before we start" },
-      ],
-      heroImages: [
-        { from: "#a9cfee", to: "#3f7bb5", label: "Boiler service" },
-        { from: "#dbeaf7", to: "#87b3d8", label: "Bathroom" },
-        { from: "#84bade", to: "#2f628f", label: "Leak trace" },
-      ],
       servicesTitle: "What we get called for",
       services: [
         { title: "Emergency Plumbing", body: "Bursts, leaks, and no-water callouts, day or night." },
@@ -347,22 +696,7 @@ export const projects: Project[] = [
         { title: "Leak Detection", body: "Finding the source without tearing your house apart." },
         { title: "Bathroom Installs", body: "Full refits, or swapping out the bits that are failing." },
         { title: "Drain Unblocking", body: "Sinks, toilets, and outside drains cleared properly." },
-        { title: "Landlord Work", body: "Certification and repairs for rental properties." },
-      ],
-      galleryTitle: "Jobs From This Month",
-      gallery: [
-        { title: "Boiler swap", from: "#bcd9f0", to: "#4a80b6" },
-        { title: "Bathroom refit", from: "#dcecf8", to: "#7cadd6" },
-        { title: "Leak trace", from: "#95c6e6", to: "#33688f" },
-      ],
-      whyTitle: "Why locals call FlowRight",
-      whyIntro:
-        "We turn up when we say we will, quote before we work, and leave the place cleaner than we found it.",
-      whyPoints: [
-        "Arrive inside the booked window",
-        "No surprise add-ons",
-        "Guaranteed workmanship",
-        "Tidy, respectful work",
+        { title: "Landlord Work", body: "Repairs and yearly checks for rental property, booked around the tenant." },
       ],
       faqTitle: "Before you call",
       faqs: [
@@ -383,6 +717,117 @@ export const projects: Project[] = [
       ],
       ctaTitle: "Water won't wait. Neither do we.",
       ctaBody: "Tell us what's wrong and get a fixed price before any work starts.",
+
+      /* --- FlowRight's own layout content. The number is the fictional
+         business's, in the range reserved for invented phone numbers; the studio's
+         own contact rules are unaffected. --- */
+      phone: {
+        display: "(555) 555-0142",
+        href: "tel:+15555550142",
+        label: "Call FlowRight",
+      },
+      availability: "Someone picks up. Day or night.",
+      trustChips: ["Upfront pricing", "Clean, tidy work", "Clear communication"],
+      hero: {
+        src: "/demos/flowright-plumbing/hero-pipes.webp",
+        alt: "A plumber's hands and the back of their head as they tighten white pipework inside a kitchen cabinet.",
+      },
+      emergency: {
+        title: "Water where it shouldn't be?",
+        body: "Shut the valve under the sink or at the stopcock, then call. We talk you through it while you're on the line.",
+        callLabel: "Call the emergency line",
+        note: "Concept site: this is a fictional number and it reaches no one.",
+      },
+      process: {
+        eyebrow: "How a callout works",
+        title: "Three steps, and you approve the price in the middle.",
+        intro: "No mystery visits. You know what is happening at every point.",
+        steps: [
+          {
+            no: "01",
+            title: "You tell us what is wrong",
+            body: "A sentence is enough. We ask the two or three questions that decide which van to send.",
+          },
+          {
+            no: "02",
+            title: "We look, then write the price",
+            body: "The plumber finds the cause and gives you a fixed price for the work before touching a tool.",
+          },
+          {
+            no: "03",
+            title: "You say go, we fix it",
+            body: "If you approve, the work happens there and then where it can. If not, you pay for the look, not the job.",
+          },
+        ],
+      },
+      quoting: {
+        eyebrow: "Pricing, plainly",
+        title: "You hear the number before the work, not after it.",
+        intro: "This is the part most people worry about, so it is the part we are clearest about.",
+        steps: [
+          { title: "Assess", body: "We find the actual cause, not just the symptom you can see." },
+          { title: "Fixed quote first", body: "One price for the job, written down, before anything starts." },
+          { title: "You approve", body: "Nothing happens until you say the price is fine. Saying no costs you the visit only." },
+          { title: "We fix it", body: "The work is done, tested in front of you, and the area is left clean." },
+        ],
+        note: "No rates are listed here. This is a concept business with no real price list to publish, and inventing figures would be a claim about money rather than a design decision.",
+      },
+      areas: {
+        eyebrow: "Where we work",
+        title: "A short list of places, close enough to reach quickly.",
+        intro: "Distance decides how fast someone can be with you, so the area is stated up front.",
+        places: [
+          "Northgate",
+          "Ashvale",
+          "Kingsley Row",
+          "Cedar Flats",
+          "Old Foundry",
+          "Marlow Bend",
+          "Riverside Wharf",
+          "Fern Hill",
+        ],
+        note: "Concept: these neighbourhoods are invented and the panel is a design element, not a coverage claim.",
+      },
+      callout: {
+        title: "Request a callout",
+        intro: "Two choices and we know what to send.",
+        serviceLabel: "What is wrong?",
+        areaLabel: "Your area",
+        areaPlaceholder: "Neighbourhood or ZIP",
+        timeLabel: "When works for you",
+        times: ["As soon as possible", "Later today", "Tomorrow morning", "This week"],
+        submit: "Send request",
+        sendNote:
+          "Concept site: this form has no backend, so nothing is sent and nothing is stored.",
+        nextTitle: "What happens next",
+        note: "Concept: response times shown are illustrative.",
+        options: [
+          {
+            next: "A plumber rings back to confirm the address and what to shut off while you wait.",
+            window: "Callback inside the hour",
+          },
+          {
+            next: "We book a visit to look at the boiler and write the price before any work.",
+            window: "Visit within two days",
+          },
+          {
+            next: "We agree a time to trace it, and tell you what the search costs first.",
+            window: "Slot in the next few days",
+          },
+          {
+            next: "Someone comes to measure and talk the layout through before anything is quoted.",
+            window: "Survey this week",
+          },
+          {
+            next: "We clear it, then show you what came out and what was causing it.",
+            window: "Same-day or next-day",
+          },
+          {
+            next: "We confirm the property, what paperwork you need, and a date that suits the tenant.",
+            window: "Scheduled around your tenant",
+          },
+        ],
+      },
     },
   },
   {
@@ -396,81 +841,161 @@ export const projects: Project[] = [
     summary:
       "A technical, safety-led electrician site that answers questions before the customer has to ask.",
     objective:
-      "Make a cautious homeowner feel the work is safe, certified, and clearly priced before they enquire.",
+      "Make a cautious homeowner feel the work is careful and clearly explained before they enquire.",
     strategy:
-      "Safety-clarity. Electrical work makes people nervous, so the page leads with certification and plain-language explanations instead of jargon, and puts the quote request next to every service rather than at the bottom.",
+      "Safety-clarity. Electrical work makes people nervous, so the page leads with what actually happens on a job and plain-language explanations instead of jargon, and puts a quote helper beside the services rather than a form at the bottom. Credentials are the one thing a concept site cannot claim, so the status panel says a real one would go there instead of inventing a badge.",
     designDirection: ["Technical", "Sharp", "Safety-led", "Plain-language"],
-    keySections: ["Hero", "Services", "Certifications", "Process", "Gallery", "FAQ", "Contact"],
+    keySections: ["Hero", "Services", "Safety practices", "Quote helper", "FAQ", "Contact"],
     mobileNotes: [
-      "Service cards stack into a single column with full-width tap areas",
-      "Quote request usable one-handed while standing in front of a consumer unit",
-      "Certification badges stay legible at small widths",
+      "Service rows stack into a single column with full-width tap areas",
+      "Quote helper usable one-handed while standing in front of a consumer unit",
+      "The emergency number stays reachable from every scroll position",
     ],
     conversionNotes: [
-      "Quote call to action in the nav, the hero, the service grid, and the closing panel",
-      "\"Send a photo of the problem\" lowers the effort needed to make first contact",
+      "Emergency call in the nav, the hero, the status panel and the closing block",
+      "The quote helper explains a job before anyone has to describe it in a form",
     ],
-    accent: "#f5b942",
-    palette: { bg: "#0d0c0a", fg: "#f6f2e9", accent: "#f5b942" },
+    accent: "#FFD400",
+    /* Dark technical theme: a near-black page, one raised surface, hairline
+       borders, and a single electric yellow doing all the acting. Text colours
+       are still derived at render time (see _shared.tsx), so the yellow only has
+       to survive as a fill — at this lightness it clears AA as small text too. */
+    palette: { bg: "#07090D", fg: "#E8ECF2", accent: "#FFD400", surface: "#0F131A" },
     content: {
       logoLetter: "V",
       navName: "VoltWise Electrical",
-      headline: "Safe Wiring. Clear Quotes.",
-      headlineAccent: "No Mess Left Behind.",
+      /* The two halves also drive the hero's one-time "power on": each word
+         group flickers to lit in sequence, so the accent half has to be able to
+         stand alone as a line. */
+      headline: "Careful Wiring.",
+      headlineAccent: "Explained Plainly.",
       intro:
-        "Domestic and light-commercial electricians. Fault finding, consumer unit upgrades, EV chargers, and full rewires — every job tested and certified.",
-      ctaPrimary: "Get a Free Quote →",
-      ctaSecondary: "Our Services",
-      stats: [
-        { value: "Same day", label: "Fault finding" },
-        { value: "Certified", label: "Every job tested" },
-      ],
-      heroImages: [
-        { from: "#c08a2a", to: "#4a3410", label: "Consumer unit" },
-        { from: "#8f9094", to: "#3b3c40", label: "EV charger" },
-        { from: "#d8b469", to: "#6b5325", label: "Rewire" },
-      ],
-      servicesTitle: "Electrical work we do",
+        "Domestic and light-commercial electrical work: fault finding, board upgrades, charging points, lighting and rewires. You are told what is being checked, what the result means, and what the work involves — before anything is taken apart.",
+      ctaPrimary: "Emergency Call",
+      ctaSecondary: "Request a quote",
+      phone: {
+        display: "(555) 555-0173",
+        href: "tel:+15555550173",
+        label: "Call VoltWise Electrical",
+      },
+      imageSource:
+        "The board photograph is concept material, licensed stock — not a record of a VoltWise installation.",
+      hero: {
+        src: "/demos/voltwise-electrical/panel-band.webp",
+        alt: "An open board with rows of breakers and colour-coded wiring, shot from above.",
+      },
+      status: {
+        eyebrow: "Service status",
+        title: "Where a real board would show its credentials",
+        rows: [
+          { label: "Emergency line", value: "Answered by an electrician", tone: "live" },
+          { label: "Quote replies", value: "Same day, illustrative", tone: "live" },
+          { label: "Licensed & insured", value: "Concept: credentials would appear here", tone: "note" },
+        ],
+        note: "Concept site: a live business would list its registration and insurance details here. Inventing them would be a claim, not a design decision.",
+      },
+      servicesTitle: "Work we take on",
+      servicesEyebrow: "Services",
       services: [
-        { title: "Fault Finding", body: "Tripping, dead circuits, and burning smells diagnosed properly." },
-        { title: "Consumer Units", body: "Modern boards with the right protection for your property." },
-        { title: "EV Chargers", body: "Home charging points, installed and certified." },
-        { title: "Full Rewires", body: "Planned room by room, with minimal disruption." },
-        { title: "Lighting", body: "Indoor, outdoor, and smart lighting that's wired to last." },
-        { title: "Commercial Testing", body: "Inspection and testing for shops and small offices." },
+        {
+          title: "Fault Finding",
+          body: "Tripping circuits, dead sockets, burning smells — traced to the cause instead of the nearest part being replaced.",
+        },
+        {
+          title: "Consumer Units",
+          body: "Boards replaced with protection matched to how the property is actually used, and every circuit named.",
+        },
+        {
+          title: "EV Charging Points",
+          body: "Home charging with the circuit, the cable route and the remaining load thought through first.",
+        },
+        {
+          title: "Lighting",
+          body: "Indoor, external and controlled lighting, wired so it can still be serviced in five years.",
+        },
+        {
+          title: "Rewires",
+          body: "Planned room by room, so the house stays livable while the work is happening.",
+        },
+        {
+          title: "Inspection And Reporting",
+          body: "A written record of what a property's wiring is doing, what it fails, and what it needs.",
+        },
       ],
       galleryTitle: "Recent Work",
-      gallery: [
-        { title: "Consumer unit upgrade", from: "#c08a2a", to: "#4a3410" },
-        { title: "EV charger install", from: "#8f9094", to: "#3b3c40" },
-        { title: "Kitchen rewire", from: "#d8b469", to: "#6b5325" },
-      ],
-      whyTitle: "Why people choose VoltWise",
+      /* The safety section. These are practices described in the moment a job is
+         being done, not qualifications asserted about the business. */
+      whyTitle: "What safety means on an actual job",
       whyIntro:
-        "We explain the problem in plain English, quote it in writing, and leave the cables tidier than we found them.",
+        "Anyone can call themselves safety-led. These are the specific things that happen on a visit, in this order.",
       whyPoints: [
-        "Written quote before work starts",
-        "Certified & insured",
-        "Clean, cable-tidy installs",
-        "Explained in plain English",
+        "Isolation confirmed and proved dead before a single screw comes out.",
+        "The existing installation is looked at before new work is added to it.",
+        "Every circuit is tested and clearly named when the job is finished.",
+        "Anything dangerous spotted while we are there is written down and shown to you.",
+        "The area is left as it was found, with no loose ends in the loft or the board.",
       ],
       faqTitle: "Common questions",
       faqs: [
         {
           q: "Do I actually need a full rewire?",
-          a: "Not always. It depends on the age, condition, safety, and existing layout of the wiring. A proper inspection is the best way to determine what needs to be replaced.",
+          a: "Not always. It depends on the age, condition and layout of what is already there, and on what has been added to it since. An inspection is what settles it, and the reason for each recommendation should be shown to you, not just asserted.",
         },
         {
-          q: "How long does an EV charger install take?",
-          a: "Installation time depends on the property, cable route, charger, and existing electrical setup. The required work can be confirmed after the installation requirements are assessed.",
+          q: "Can any circuit take a charging point?",
+          a: "Not automatically. The board, the remaining capacity, the cable route and the earthing arrangement all get looked at first. If the answer is no, that should be said before a date is booked rather than discovered on the day.",
         },
         {
-          q: "Can you work around my hours?",
-          a: "Visit times can be discussed around the customer's availability. The actual appointment windows should be confirmed with the business.",
+          q: "Why does a socket dead on one side of the house affect the other?",
+          a: "Circuits are often looped through more rooms than they are named for, so one fault can take out a run of sockets or lights. Tracing which circuit a socket sits on is most of the work, and it is done with the board open rather than by guessing.",
+        },
+        {
+          q: "What should I have ready before a visit?",
+          a: "The age of the property if you know it, what changed before the problem appeared, and clear access to the board and to wherever the work is. A photo of the board with the cover off answers most of the rest before anyone arrives.",
         },
       ],
+      helper: {
+        eyebrow: "Quote helper",
+        title: "Pick the job. See what it involves.",
+        intro:
+          "No prices here — a figure written before anyone has seen the board would be a guess dressed up as a quote.",
+        prompt: "What needs doing?",
+        checkLabel: "What we check first",
+        prepareLabel: "What helps you prepare",
+        submit: "Request this quote",
+        sendNote: "Concept site: this form has no backend, so nothing is sent and nothing is stored.",
+        options: [
+          {
+            job: "Panel upgrade",
+            check: "The incoming supply, the earthing and bonding arrangement, the condition of the existing cables, and which circuits actually exist once the cover is off.",
+            prepare: "Clear access to the board and a note of what each switch does today, even if you are sure some of them do nothing.",
+          },
+          {
+            job: "EV charger",
+            check: "Spare capacity in the board, the circuit length and route, the earthing arrangement, and whether the consumer unit needs work before a charger is added to it.",
+            prepare: "Where the car parks in relation to the board, and a photo of the outside wall you would want the unit on.",
+          },
+          {
+            job: "Lighting",
+            check: "Where the existing cable runs, whether the switch legs and neutrals are where the plan assumes they are, and what the fitting needs to be serviceable later.",
+            prepare: "Which rooms, and whether you want them controlled from more than one place — that decides most of the cabling.",
+          },
+          {
+            job: "Rewiring",
+            check: "What is installed now, what condition it is in, what has been added on top of it over the years, and which rooms can stay in use while the work runs.",
+            prepare: "Which rooms you can clear for how long, and where the loft or cupboard access is.",
+          },
+          {
+            job: "Fault finding",
+            check: "Which circuit the symptom actually sits on, whether the fault is in the board, the cable, or a connection somewhere along the run, and whether it is safe to leave until tomorrow.",
+            prepare: "When it happens and what was in use at the time. A ten-second video of the switch failing saves an hour of guessing.",
+          },
+        ],
+        note: "Concept: the helper explains the work. It stores nothing and sends nothing.",
+      },
       ctaTitle: "Something not right with your electrics?",
-      ctaBody: "Send a photo of the problem and get a clear, fixed quote back.",
+      ctaBody:
+        "Describe what is happening, or send a photo of the board. You will hear what needs checking and what that means before anyone quotes a price.",
     },
   },
   {
@@ -498,38 +1023,417 @@ export const projects: Project[] = [
       "Reserve call to action in the header, the hero, and the dedicated booking panel",
       "Opening days and hours repeated next to the booking form to remove the last question",
     ],
-    accent: "#b5522f",
-    /* Bright theme: ivory/cream surfaces, warm charcoal text, terracotta accent. */
-    palette: { bg: "#f8f2e9", fg: "#2f2724", accent: "#b5522f" },
+    accent: "#C8642B",
+    /* Dark ember theme: near-black brown room, warm cream ink, burnt orange fire,
+       and an olive that only ever appears at large sizes because it cannot clear
+       4.5:1 as small text on this background. DemoVars derives every grey and
+       both boundary colours from these four at render time. */
+    palette: { bg: "#16100C", fg: "#F3EBDD", accent: "#C8642B", accent2: "#7C8460" },
+    content: {
+      navName: "Ember & Oak",
+      ctaPrimary: "Reserve a Table →",
+      ctaSecondary: "See the Menu",
+      services: [
+        { title: "The Grill", body: "Dry-aged beef and whole fish over oak and beech." },
+        { title: "The Hearth", body: "Roots and alliums buried in the ash." },
+        { title: "The Cold Room", body: "Cured fish and things we keep for later." },
+        { title: "The Cellar", body: "Low-intervention wine, poured by the glass." },
+      ],
+      faqTitle: "Before You Book",
+      faqs: [
+        {
+          q: "Do you take walk-ins?",
+          a: "A few seats at the counter are held back for people who arrive without a booking. Everything else goes out through the reservation book.",
+        },
+        {
+          q: "Can you cook around an allergy?",
+          a: "Usually, if we know in advance. Add it to the booking note and we will tell you honestly whether the kitchen can do it properly that night.",
+        },
+        {
+          q: "Is there a set menu?",
+          a: "No. The card changes with the week, so you choose course by course and nobody is committed to a long dinner they did not ask for.",
+        },
+        {
+          q: "Do you take large groups?",
+          a: "The banquet room seats up to fourteen and is enquired about rather than booked online. Use the number on this page.",
+        },
+      ],
+
+      imageSource:
+        "Photography: Sebastian Alvarado Rojas, Ruben Mavarez, Vitalii Kyktov, Janay Peters, Sergio Arteaga, Bence Balla-Schottner, Madeline Liu, Anita Austvika and Ivan Benets — all used under the Unsplash License. This is a fictional restaurant; the food shown is not the food on this menu.",
+
+      /* The reservation cannot really hold a table, so the status line says what
+         pressing the button did in a diner's own words. */
+      formNote:
+        "This form is part of a concept website: nothing has been booked and no request was sent. A real reservation book would confirm the table here.",
+
+      restaurant: {
+        hero: {
+          src: "/demos/ember-restaurant/hero-fire.webp",
+          alt: "Steaks cooking over an open flame on a barred grill, a tall tongue of fire behind them.",
+          headline: "Everything Here",
+          accent: "Has Met A Flame.",
+          hoursLine: "Dinner Wednesday to Sunday · from 18:00",
+          caption: "Oak and beech, burned down since four o'clock",
+        },
+        intro: {
+          eyebrow: "The Kitchen",
+          body: "There is one fire in this building and it does most of the work. Meat and fish go straight onto the bars. Vegetables go into the ash under a foil hood, where they cook slower and taste of somewhere else. Bread arrives still ticking from the heat, and the butter is cultured in-house because it takes four days and we have them.",
+        },
+        menu: {
+          eyebrow: "The Card",
+          title: "This Week",
+          lead:
+            "Nine things on the grill, four puddings, and a cellar list we keep short on purpose.",
+          note: "The card is rewritten on Monday. If a dish matters to you, say so when you book and we will tell you whether it is still on.",
+          tabs: [
+            {
+              label: "Starters",
+              blurb: "Small, salted, and meant to be eaten while the grill is still settling.",
+              dishes: [
+                {
+                  name: "Ember Leeks",
+                  desc: "Buried in the ash, hazelnut, aged sheep's cheese",
+                  price: "12",
+                },
+                {
+                  name: "Grilled Sourdough",
+                  desc: "Cultured butter, smoked salt, thyme oil",
+                  price: "8",
+                },
+                {
+                  name: "Charred Hispi",
+                  desc: "Brown butter, lemon, toasted caraway",
+                  price: "11",
+                },
+                {
+                  name: "Smoked Beetroot",
+                  desc: "Goat curd, walnut, honey vinegar",
+                  price: "10",
+                },
+                {
+                  name: "Cured Trout",
+                  desc: "Buttermilk, cucumber, dill oil",
+                  price: "13",
+                },
+              ],
+            },
+            {
+              label: "Mains",
+              blurb: "Cooked on the bars, rested by the fire, never under a lamp.",
+              dishes: [
+                {
+                  name: "Dry-Aged Ribeye",
+                  desc: "Bone marrow, watercress, burnt onion",
+                  price: "42",
+                },
+                {
+                  name: "Whole Plaice",
+                  desc: "Brown butter, capers, sea herbs",
+                  price: "29",
+                },
+                {
+                  name: "Coal-Roast Chicken",
+                  desc: "Morels, tarragon, pan gravy",
+                  price: "26",
+                },
+                {
+                  name: "Aged Pork Chop",
+                  desc: "Quince, fennel, mustard greens",
+                  price: "28",
+                },
+                {
+                  name: "Smoked Haddock",
+                  desc: "Crab, cauliflower, brown shrimp butter",
+                  price: "27",
+                },
+              ],
+            },
+            {
+              label: "Dessert",
+              blurb: "Three puddings and a cheese board, made in the afternoon.",
+              dishes: [
+                {
+                  name: "Burnt Honey Custard",
+                  desc: "Oat crumble, crème fraîche",
+                  price: "9",
+                },
+                {
+                  name: "Chocolate and Olive Oil",
+                  desc: "Sea salt, bay leaf ice cream",
+                  price: "10",
+                },
+                {
+                  name: "Baked Pear",
+                  desc: "Sourdough ice cream, walnut praline",
+                  price: "9",
+                },
+                {
+                  name: "Cheese, Two",
+                  desc: "Oatcakes, quince from the pot",
+                  price: "12",
+                },
+              ],
+            },
+            {
+              label: "Drinks",
+              blurb: "The short list. The cellar card has more and is on the table.",
+              dishes: [
+                {
+                  name: "Barrel-Aged Negroni",
+                  desc: "Orange peel, bitter wine",
+                  price: "13",
+                },
+                {
+                  name: "Smoked Old Fashioned",
+                  desc: "Maple, black walnut bitters",
+                  price: "14",
+                },
+                {
+                  name: "Wine, By The Glass",
+                  desc: "Three whites, three reds, one orange",
+                  price: "9–14",
+                },
+                {
+                  name: "Spruce and Honey Soda",
+                  desc: "No alcohol, made in the kitchen",
+                  price: "6",
+                },
+              ],
+            },
+          ],
+        },
+        story: {
+          eyebrow: "The Room",
+          title: "Twenty-Two Covers, One Fire",
+          paras: [
+            "The room seats twenty-two and the tables are close enough that you can hear the kitchen deciding things. It is not a quiet restaurant and it does not pretend to be.",
+            "Service runs in two blocks so the grill can keep up with the room. The first table is seated at six, the last at nine, and nobody is rushed out in between.",
+          ],
+          tall: {
+            src: "/demos/ember-restaurant/story-hands.webp",
+            alt: "Two hands passing small plates across a dark wooden table, in black and white.",
+          },
+          small: {
+            src: "/demos/ember-restaurant/story-dessert.webp",
+            alt: "Hands either side of a small dessert in a dark glazed bowl, topped with a yellow flower.",
+          },
+          caption: "Plates go over the pass by hand. There is no till at the front.",
+        },
+        gallery: {
+          eyebrow: "Photographs",
+          title: "Fire, Tables, Plates",
+          lead: "Tap any photograph to see it larger. Escape or the arrow keys move through them.",
+          items: [
+            {
+              src: "/demos/ember-restaurant/gal-hearth.webp",
+              alt: "Sausages and a split chicken on a chain-hung grill in front of a hearth fire.",
+              caption: "The chain, lowered onto the coals",
+            },
+            {
+              src: "/demos/ember-restaurant/gal-grill.webp",
+              alt: "Close view of empty iron grill bars with embers glowing underneath.",
+              caption: "Bars, cleaned and hot",
+            },
+            {
+              src: "/demos/ember-restaurant/gal-table.webp",
+              alt: "A row of small dishes laid along a wooden table over evergreen branches.",
+              caption: "A long table, laid for nobody yet",
+            },
+            {
+              src: "/demos/ember-restaurant/gal-autumn.webp",
+              alt: "A glazed purple dessert on a white plate beside an amber cocktail, with pale pumpkins behind.",
+              caption: "Pudding and a digestif",
+            },
+            {
+              src: "/demos/ember-restaurant/gal-candles.webp",
+              alt: "Empty restaurant tables lit by small battery lamps at night.",
+              caption: "Nine o'clock, second service",
+            },
+          ],
+        },
+        events: {
+          eyebrow: "Private Dining",
+          title: "The Banquet Room",
+          body:
+            "A door closes, the candles come down the table, and fourteen people eat the same menu at the same time. It is cooked the same way as everything else in the building — on the fire, in front of you.",
+          points: [
+            "Seats up to fourteen",
+            "One menu, chosen in advance",
+            "The grill is fired for your table only",
+          ],
+          cta: "Enquire About The Room",
+          src: "/demos/ember-restaurant/events-room.webp",
+          alt: "A long dark dining room set for a banquet, with tall candles in glass holders down the centre.",
+        },
+        booking: {
+          eyebrow: "Reservations",
+          title: "Find A Table",
+          body:
+            "Dinner service, Wednesday to Sunday. Parties of two to eight are held here; anything larger goes through the phone so we can check the room will take you.",
+          times: ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+          hours: [
+            { day: "Wednesday – Saturday", time: "18:00 – 23:30" },
+            { day: "Sunday", time: "12:00 – 17:00" },
+            { day: "Monday – Tuesday", time: "Closed" },
+          ],
+          address: ["14 Ashgrove Lane", "Old Foundry Quarter"],
+          phone: { display: "(555) 014-0166", href: "tel:+15550140166" },
+          submit: "Find a Table",
+          note: "Tables are held for the block you book, not for the evening. Running late is worth a call.",
+        },
+      },
+    },
   },
   {
-    slug: "maison-lifestyle",
+    slug: "maison-lune",
     index: "05",
-    demo: "ecommerce",
-    name: "Maison Objects",
-    businessType: "Local Retail / E-commerce",
-    industry: "Premium Lifestyle",
-    category: "E-commerce",
+    demo: "salon",
+    name: "Maison Lune",
+    businessType: "Beauty Studio",
+    industry: "Hair & Beauty",
+    category: "Hospitality",
     summary:
-      "A product-focused storefront with an editorial, premium retail feel.",
+      "A soft, minimal beauty studio site built around a service menu and a booking flow.",
     objective:
-      "Present a product line as desirable and premium, and drive online purchases.",
+      "Make a small studio feel calm and premium, and turn a visitor into an appointment without a heavy storefront.",
     strategy:
-      "Editorial credibility. Premium retail sells on presentation, so the layout behaves like a magazine spread — large imagery, restrained type, and a product grid where the price never has to be hunted for.",
-    designDirection: ["Editorial", "Luxury retail", "Image-led", "Elegant"],
-    keySections: ["Hero", "Featured Products", "Story", "Newsletter"],
+      "Restraint. A beauty studio sells on atmosphere and trust, so the layout behaves like the room itself — generous cream space, a light serif, one muted rose accent, and a booking flow that walks a visitor from service to time in four quiet steps.",
+    designDirection: ["Minimal", "Soft luxury", "Editorial serif", "Calm"],
+    keySections: ["Hero", "Service Menu", "Booking", "Team", "Gallery"],
     mobileNotes: [
-      "Product grid drops from four columns to two so images stay large enough to judge",
-      "Hero stacks text above image instead of shrinking them side by side",
-      "Bag and search stay in the sticky header at every width",
+      "Nav collapses to a hamburger sheet below the tablet frame",
+      "The four-step booking stays one column so a choice never crowds the next",
+      "A sticky Book bar keeps the appointment reachable with one thumb",
     ],
     conversionNotes: [
-      "Add-to-bag action available on every product card without leaving the grid",
-      "Featured collection placed directly under the hero, ahead of the brand story",
-      "Shipping threshold announced at the very top to lift basket size",
+      "Book Now appears in the header, the hero, and the sticky mobile bar",
+      "Service menu leads with durations and a from-price so a visitor can self-select",
+      "The booking summary updates live, so the choice is visible before it is confirmed",
     ],
-    accent: "#d98a5f",
-    palette: { bg: "#12100e", fg: "#f7f2ec", accent: "#d98a5f" },
+    accent: "#B5776A",
+    palette: { bg: "#F7F2EC", fg: "#2B221D", accent: "#B5776A", surface: "#E9DFD3" },
+    content: {
+      /* The salon layout renders nothing from the shared local-service base
+         except `navName`, which its header and footer both draw. Everything else
+         it shows lives under `salon` below. See ruling H. */
+      navName: "Maison Lune",
+      formNote:
+        "This book is part of a concept website: the appointment has not been taken and nothing was sent. A real studio would confirm it here.",
+      salon: {
+        announcement: "Now booking spring appointments",
+        hero: {
+          src: "/demos/maison-lune/hero.webp",
+          alt: "The studio floor: tan styling chairs beneath arched gold mirrors, a wash basin in the foreground, no people.",
+          eyebrow: "Hair & Beauty Studio",
+          headline: "A quiet room for",
+          accent: "slow appointments.",
+          sub: "Few chairs, unhurried appointments, and a menu kept short so each one gets the time it needs.",
+          note: "Appointments open",
+          ctaPrimary: "Book an Appointment",
+          ctaSecondary: "See the Menu",
+        },
+        statement:
+          "We are a small studio. We would rather do fewer people well than fill a calendar — so a haircut is not squeezed between the appointments on either side of it.",
+        menu: {
+          eyebrow: "The Menu",
+          title: "What we do",
+          lead: "Four families of treatment. Prices are a starting point; the studio confirms the final figure at your consultation.",
+          tabs: [
+            {
+              label: "Hair",
+              items: [
+                { name: "Cut & Style", desc: "A consultation, a wash, and a cut you can live with.", duration: "60 min", price: "from $65" },
+                { name: "Blow-dry", desc: "Prepped, dried and finished to leave the chair ready.", duration: "40 min", price: "from $45" },
+                { name: "Keratin smoothing", desc: "A frizz-taming finish that settles over the next few washes.", duration: "150 min", price: "from $180" },
+              ],
+            },
+            {
+              label: "Colour",
+              items: [
+                { name: "Root retouch", desc: "A grown-out root line, blended back into the length.", duration: "75 min", price: "from $85" },
+                { name: "Balayage", desc: "Hand-painted, sun-kissed ends with no hard line.", duration: "180 min", price: "from $210" },
+                { name: "Gloss & tone", desc: "A sheer colour bath that brings back shine.", duration: "45 min", price: "from $55" },
+              ],
+            },
+            {
+              label: "Skin",
+              items: [
+                { name: "Express facial", desc: "Cleanse, exfoliate and hydrate in half an hour.", duration: "30 min", price: "from $50" },
+                { name: "Signature facial", desc: "A longer treatment built around what your skin needs.", duration: "75 min", price: "from $95" },
+                { name: "Brow shape", desc: "Waxed or threaded, and tidied to suit your face.", duration: "20 min", price: "from $24" },
+              ],
+            },
+            {
+              label: "Nails",
+              items: [
+                { name: "Classic manicure", desc: "Shape, cuticle care and a coat of polish.", duration: "45 min", price: "from $38" },
+                { name: "Gel overlay", desc: "A longer-wearing finish that cures under a lamp.", duration: "60 min", price: "from $55" },
+                { name: "Spa pedicure", desc: "A soak, an exfoliation and a clean finish.", duration: "60 min", price: "from $60" },
+              ],
+            },
+          ],
+        },
+        booking: {
+          eyebrow: "Appointments",
+          title: "Book in four steps",
+          body: "Pick what you would like, who you would like to see, and a time. Nothing here really reserves a chair — it is a concept demonstration of how a booking could feel.",
+          steps: ["Service", "Stylist", "Time", "Review"],
+          days: ["Mon 12", "Tue 13", "Wed 14", "Thu 15", "Fri 16", "Sat 17"],
+          times: ["09:30", "11:00", "13:15", "15:00", "16:30"],
+          submit: "Request Appointment",
+          note: "Concept site — this booking does not send anywhere and no chair is held.",
+        },
+        team: {
+          eyebrow: "The Studio",
+          title: "Who you'll see",
+          intro: "Three stylists share the room. You can ask for a favourite, or let the studio pair you with whoever suits the service.",
+          members: [
+            { name: "Noor", initials: "N", role: "Senior Stylist", focus: "Cuts, curl re-shaping and colour correction." },
+            { name: "Elise", initials: "E", role: "Colour Specialist", focus: "Balayage, lived-in blonde and toning." },
+            { name: "Priya", initials: "P", role: "Skin & Nails", focus: "Facials, brow shaping and gel finishes." },
+          ],
+        },
+        gallery: {
+          eyebrow: "The Room",
+          title: "Inside the studio",
+          lead: "A working room, photographed between appointments. No faces and no products posed as endorsements.",
+          items: [
+            { src: "/demos/maison-lune/stations.webp", alt: "A row of tan styling chairs and arched gold mirrors along a cream wall.", caption: "The styling floor" },
+            { src: "/demos/maison-lune/corner.webp", alt: "A white lounge chair and a round standing mirror in a cream alcove.", caption: "The quiet corner" },
+            { src: "/demos/maison-lune/braid.webp", alt: "Fresh cornrow braids seen from behind, mid-style.", caption: "Braiding & texture" },
+            { src: "/demos/maison-lune/tools.webp", alt: "Nail scissors, files and wooden sticks laid on a soft grey towel.", caption: "The tools" },
+            { src: "/demos/maison-lune/towels.webp", alt: "A stack of rolled white towels warming in sunlight on a wooden bench.", caption: "Fresh from the wash" },
+            { src: "/demos/maison-lune/marble.webp", alt: "Two tan styling chairs on a polished marble floor.", caption: "Between appointments" },
+          ],
+        },
+        studio: {
+          eyebrow: "How we work",
+          title: "A few things we keep to",
+          points: [
+            { title: "Quality products", body: "We use the same lines on our own hair and skin, and we only stock what we would recommend to a friend." },
+            { title: "A calm space", body: "Low music, daylight, and no two appointments scheduled back-to-back on the same chair." },
+            { title: "Consultation first", body: "Colour and longer treatments start with a short talk about your hair, so nothing begins before you agree to it." },
+          ],
+        },
+        offer: {
+          title: "New here?",
+          body: "Your first visit includes a short consultation and a take-home sample, chosen at the chair.",
+        },
+        visit: {
+          eyebrow: "Visit",
+          title: "Finding the studio",
+          address: ["Maison Lune", "142 Alder Street", "Springfield"],
+          hours: [
+            { day: "Tue – Fri", time: "9:00 – 18:00" },
+            { day: "Saturday", time: "9:00 – 16:00" },
+            { day: "Sun – Mon", time: "Closed" },
+          ],
+          phone: { display: "(555) 018-0142", href: "tel:+15550180142" },
+          mapNote: "Illustrative map — not a real location.",
+        },
+      },
+    },
   },
 ];
 
@@ -576,9 +1480,9 @@ export const services: Service[] = [
     icon: "target",
   },
   {
-    title: "E-commerce Websites",
-    body: "A modern storefront for local shops that want to sell online as well as in person.",
-    icon: "cart",
+    title: "Booking & Enquiry Forms",
+    body: "Turn your website into a way to get enquiries — a form that actually reaches you, with a clear next step for the visitor.",
+    icon: "cursor",
   },
 ];
 
@@ -743,7 +1647,7 @@ export const pricingPackages: Package[] = [
 /* One source for the package terms the pricing band publishes. */
 export const packageTerms = {
   included: "Every package includes 2 rounds of revisions and 30 days of free bug fixes.",
-  payment: "50% to start, 50% before launch, by bank transfer or Payoneer.",
+  payment: "50% to start, 50% before launch — paid through Payoneer, by bank transfer or card.",
   approval: "Nothing goes live until you approve it.",
 };
 
@@ -799,7 +1703,7 @@ export const faqItems = [
   },
   {
     q: "How does payment work?",
-    a: "50% to start, 50% before launch. I send an invoice and you pay securely through Payoneer by bank transfer or card. Nothing goes live until final payment is received.",
+    a: "50% to start, 50% before launch. I send an invoice and you pay through Payoneer, by bank transfer or card. Nothing goes live until final payment is received.",
   },
   {
     q: "Do you handle hosting and the domain?",

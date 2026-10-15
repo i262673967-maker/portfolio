@@ -20,6 +20,17 @@ const nextConfig: NextConfig = {
      the wrong project root without this. */
   turbopack: { root: path.join(__dirname) },
 
+  /* The e-commerce concept was replaced by a beauty salon and the slug moved with
+     it, so the old Maison Objects URLs are permanently redirected rather than left
+     to 404. permanent:true is a 308, which keeps the request method and tells a
+     crawler the address has moved for good. */
+  async redirects() {
+    return [
+      { source: "/work/maison-lifestyle", destination: "/work/maison-lune", permanent: true },
+      { source: "/demos/maison-lifestyle", destination: "/demos/maison-lune", permanent: true },
+    ];
+  },
+
   /* Baseline response headers on every route, including the prerendered pages
      and /_next assets. Deliberately minimal: the CSP carries frame-ancestors
      only, so nothing restricts the inline styles the device frames and the

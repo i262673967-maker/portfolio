@@ -1,34 +1,26 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Design tokens — premium dark studio
+   Design tokens — bright brand studio (light theme)
+   Derived from the logo: navy circle, white "i", electric-blue "W".
+   Never a token named `base` (it collides with Tailwind's text-base).
+   Demo palettes live in DemoVars (--d-*) and are deliberately untouched.
    --------------------------------------------------------------- */
 @theme {
-  /* WARNING: a colour token named `base` makes Tailwind v4 resolve `text-base`
-     to this colour instead of the usual 1rem font size — the text turns
-     near-black on a near-black background. Write sizes as `text-[1rem]`. */
-  --color-base: #08090c;
-  --color-base-2: #0c0e13;
-  --color-ink: #08090c;
-  --color-surface: #12141b;
-  --color-surface-2: #191c25;
-  --color-line: #ffffff14;
-  --color-line-strong: #ffffff24;
-  /* Form controls need a boundary a visitor can actually see (WCAG 1.4.11 asks
-     for 3:1 against the surrounding colour). line/line-strong are decorative
-     hairlines at ~1.2:1 and don't qualify, so inputs get their own token. */
-  --color-line-input: #626a7c;
-  --color-offwhite: #f4f3ef;
-  --color-muted: #9aa0ad;
-  --color-faint: #838a97;
-  --color-accent: #38bdf8;
-  --color-accent-2: #22d3ee;
-  --color-accent-deep: #0ea5e9;
-  --color-warm: #f2a65a;
-  --color-warm-2: #e8896b;
+  --color-paper: #f6f4ef; /* page background */
+  --color-paper-2: #ece8df; /* subtle alternating band + chip fill */
+  --color-card: #ffffff; /* raised card / input surface */
+  --color-ink: #07133f; /* primary text + solid shapes (navy) */
+  --color-ink-muted: #4a5272; /* secondary text (AA on paper/card/paper-2) */
+  --color-line: #07133f; /* borders at full strength */
+  --color-brand: #1a5cff; /* electric blue — primary action */
+  --color-sky: #22a7ff; /* decorative large block only (fails text/UI contrast) */
+  --color-mark: #ffd43b; /* yellow highlighter swipe */
+  --color-navy: #07133f; /* solid navy shapes */
+  --color-on-brand: #ffffff; /* text sitting on brand/navy fills */
 
-  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --animate-marquee: marquee 32s linear infinite;
@@ -40,7 +32,7 @@
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
@@ -48,25 +40,25 @@ html {
 }
 
 body {
-  background: var(--color-base);
-  color: var(--color-offwhite);
+  background: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--color-accent) 35%, transparent);
-  color: #fff;
+  background: var(--color-brand);
+  color: var(--color-on-brand);
 }
 
 /* Thin, subtle scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #ffffff22 transparent;
+  scrollbar-color: #07133f33 transparent;
 }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
-*::-webkit-scrollbar-thumb { background: #ffffff1f; border-radius: 999px; }
+*::-webkit-scrollbar-thumb { background: #07133f2b; border-radius: 999px; }
 *::-webkit-scrollbar-track { background: transparent; }
 
 /* ---------------------------------------------------------------
@@ -85,27 +77,122 @@ body {
   .container-shell { padding-inline: 2.5rem; }
 }
 
+/* 12px floor: this is uppercase mono at 0.22em tracking, and below 12px it stops
+   reading as a label on a phone. Brand blue clears AA on paper/card (4.75/5.23),
+   so an eyebrow never sits directly on the paper-2 band. */
 @utility eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-brand);
 }
 
 @utility heading-display {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
-  color: var(--color-offwhite);
+  color: var(--color-ink);
 }
 
-/* Subtle grain / vignette backdrop */
-@utility studio-bg {
-  background-image:
-    radial-gradient(60rem 40rem at 80% -10%, color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 60%),
-    radial-gradient(50rem 40rem at 0% 10%, color-mix(in oklab, var(--color-warm) 6%, transparent), transparent 55%);
+/* Raised card: 2px navy border, generous radius, one hard offset shadow that
+   grows and lifts on hover. transform/opacity only, so it never costs layout. */
+@utility card-pop {
+  border: 2px solid var(--color-line);
+  border-radius: 22px;
+  background: var(--color-card);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility btn-pop {
+  border: 2px solid var(--color-line);
+  border-radius: 999px;
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition:
+    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card-pop:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  .btn-pop:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  .btn-pop:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
+}
+
+/* A highlighter swipe behind a word. The word text stays in ink/navy (12.55:1 on
+   the yellow); the yellow is painted in via background-size so it can animate its
+   own width from 0 to full on load without touching layout. */
+@utility mark {
+  background-color: var(--color-mark);
+  background-image: linear-gradient(var(--color-mark), var(--color-mark));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.36em;
+  padding-inline: 0.08em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mark {
+    animation: mark-swipe 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+  }
+}
+
+@keyframes mark-swipe {
+  from { background-size: 0% 0.36em; }
+  to { background-size: 100% 0.36em; }
+}
+
+/* A rotated circular sticker badge (e.g. "Free audit"). Sits as decoration. */
+@utility sticker {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 2px solid var(--color-ink);
+  background: var(--color-mark);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transform: rotate(-6deg);
+  box-shadow: 3px 3px 0 var(--color-ink);
+}
+
+/* CSS-only marquee that stops when the pointer is over it or the visitor asked
+   for no motion. The strip is duplicated in markup, so translateX(-50%) loops. */
+@utility marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+@media (hover: hover) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 
 /* Demo sites render inside device frames using container queries.
@@ -168,6 +255,321 @@ body {
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+/* The same entrance for a section of a concept website. Measured against the
+   frame's own scroll box rather than the browser window, because the demo is the
+   thing scrolling inside the device. Only opacity and transform animate, the
+   resting state is fully visible, and nothing is applied at all when the visitor
+   has asked for reduced motion — so a browser that cannot run scroll-driven
+   animation, or a page whose bundle never arrives, still shows every section. */
+@keyframes demo-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--demo-reveal-y, 0.75rem));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-reveal {
+      animation: demo-reveal-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+
+    /* FlowRight's "how a callout works" rail draws itself as the steps come into
+       view. The resting state is the finished line, so a visitor on an engine
+       without scroll-driven animation — or who asked for reduced motion — simply
+       sees a drawn connector, which is exactly what the animation ends on. */
+    .demo-rail-x {
+      animation: rail-draw-x 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+    .demo-rail-y {
+      animation: rail-draw-y 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+
+@keyframes rail-draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rail-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* --- VoltWise Electrical's three concept effects -----------------------------
+   All three are declared inside a `prefers-reduced-motion: no-preference` guard
+   rather than relying on the global duration collapse, so a visitor who asked
+   for no motion never gets the keyframes applied at all. Each element's resting
+   state is the finished look, so the same is true of a browser that never runs
+   this bundle or does not know the class. */
+
+/* The signature moment: the headline comes up like a circuit settling — two
+   hard drop-outs on the way to full brightness, then it stays lit. Opacity only,
+   800ms, once. The second word group runs a little later so the line reads as
+   two circuits closing in sequence instead of one block fading in. */
+@keyframes demo-power-on {
+  0% { opacity: 0; }
+  16% { opacity: 0.5; }
+  22% { opacity: 0; }
+  44% { opacity: 0.85; }
+  52% { opacity: 0.1; }
+  70% { opacity: 1; }
+  76% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-power-on {
+    animation: demo-power-on 800ms linear var(--power-delay, 0s) both;
+  }
+
+  /* A live status indicator: the dot is solid, the ring is the animation. */
+  .demo-pulse {
+    animation: demo-pulse 2.2s ease-out infinite;
+  }
+
+  /* The hero's grid drifts one cell every 24s. Slow enough that it reads as a
+     lit panel rather than movement, and it is behind a mask and a low opacity
+     before any of that reaches the eye. */
+  .demo-circuit {
+    animation: demo-grid-drift 24s linear infinite;
+  }
+}
+
+@keyframes demo-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--d-accent) 60%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes demo-grid-drift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 0 44px, 44px 0;
+  }
+}
+
+/* Hairline grid, drawn from the concept's own accent so the palette stays the
+   single source of colour it is everywhere else on this page. */
+.demo-circuit {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--d-accent) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--d-accent) 10%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px, 44px 44px;
+}
+
+/* The service rows light where the pointer is. `--glow-x`/`--glow-y` are written
+   by a pointermove handler on the row; the fallback centres the wash, so a row
+   hovered without the bundle running still answers, and a touch device never
+   gets a hover state it cannot leave. */
+.demo-glow {
+  position: relative;
+}
+
+.demo-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms linear;
+  background: radial-gradient(
+    16rem 9rem at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in oklab, var(--d-accent) 16%, transparent),
+    transparent 70%
+  );
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .demo-glow:hover::after {
+    opacity: 1;
+  }
+}
+
+/* The renovation concept's signature moment: its hero photograph settles from a
+   slight overzoom to its frame once, on load. It is a plain time-based animation,
+   not a scroll-driven one, because the hero is already on screen — and the global
+   `prefers-reduced-motion: reduce` block collapses its duration, so a visitor who
+   asked for no motion simply sees the finished image. */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@utility hero-settle {
+  animation: hero-settle 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* --- Ember & Oak's two concept effects --------------------------------------
+   Same rule as the VoltWise block: both are applied only under
+   `prefers-reduced-motion: no-preference` instead of relying on the global
+   duration collapse, and each element's resting state is the finished look, so a
+   visitor who asked for no motion, or an engine that never runs this rule, sees
+   the photo and the menu exactly as they end up. */
+
+/* The signature moment: the hero photograph drifts. It only ever scales UP from
+   its natural size, so the unanimated state can never show an edge of the frame
+   the way a zoom-out-from-below-1 would, and the pan stays inside the overzoom.
+   12s per leg, easing in and back out, so it reads as a room rather than a loop. */
+@keyframes ember-ken-burns {
+  from {
+    transform: scale(1.04) translate3d(-0.6%, -0.4%, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(0.5%, 0.5%, 0);
+  }
+}
+
+/* The menu ledger fades in when its tab changes. Only opacity animates, and the
+   outgoing list is removed rather than stacked, so a screen reader gets one
+   panel per change instead of two — and a visitor on `reduce` gets an instant,
+   fully legible swap. */
+@keyframes ember-menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-ken-burns {
+    animation: ember-ken-burns 12s ease-in-out infinite alternate;
+  }
+
+  .demo-menu-fade {
+    animation: ember-menu-in 350ms ease-out both;
+  }
+
+  /* Ember & Oak's top bar: quiet over the hero, solid once the page has moved.
+     It is driven from the header's own nearest scroll container, so it behaves
+     the same inside a device frame and on the concept's full-page route. The
+     plate never goes fully transparent: at 0 it keeps 88% of the page colour.
+     The photograph behind it cannot be measured, so the worst case is assumed —
+     a pure-white pixel — and 88% still leaves the bar's cream wordmark at 11.5:1
+     and its body-colour nav links at 6.2:1 against that. The hamburger's three
+     bars are ink, not the hairline, so the control is identifiable without the
+     border carrying the contrast. Without support, or on `reduce`, the header
+     keeps its resting solid style. */
+  @keyframes ember-header {
+    from {
+      background-color: color-mix(in oklab, var(--d-bg) 88%, transparent);
+      border-bottom-color: transparent;
+    }
+    to {
+      background-color: color-mix(in oklab, var(--d-bg) 97%, transparent);
+      border-bottom-color: var(--d-line);
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .demo-header-fire,
+    .demo-header-lune {
+      animation: ember-header 1ms linear both;
+      animation-timeline: scroll(nearest block);
+      animation-range: 0 5rem;
+    }
+
+    /* Maison Lune's hero drifts a few pixels as the section passes, so the tall
+       photograph moves slower than the page and the split hero feels like a room
+       rather than a flat image. It only ever scales from 1.12 (never down toward
+       1), and the ±3% pan stays inside that overzoom, so no edge of the frame is
+       ever exposed and the unanimated resting state is the finished, covered
+       crop. Driven from the hero's own view range so it behaves the same inside a
+       device frame and on the standalone route. Without scroll timelines, or on
+       `reduce`, the image simply holds its resting crop. */
+    .demo-lune-parallax {
+      animation: lune-parallax 1ms linear both;
+      animation-timeline: view(block);
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes lune-parallax {
+  from {
+    transform: scale(1.12) translate3d(0, -3%, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(0, 3%, 0);
+  }
+}
+
+/* Maison Lune's booking flow changes step; the incoming panel rises a few pixels
+   and fades in so the switch reads as progress, not a jump-cut. Only opacity and
+   a small translate animate, and the resting state (no support, `reduce`, or when
+   the rule is not applied) is the panel already in place and fully legible. */
+@keyframes lune-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-lune-step {
+    animation: lune-step-in 300ms ease-out both;
+  }
+}
+
+/* Maison Lune's gallery plates lift a few pixels and gain this light theme's real
+   shadow on hover, so a room full of photographs feels handled rather than read.
+   It is a transform on the card and a scale on the image — the resting state is
+   the shipped look, and the whole thing sits behind hover:hover (a phone has no
+   hover, so it never sees a stuck "lifted" card) and behind no-preference. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .demo-lune-lift {
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+  .demo-lune-lift img {
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .demo-lune-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--d-shadow);
+  }
+  .demo-lune-lift:hover img {
+    transform: scale(1.04);
   }
 }
 
@@ -249,10 +651,10 @@ section[id],
 footer[id] {
   scroll-margin-top: 4.5rem;
 }
-
-/* Keyboard focus stays visible for every interactive element. */
+/* Keyboard focus stays visible for every interactive element. Brand blue clears
+   3:1 against paper (4.75:1), so the ring is identifiable on every surface. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-brand);
   outline-offset: 3px;
 }
 

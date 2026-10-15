@@ -53,13 +53,13 @@ export default function StickyCta() {
       } transition-opacity duration-300`}
       aria-hidden={!show}
     >
-      <div className="border-t border-line bg-base/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
+      <div className="border-t-2 border-line bg-paper px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <Link
           href="/#contact"
           tabIndex={show ? undefined : -1}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-[15px] font-semibold text-ink"
+          className="btn-pop flex w-full items-center justify-center gap-2 bg-brand px-5 py-3.5 text-[15px] font-semibold text-on-brand"
         >
-          <Search className="h-4 w-4" /> {cta.primary}
+          <Search className="h-4 w-4" /> {cta.nav}
         </Link>
       </div>
     </div>

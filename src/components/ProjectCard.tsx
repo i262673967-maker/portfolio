@@ -35,7 +35,7 @@ export default function ProjectCard({
             {project.name}
           </h3>
           {/* Just the industry: the name already carries the trade, so pairing it
-              with businessType read as "VoltWise Electrical — Electrical Services". */}
+              with businessType read as "Rowanwood Dental — Dental Practice". */}
           <p className="mt-0.5 text-[13px] text-ink-muted">{project.industry}</p>
 
           {detailed ? (

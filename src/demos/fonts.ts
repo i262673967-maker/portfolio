@@ -1,4 +1,4 @@
-import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Fraunces, Inter, Jost, Newsreader, Public_Sans, Space_Grotesk } from "next/font/google";
+import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Jost, Newsreader, Public_Sans } from "next/font/google";
 import type { DemoKey } from "@/lib/data";
 
 /* Each concept site gets its own type pairing — display for headings, body for
@@ -11,9 +11,8 @@ import type { DemoKey } from "@/lib/data";
    woff2. `preload: false` + a wrapper-scoped class means a family is only fetched
    by a page that actually renders that concept.
 
-   Every slot currently resolves to the pair the site already loads (Sora +
-   Inter), so wiring this up costs nothing; building a concept replaces its own
-   slot with a real pairing in one place. */
+   Each slot below names its own concept's real pairing, so a concept pays for
+   the two files it declares and nothing else. */
 export type DemoFontSlot = {
   /* Classes returned by next/font calls — they carry the @font-face variables. */
   className: string;
@@ -23,18 +22,10 @@ export type DemoFontSlot = {
   body: string;
 };
 
-/* Atlas Renovation's editorial pairing. Fraunces is a variable optical-size
-   serif, which is what the oversized hero headline wants; DM Sans carries the
-   running copy. Both are `preload: false` and scoped to this slot's wrapper, so
-   neither file is fetched by the plumber, the electrician, or any page that does
-   not render this concept. */
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  variable: "--font-fraunces",
-});
-
+/* The running copy and letterspaced small-caps for Ember & Oak. A serif cannot
+   hold a 12px label, so the menu carries this clean grotesque instead; it is
+   `preload: false` and scoped to that slot's wrapper, so no other page fetches
+   it. */
 const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
@@ -45,7 +36,7 @@ const dmSans = DM_Sans({
 /* FlowRight's trade-signage pairing. Barlow Condensed is the lettering you see
    down the side of a van and on a job board: it holds a phone number at
    display size without eating the horizontal space a call-first layout needs,
-   and it is visibly not the serif the restaurant, salon and renovation concepts
+   and it is visibly not the serif the restaurant, salon and dental concepts
    are built on. Barlow — the same superfamily at normal width — carries the
    running copy, so the two halves of the page are related rather than borrowed.
    Two files, two weights each: `preload: false`, wrapper-scoped, so no other
@@ -66,35 +57,13 @@ const barlow = Barlow({
   variable: "--font-barlow",
 });
 
-/* VoltWise's technical pairing. Space Grotesk carries the headline and every
-   number that has to hold its own at display size; the running copy is Inter, a
-   plain workhorse under the one distinctive display face. Inter is loaded here,
-   scoped to this slot with `preload: false`, rather than at the site root, so the
-   host ships only Bricolage, Instrument Sans and JetBrains Mono and Inter is
-   fetched by no page that doesn't render this concept. Mono labels are the
-   site's existing JetBrains Mono. */
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  variable: "--font-inter",
-});
-
 /* Ember & Oak's hospitality pairing. Cormorant Garamond is a high-contrast,
    light-built serif — the shape that fine-dining menus use because it holds
    elegance at display size without going heavy; italic is requested so the
    accent words can be set in the cursive cut. DM Sans carries the running copy
-   and the letterspaced small-caps labels, which a serif cannot do at 12px. The
-   body slot reuses the same DM Sans instance as Atlas, so this concept pays for
-   one new file. `preload: false`, wrapper-scoped, like every other slot. */
+   and the letterspaced small-caps labels, which a serif cannot do at 12px (the
+   file is declared above and read only by this slot). `preload: false`,
+   wrapper-scoped, like every other slot. */
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   display: "swap",
@@ -106,10 +75,11 @@ const cormorant = Cormorant_Garamond({
 
 /* Maison Lune's soft-luxury pairing. Bodoni Moda is a high-contrast didone kept
    deliberately light — the airy, elegant serif a beauty studio reaches for, and
-   visibly distinct from Fraunces (wonky, softer) and Cormorant (a garamond, already
-   Ember's). Its light weight is the display voice, so it needs a clean geometric
-   sans under it; Jost carries the running copy and the letterspaced small-caps,
-   which a Bodoni cannot do at 12px. This is a second file the site does not
+   visibly distinct from Cormorant (a garamond, already Ember's) and Newsreader
+   (the literary serif Rowanwood is built on). Its light weight is the display
+   voice, so it needs a clean geometric sans under it; Jost carries the running
+   copy and the letterspaced small-caps, which a Bodoni cannot do at 12px. This
+   is a second file the site does not
    already load, so the concept pays for both — `preload: false`, wrapper-scoped,
    like every other slot. */
 const bodoni = Bodoni_Moda({
@@ -131,10 +101,10 @@ const jost = Jost({
 
 /* Rowanwood's patient-leaflet pairing. Newsreader is a workhorse literary serif
    with real optical sizes — the voice of a printed information sheet you are
-   handed in a waiting room, and visibly none of the other three serifs here (it
-   is not Cormorant's thin garamond, not Bodoni's didone contrast, not Fraunces'
-   wonky display cut). Public Sans is the typeface a government health service
-   would choose: designed for forms, small print and long strings of numbers, and
+   handed in a waiting room, and visibly none of the other two serifs here (it
+   is not Cormorant's thin garamond or Bodoni's didone contrast). Public Sans is
+   the typeface a government health service would choose: designed for forms,
+   small print and long strings of numbers, and
    the most legible thing on this site at 13px. Both `preload: false`, scoped to
    this wrapper, so no other page fetches either file. */
 const newsreader = Newsreader({
@@ -155,22 +125,10 @@ const publicSans = Public_Sans({
 });
 
 export const demoFonts: Record<DemoKey, DemoFontSlot> = {
-  renovation: {
-    className: `${fraunces.variable} ${dmSans.variable}`,
-    display: "var(--font-fraunces), ui-serif, Georgia, serif",
-    body: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
-  },
   plumber: {
     className: `${barlowCondensed.variable} ${barlow.variable}`,
     display: "var(--font-barlow-condensed), ui-sans-serif, system-ui, sans-serif",
     body: "var(--font-barlow), ui-sans-serif, system-ui, sans-serif",
-  },
-  electrician: {
-    className: `${spaceGrotesk.variable} ${inter.variable}`,
-    display: "var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif",
-    /* The body slot uses this slot's own Inter (declared above, scoped to this
-       wrapper), so the host carries no Inter at all. */
-    body: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
   },
   restaurant: {
     className: `${cormorant.variable} ${dmSans.variable}`,

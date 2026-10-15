@@ -329,43 +329,15 @@ body {
   }
 }
 
-/* --- VoltWise Electrical's three concept effects -----------------------------
-   All three are declared inside a `prefers-reduced-motion: no-preference` guard
-   rather than relying on the global duration collapse, so a visitor who asked
-   for no motion never gets the keyframes applied at all. Each element's resting
-   state is the finished look, so the same is true of a browser that never runs
-   this bundle or does not know the class. */
-
-/* The signature moment: the headline comes up like a circuit settling — two
-   hard drop-outs on the way to full brightness, then it stays lit. Opacity only,
-   800ms, once. The second word group runs a little later so the line reads as
-   two circuits closing in sequence instead of one block fading in. */
-@keyframes demo-power-on {
-  0% { opacity: 0; }
-  16% { opacity: 0.5; }
-  22% { opacity: 0; }
-  44% { opacity: 0.85; }
-  52% { opacity: 0.1; }
-  70% { opacity: 1; }
-  76% { opacity: 0.35; }
-  100% { opacity: 1; }
-}
+/* --- The live-status dot ------------------------------------------------------
+   Declared inside a `prefers-reduced-motion: no-preference` guard rather than
+   relying on the global duration collapse, so a visitor who asked for no motion
+   never gets the keyframes applied at all. The dot is solid and the ring is the
+   whole animation, so the resting state is the finished look everywhere else. */
 
 @media (prefers-reduced-motion: no-preference) {
-  .demo-power-on {
-    animation: demo-power-on 800ms linear var(--power-delay, 0s) both;
-  }
-
-  /* A live status indicator: the dot is solid, the ring is the animation. */
   .demo-pulse {
     animation: demo-pulse 2.2s ease-out infinite;
-  }
-
-  /* The hero's grid drifts one cell every 24s. Slow enough that it reads as a
-     lit panel rather than movement, and it is behind a mask and a low opacity
-     before any of that reaches the eye. */
-  .demo-circuit {
-    animation: demo-grid-drift 24s linear infinite;
   }
 }
 
@@ -381,73 +353,8 @@ body {
   }
 }
 
-@keyframes demo-grid-drift {
-  from {
-    background-position: 0 0, 0 0;
-  }
-  to {
-    background-position: 0 44px, 44px 0;
-  }
-}
-
-/* Hairline grid, drawn from the concept's own accent so the palette stays the
-   single source of colour it is everywhere else on this page. */
-.demo-circuit {
-  background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--d-accent) 10%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--d-accent) 10%, transparent) 1px, transparent 1px);
-  background-size: 44px 44px, 44px 44px;
-}
-
-/* The service rows light where the pointer is. `--glow-x`/`--glow-y` are written
-   by a pointermove handler on the row; the fallback centres the wash, so a row
-   hovered without the bundle running still answers, and a touch device never
-   gets a hover state it cannot leave. */
-.demo-glow {
-  position: relative;
-}
-
-.demo-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 200ms linear;
-  background: radial-gradient(
-    16rem 9rem at var(--glow-x, 50%) var(--glow-y, 50%),
-    color-mix(in oklab, var(--d-accent) 16%, transparent),
-    transparent 70%
-  );
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .demo-glow:hover::after {
-    opacity: 1;
-  }
-}
-
-/* The renovation concept's signature moment: its hero photograph settles from a
-   slight overzoom to its frame once, on load. It is a plain time-based animation,
-   not a scroll-driven one, because the hero is already on screen — and the global
-   `prefers-reduced-motion: reduce` block collapses its duration, so a visitor who
-   asked for no motion simply sees the finished image. */
-@keyframes hero-settle {
-  from {
-    transform: scale(1.08);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-@utility hero-settle {
-  animation: hero-settle 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 /* --- Ember & Oak's two concept effects --------------------------------------
-   Same rule as the VoltWise block: both are applied only under
+   Same rule as the pulse above: both are applied only under
    `prefers-reduced-motion: no-preference` instead of relying on the global
    duration collapse, and each element's resting state is the finished look, so a
    visitor who asked for no motion, or an engine that never runs this rule, sees

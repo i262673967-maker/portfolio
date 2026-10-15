@@ -149,22 +149,16 @@ export const sampleAudit = {
   ],
 };
 
-export type DemoKey =
-  | "renovation"
-  | "plumber"
-  | "electrician"
-  | "restaurant"
-  | "salon"
-  | "dental";
+export type DemoKey = "plumber" | "restaurant" | "salon" | "dental";
 
-/* Content for the local-service demo layout (renovation / plumber / electrician).
+/* Content for the concept-site layouts.
    Each fictional business gets its own copy, palette and structure emphasis so
    the demos don't look like one recoloured template.
 
-   The base fields below are OPTIONAL. Every demo now owns its own layout
+   The base fields below are OPTIONAL. Every demo owns its own layout
    component, so each concept reads only the fields it actually renders; a
    project carries nothing its demo cannot draw. `navName` is the one field all
-   five read (their headers and footers). */
+   four read (their headers and footers). */
 export type ServiceDemoContent = {
   logoLetter?: string;
   navName: string;
@@ -191,13 +185,11 @@ export type ServiceDemoContent = {
      The footer disclaimer is separate and stays shared on every page. */
   formNote?: string;
 
-  /* --- Renovation-concept fields -------------------------------------------
-     The editorial renovation layout needs a little more than the shared
-     local-service template reads: full-bleed photography, an opening statement,
-     project rows with scope instead of stats, and a named process. They live
-     here so the copy stays in one place with the rest of the fictional
-     business, and every one is OPTIONAL — the plumber and electrician concepts
-     read none of them and need no new content. */
+  /* --- Shared editorial fields ---------------------------------------------
+     The pieces more than one layout draws: full-bleed photography, an opening
+     statement, a named process, a form's labels. They live here so the copy
+     stays in one place with the rest of the fictional business, and every one is
+     OPTIONAL — a concept supplies only what its own layout reads. */
   imageSource?: string; // licence and photographer, shown where photos appear
   hero?: {
     src: string;
@@ -209,17 +201,14 @@ export type ServiceDemoContent = {
     accent?: string;
   };
   statement?: string;
-  work?: { eyebrow: string; lead: string; items: { title: string; type: string; scope: string; src: string; alt: string }[] };
   process?: { eyebrow: string; title: string; intro: string; steps: { no: string; title: string; body: string }[] };
   servicesEyebrow?: string;
-  servicesLead?: string;
-  servicePreviews?: string[]; // one decorative preview plate per service, by index
   contact?: { eyebrow: string; name: string; email: string; projectType: string; message: string; submit: string; projectOptions: string[] };
 
   /* --- Plumber-concept fields ------------------------------------------------
      The call-first plumbing layout is built around a phone number, an urgent
      band, a quoting explanation and a coverage panel. All OPTIONAL, so the
-     renovation, restaurant and salon concepts read none of it.
+     restaurant, salon and dental concepts read none of it.
 
      `phone` is the fictional business's number, never the studio's: the site's
      own contact rules (see the studio config at the top of this file) still hold
@@ -249,7 +238,7 @@ export type ServiceDemoContent = {
 
   /* --- FlowRight's home-services layout ---------------------------------------
      The call-first redesign reads the fields below. All of it is read only by
-     PlumberDemo, so the renovation, restaurant and salon concepts are untouched.
+     PlumberDemo, so the restaurant, salon and dental concepts are untouched.
 
      `groups` replaces a grid of equal service cards: nine services in three
      kinds of call, because what decides who you phone is whether it is urgent,
@@ -312,34 +301,6 @@ export type ServiceDemoContent = {
       note: string;
     };
     closing: { eyebrow: string; hours: { day: string; time: string }[] };
-  };
-
-  /* --- Electrician-concept fields ---------------------------------------------
-     The dark technical layout reads a dashboard-style status panel and a quote
-     helper that explains a job instead of pricing it. `phone` above is reused
-     here; everything below is OPTIONAL and read only by ElectricianDemo, so the
-     other concepts are untouched. */
-  status?: {
-    eyebrow: string;
-    title: string;
-    /* `tone: "live"` draws a pulsing dot, `note` a static one. A concept cannot
-       claim to be staffed right now, so only the invented rows get "live". */
-    rows: { label: string; value: string; tone: "live" | "note" }[];
-    note: string;
-  };
-  helper?: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    prompt: string;
-    checkLabel: string;
-    prepareLabel: string;
-    submit: string;
-    sendNote: string;
-    /* Index-aligned with nothing: each option carries its own two answers, so a
-       job type can never be paired with the wrong preparation note. */
-    options: { job: string; check: string; prepare: string }[];
-    note: string;
   };
 
   /* --- Restaurant-concept fields ------------------------------------------------
@@ -777,177 +738,8 @@ export type Project = {
    never presented as real clients. */
 export const projects: Project[] = [
   {
-    slug: "atlas-renovation",
-    index: "01",
-    demo: "renovation",
-    name: "Atlas Renovation Co.",
-    businessType: "Local Service Business",
-    industry: "Home Renovation",
-    category: "Service",
-    summary:
-      "A premium home-renovation site built to earn trust before the first phone call.",
-    objective:
-      "Create a premium online presence that makes homeowners trust the company before contacting them.",
-    strategy:
-      "Trust-led. The page order follows how a homeowner actually decides: what you do, proof it's been done, who's doing it, then the questions that stop them calling. Nothing decorative sits above the booking action.",
-    designDirection: ["Minimal", "Premium", "Trust-focused", "Conversion-oriented"],
-    keySections: ["Hero", "Services", "Projects", "About", "FAQ", "Contact"],
-    mobileNotes: [
-      "One-column layout so nothing needs horizontal scrolling",
-      "Full-width tap targets for the consultation button",
-      "Project gallery stacks instead of shrinking into unreadable tiles",
-    ],
-    conversionNotes: [
-      "Primary call to action repeated in the nav, after the gallery, and at the end",
-      "Fixed-quote promise stated twice to remove the price anxiety that stops enquiries",
-    ],
-    accent: "#9A6B3F",
-    /* Light editorial theme: warm off-white paper, charcoal ink, muted bronze.
-       Every text colour the concept uses is derived from these three at render
-       time (see _shared.tsx), so the bronze only has to work as a fill. */
-    palette: { bg: "#F4F1EC", fg: "#1B1B1A", accent: "#9A6B3F" },
-    content: {
-      navName: "Atlas Renovation",
-      headline: "Premium Local Service,",
-      headlineAccent: "Without The Generic Website.",
-      intro:
-        "Full-home renovation crafted around how you actually live. Kitchens, bathrooms, and extensions — designed, managed, and finished to a standard you can point to.",
-      ctaPrimary: "Book a Consultation →",
-      servicesTitle: "Services built around your home",
-      services: [
-        { title: "Kitchens", body: "Custom cabinetry, worktops, and layouts designed for how you cook." },
-        { title: "Bathrooms", body: "Wet rooms, tiling, and fixtures with a spa-like finish." },
-        { title: "Extensions", body: "Added space that feels original to the property." },
-        { title: "Full Renovation", body: "One team from strip-out to final clean." },
-        { title: "Interiors", body: "Colour, lighting, and materials that hold together." },
-        { title: "Project Management", body: "A single point of contact, on schedule." },
-      ],
-      galleryTitle: "Recent Projects",
-      whyIntro:
-        "We treat your home like our own. Clear quotes, honest timelines, and a finish that stands up close.",
-      faqTitle: "Questions, answered",
-      faqs: [
-        {
-          q: "How long does a typical renovation take?",
-          a: "It depends on the size and scope of the project. After a consultation and review of the work involved, we can give you a clearer estimated timeline.",
-        },
-        {
-          q: "Do you handle permits?",
-          a: "Where approvals or permits are required, they should be identified during the planning stage and factored into the project before work begins.",
-        },
-        {
-          q: "Can I live at home during the work?",
-          a: "Sometimes. It depends on which areas of the home are being renovated and how much of the property is affected. We discuss the practical options before the project starts.",
-        },
-      ],
-      ctaTitle: "Ready to talk about your project?",
-      ctaBody: "Book a free consultation and get a clear, fixed quote.",
-
-      /* The consultation form cannot really reach a business, so the status line
-         says plainly what happened when it was pressed. */
-      formNote:
-        "This form is part of a concept website: nothing has been sent and no consultation is booked. A real business site would confirm the enquiry here.",
-
-      /* Renovation-concept layout content. Scope is composed from the service
-         descriptions above rather than written fresh, and the process steps
-         restate the promises already made in the services — no new claims. */
-      imageSource:
-        "Interior photography here stands in for project imagery. It is concept material, not a record of completed work.",
-      hero: {
-        src: "/demos/atlas-renovation/hero-kitchen.webp",
-        alt: "A renovated kitchen with pale cabinets and a timber-topped island, lit from the side.",
-        caption: "Kitchens · Bathrooms · Extensions",
-        headline: "Spaces that feel",
-        accent: "inevitable.",
-      },
-      statement:
-        "We treat your home like our own. Clear quotes, honest timelines, and a finish that stands up close.",
-      work: {
-        eyebrow: "Selected work",
-        lead: "A kitchen, a bathroom, and an extension — the three rooms people most often start with.",
-        items: [
-          {
-            title: "Hillside Kitchen",
-            type: "Kitchen",
-            scope: "Custom cabinetry, worktops, and layouts designed for how you cook.",
-            src: "/demos/atlas-renovation/work-kitchen.webp",
-            alt: "A bright kitchen with pale cabinets and a patterned tile backsplash behind the counter.",
-          },
-          {
-            title: "Marble Bath",
-            type: "Bathroom",
-            scope: "Wet rooms, tiling, and fixtures with a spa-like finish.",
-            src: "/demos/atlas-renovation/work-bathroom.webp",
-            alt: "A modern bathroom with two basins set into a long counter and a large mirror.",
-          },
-          {
-            title: "Garden Extension",
-            type: "Extension",
-            scope: "Added space that feels original to the property.",
-            src: "/demos/atlas-renovation/living-openplan.webp",
-            alt: "An open-plan living and dining space under a high pitched ceiling with tall windows.",
-          },
-        ],
-      },
-      process: {
-        eyebrow: "How we work",
-        title: "Four stages, one lead",
-        intro:
-          "The same route on every project, so you always know which stage the work is in and who to ask about it.",
-        steps: [
-          {
-            no: "01",
-            title: "Consult",
-            body: "We walk the space with you and talk through what the home has to do for you.",
-          },
-          {
-            no: "02",
-            title: "Design",
-            body: "Layout, materials and finishes are settled on drawings you can read before anything starts.",
-          },
-          {
-            no: "03",
-            title: "Build",
-            body: "One dedicated project lead runs the works and keeps the site dust-controlled.",
-          },
-          {
-            no: "04",
-            title: "Handover",
-            body: "We go through the finished work with you, backed by the workmanship guarantee.",
-          },
-        ],
-      },
-      servicesEyebrow: "Services",
-      servicesLead: "Six ways we take a house from plans to a finish.",
-      servicePreviews: [
-        "/demos/atlas-renovation/work-kitchen.webp",
-        "/demos/atlas-renovation/work-bathroom.webp",
-        "/demos/atlas-renovation/living-openplan.webp",
-        "/demos/atlas-renovation/hero-kitchen.webp",
-        "/demos/atlas-renovation/hero-kitchen.webp",
-        "/demos/atlas-renovation/living-openplan.webp",
-      ],
-      contact: {
-        eyebrow: "Start a project",
-        name: "Your name",
-        email: "Email",
-        projectType: "Project type",
-        message: "What are you thinking of?",
-        submit: "Request a consultation",
-        projectOptions: [
-          "Kitchen",
-          "Bathroom",
-          "Extension",
-          "Full renovation",
-          "Interiors",
-          "Not sure yet",
-        ],
-      },
-    },
-  },
-  {
     slug: "flowright-plumbing",
-    index: "02",
+    index: "01",
     demo: "plumber",
     name: "FlowRight Plumbing",
     businessType: "Home Services",
@@ -1292,176 +1084,8 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "voltwise-electrical",
-    index: "03",
-    demo: "electrician",
-    name: "VoltWise Electrical",
-    businessType: "Local Trade",
-    industry: "Electrical Services",
-    category: "Trade",
-    summary:
-      "A technical, safety-led electrician site that answers questions before the customer has to ask.",
-    objective:
-      "Make a cautious homeowner feel the work is careful and clearly explained before they enquire.",
-    strategy:
-      "Safety-clarity. Electrical work makes people nervous, so the page leads with what actually happens on a job and plain-language explanations instead of jargon, and puts a quote helper beside the services rather than a form at the bottom. Credentials are the one thing a concept site cannot claim, so the status panel says a real one would go there instead of inventing a badge.",
-    designDirection: ["Technical", "Sharp", "Safety-led", "Plain-language"],
-    keySections: ["Hero", "Services", "Safety practices", "Quote helper", "FAQ", "Contact"],
-    mobileNotes: [
-      "Service rows stack into a single column with full-width tap areas",
-      "Quote helper usable one-handed while standing in front of a consumer unit",
-      "The emergency number stays reachable from every scroll position",
-    ],
-    conversionNotes: [
-      "Emergency call in the nav, the hero, the status panel and the closing block",
-      "The quote helper explains a job before anyone has to describe it in a form",
-    ],
-    accent: "#FFD400",
-    /* Dark technical theme: a near-black page, one raised surface, hairline
-       borders, and a single electric yellow doing all the acting. Text colours
-       are still derived at render time (see _shared.tsx), so the yellow only has
-       to survive as a fill — at this lightness it clears AA as small text too. */
-    palette: { bg: "#07090D", fg: "#E8ECF2", accent: "#FFD400", surface: "#0F131A" },
-    content: {
-      logoLetter: "V",
-      navName: "VoltWise Electrical",
-      /* The two halves also drive the hero's one-time "power on": each word
-         group flickers to lit in sequence, so the accent half has to be able to
-         stand alone as a line. */
-      headline: "Careful Wiring.",
-      headlineAccent: "Explained Plainly.",
-      intro:
-        "Domestic and light-commercial electrical work: fault finding, board upgrades, charging points, lighting and rewires. You are told what is being checked, what the result means, and what the work involves — before anything is taken apart.",
-      ctaPrimary: "Emergency Call",
-      ctaSecondary: "Request a quote",
-      phone: {
-        display: "(555) 555-0173",
-        href: "tel:+15555550173",
-        label: "Call VoltWise Electrical",
-      },
-      imageSource:
-        "The board photograph is concept material, licensed stock — not a record of a VoltWise installation.",
-      hero: {
-        src: "/demos/voltwise-electrical/panel-band.webp",
-        alt: "An open board with rows of breakers and colour-coded wiring, shot from above.",
-      },
-      status: {
-        eyebrow: "Service status",
-        title: "Where a real board would show its credentials",
-        rows: [
-          { label: "Emergency line", value: "Answered by an electrician", tone: "live" },
-          { label: "Quote replies", value: "Same day, illustrative", tone: "live" },
-          { label: "Licensed & insured", value: "Concept: credentials would appear here", tone: "note" },
-        ],
-        note: "Concept site: a live business would list its registration and insurance details here. Inventing them would be a claim, not a design decision.",
-      },
-      servicesTitle: "Work we take on",
-      servicesEyebrow: "Services",
-      services: [
-        {
-          title: "Fault Finding",
-          body: "Tripping circuits, dead sockets, burning smells — traced to the cause instead of the nearest part being replaced.",
-        },
-        {
-          title: "Consumer Units",
-          body: "Boards replaced with protection matched to how the property is actually used, and every circuit named.",
-        },
-        {
-          title: "EV Charging Points",
-          body: "Home charging with the circuit, the cable route and the remaining load thought through first.",
-        },
-        {
-          title: "Lighting",
-          body: "Indoor, external and controlled lighting, wired so it can still be serviced in five years.",
-        },
-        {
-          title: "Rewires",
-          body: "Planned room by room, so the house stays livable while the work is happening.",
-        },
-        {
-          title: "Inspection And Reporting",
-          body: "A written record of what a property's wiring is doing, what it fails, and what it needs.",
-        },
-      ],
-      galleryTitle: "Recent Work",
-      /* The safety section. These are practices described in the moment a job is
-         being done, not qualifications asserted about the business. */
-      whyTitle: "What safety means on an actual job",
-      whyIntro:
-        "Anyone can call themselves safety-led. These are the specific things that happen on a visit, in this order.",
-      whyPoints: [
-        "Isolation confirmed and proved dead before a single screw comes out.",
-        "The existing installation is looked at before new work is added to it.",
-        "Every circuit is tested and clearly named when the job is finished.",
-        "Anything dangerous spotted while we are there is written down and shown to you.",
-        "The area is left as it was found, with no loose ends in the loft or the board.",
-      ],
-      faqTitle: "Common questions",
-      faqs: [
-        {
-          q: "Do I actually need a full rewire?",
-          a: "Not always. It depends on the age, condition and layout of what is already there, and on what has been added to it since. An inspection is what settles it, and the reason for each recommendation should be shown to you, not just asserted.",
-        },
-        {
-          q: "Can any circuit take a charging point?",
-          a: "Not automatically. The board, the remaining capacity, the cable route and the earthing arrangement all get looked at first. If the answer is no, that should be said before a date is booked rather than discovered on the day.",
-        },
-        {
-          q: "Why does a socket dead on one side of the house affect the other?",
-          a: "Circuits are often looped through more rooms than they are named for, so one fault can take out a run of sockets or lights. Tracing which circuit a socket sits on is most of the work, and it is done with the board open rather than by guessing.",
-        },
-        {
-          q: "What should I have ready before a visit?",
-          a: "The age of the property if you know it, what changed before the problem appeared, and clear access to the board and to wherever the work is. A photo of the board with the cover off answers most of the rest before anyone arrives.",
-        },
-      ],
-      helper: {
-        eyebrow: "Quote helper",
-        title: "Pick the job. See what it involves.",
-        intro:
-          "No prices here — a figure written before anyone has seen the board would be a guess dressed up as a quote.",
-        prompt: "What needs doing?",
-        checkLabel: "What we check first",
-        prepareLabel: "What helps you prepare",
-        submit: "Request this quote",
-        sendNote: "Concept site: this form has no backend, so nothing is sent and nothing is stored.",
-        options: [
-          {
-            job: "Panel upgrade",
-            check: "The incoming supply, the earthing and bonding arrangement, the condition of the existing cables, and which circuits actually exist once the cover is off.",
-            prepare: "Clear access to the board and a note of what each switch does today, even if you are sure some of them do nothing.",
-          },
-          {
-            job: "EV charger",
-            check: "Spare capacity in the board, the circuit length and route, the earthing arrangement, and whether the consumer unit needs work before a charger is added to it.",
-            prepare: "Where the car parks in relation to the board, and a photo of the outside wall you would want the unit on.",
-          },
-          {
-            job: "Lighting",
-            check: "Where the existing cable runs, whether the switch legs and neutrals are where the plan assumes they are, and what the fitting needs to be serviceable later.",
-            prepare: "Which rooms, and whether you want them controlled from more than one place — that decides most of the cabling.",
-          },
-          {
-            job: "Rewiring",
-            check: "What is installed now, what condition it is in, what has been added on top of it over the years, and which rooms can stay in use while the work runs.",
-            prepare: "Which rooms you can clear for how long, and where the loft or cupboard access is.",
-          },
-          {
-            job: "Fault finding",
-            check: "Which circuit the symptom actually sits on, whether the fault is in the board, the cable, or a connection somewhere along the run, and whether it is safe to leave until tomorrow.",
-            prepare: "When it happens and what was in use at the time. A ten-second video of the switch failing saves an hour of guessing.",
-          },
-        ],
-        note: "Concept: the helper explains the work. It stores nothing and sends nothing.",
-      },
-      ctaTitle: "Something not right with your electrics?",
-      ctaBody:
-        "Describe what is happening, or send a photo of the board. You will hear what needs checking and what that means before anyone quotes a price.",
-    },
-  },
-  {
     slug: "ember-restaurant",
-    index: "04",
+    index: "02",
     demo: "restaurant",
     name: "Ember & Oak",
     businessType: "Restaurant / Hospitality",
@@ -1822,7 +1446,7 @@ export const projects: Project[] = [
   },
   {
     slug: "maison-lune",
-    index: "05",
+    index: "03",
     demo: "salon",
     name: "Maison Lune",
     businessType: "Beauty Studio",
@@ -2052,7 +1676,7 @@ export const projects: Project[] = [
   },
   {
     slug: "rowanwood-dental",
-    index: "06",
+    index: "04",
     demo: "dental",
     name: "Rowanwood Dental",
     businessType: "Dental Practice",

@@ -20,14 +20,22 @@ const nextConfig: NextConfig = {
      the wrong project root without this. */
   turbopack: { root: path.join(__dirname) },
 
-  /* The e-commerce concept was replaced by a beauty salon and the slug moved with
-     it, so the old Maison Objects URLs are permanently redirected rather than left
-     to 404. permanent:true is a 308, which keeps the request method and tells a
-     crawler the address has moved for good. */
+  /* Two concepts were dropped from the showcase — the renovation studio and the
+     electrician — and one was renamed when the e-commerce site became a beauty
+     salon. Their URLs were published before, so they are permanently redirected
+     rather than left to 404: the renamed pair to its new address, the removed
+     four to the gallery, where the remaining concepts live. A redirect beats a
+     dead end for anyone who bookmarked or linked one, and it keeps a removed
+     concept unreachable through an old route. `permanent: true` is a 308, which
+     keeps the request method and tells a crawler the address has moved for good. */
   async redirects() {
     return [
       { source: "/work/maison-lifestyle", destination: "/work/maison-lune", permanent: true },
       { source: "/demos/maison-lifestyle", destination: "/demos/maison-lune", permanent: true },
+      { source: "/work/atlas-renovation", destination: "/projects", permanent: true },
+      { source: "/demos/atlas-renovation", destination: "/projects", permanent: true },
+      { source: "/work/voltwise-electrical", destination: "/projects", permanent: true },
+      { source: "/demos/voltwise-electrical", destination: "/projects", permanent: true },
     ];
   },
 

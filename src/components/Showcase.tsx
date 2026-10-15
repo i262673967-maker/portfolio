@@ -15,7 +15,7 @@ const devices: { id: Device; label: string; icon: typeof Monitor }[] = [
 ];
 
 /* The homepage work section: every concept, each previewable the way a customer
-   would see it. Five names stacked into a column ate a third of a phone screen,
+   would see it. The names stacked into a column ate a third of a phone screen,
    so below `sm` the selector is one snap-scrolling row instead. */
 export default function Showcase() {
   const [active, setActive] = useState(0);
@@ -48,7 +48,7 @@ export default function Showcase() {
 
         {/* Project selector */}
         <Reveal delay={0.05}>
-          {/* Below `sm` this is one snap-scrolling row rather than a wrap: five
+          {/* Below `sm` this is one snap-scrolling row rather than a wrap: the
               pills stacked vertically pushed the preview off a phone screen.
               `shrink-0` keeps each pill at its own width inside the scroller. */}
           <div className="pill-row mt-10 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0">

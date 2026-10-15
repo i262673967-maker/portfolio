@@ -8,17 +8,6 @@ the attribution survives outside the browser.
 All photos below are used under the **Unsplash License**
 (https://unsplash.com/license) — "Free to use under the Unsplash License."
 
-## Atlas Renovation Co. — /demos/atlas-renovation
-
-Files in `demos/atlas-renovation/`:
-
-| File | Subject | Photographer | Unsplash page |
-| --- | --- | --- | --- |
-| `hero-kitchen.webp` | Cream kitchen with wood island | Puscas Adryan | https://unsplash.com/photos/ilbLEHMhxMA |
-| `work-kitchen.webp` | White cabinets, mosaic backsplash | Franco Debartolo | https://unsplash.com/photos/5esxlNguAGw |
-| `work-bathroom.webp` | Double-sink modern bathroom | Ibrar Tariq | https://unsplash.com/photos/b8bBTyWj6gM |
-| `living-openplan.webp` | Vaulted open-plan living/dining | Clay Banks | https://unsplash.com/photos/b0y9W2jPoSI |
-
 ## FlowRight Plumbing — /demos/flowright-plumbing
 
 Files in `demos/flowright-plumbing/`:
@@ -29,22 +18,13 @@ Files in `demos/flowright-plumbing/`:
 | `bathroom.webp` | Bathroom refits | Double-vanity bathroom: freestanding tub, glass shower, black brassware | Ibrar Tariq | https://unsplash.com/photos/b8bBTyWj6gM |
 | `warm-room.webp` | Heating | Vaulted living/dining room with a lit wood-burning stove | Clay Banks | https://unsplash.com/photos/b0y9W2jPoSI |
 
-`bathroom.webp` and `warm-room.webp` are copies of two files already licensed for
-the Atlas Renovation concept, kept under their original credit. The Unsplash
-License permits this; the duplication is temporary while both concepts are on the
-branch, and the Atlas copies go when that concept is removed.
+`bathroom.webp` and `warm-room.webp` first shipped inside the Atlas Renovation
+concept, which has since been removed from this branch. Their files went with it;
+these two copies keep the original credit, which the Unsplash License permits.
 
-A third Atlas shot, `work-kitchen.webp` (Franco Debartolo), was **not** reused: a
-framed photograph of a person sits on the counter, which is the same test that
-retired Maison Lune's framed-faces shot.
-
-## VoltWise Electrical — /demos/voltwise-electrical
-
-Files in `demos/voltwise-electrical/`:
-
-| File | Subject | Photographer | Unsplash page |
-| --- | --- | --- | --- |
-| `panel-band.webp` | Open consumer unit: colour-coded wiring and a row of breakers | mostafa mahmoudi (@mostafa_mahmoudi24) | https://unsplash.com/photos/a-bunch-of-wires-are-plugged-into-a-switch-box-47jO5Y8nsYo |
+A third former Atlas shot (a white-cabinet kitchen by Franco Debartolo) was **not**
+reused: a framed photograph of a person sits on the counter, which is the same test
+that retired Maison Lune's framed-faces shot.
 
 ## Ember & Oak — /demos/ember-restaurant
 
@@ -74,8 +54,8 @@ Files in `demos/ember-restaurant/`:
   dining room, Martin Baron) — both free to use, but each has legible text inside
   the frame: a menu card and a foreign-language exit sign in the first, table
   tent cards reading "ELITE RESTAURANT" with Chinese characters in the second.
-  A language on screen is a location signal, so neither ships. The same rule that
-  retired the German-labelled VoltWise panel.
+  A language on screen is a location signal, so neither ships — the same rule
+  that retired a consumer-unit panel shot for its German labelling.
 - `H0q4wRU_KmE` (amber pendant lamps over red booths, Karina G) — free to use, but
   a blurred figure stands behind the glass mid-frame. No identifiable face, yet a
   person is legible enough to be a guest at a table we never served, so it is out.
@@ -157,8 +137,7 @@ at the downloaded frame, which is the standard applied to every plate here.
 
 - No face is visible in any of these photos. The FlowRight hero shows hands and
   the back of a head only, so nobody in it can be identified; its bathroom and
-  warm-room plates contain no people at all. The VoltWise band
-  shows a board and its wiring with no person in frame at all. Ember & Oak's two
+  warm-room plates contain no people at all. Ember & Oak's two
   story photographs show hands only — `story-hands.webp` is cropped to forearms
   and a table, `story-dessert.webp` to hands and a bowl with a strand of hair at
   the very edge — so no guest or staff member can be recognised.

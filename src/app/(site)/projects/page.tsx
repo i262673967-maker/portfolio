@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMeta({
   tab: "Concept Projects",
   share: `Concept Projects · ${site.brand}`,
   description:
-    "Concept websites for local businesses — renovation, plumbing, electrical, dining and retail. Each has a case study and a live preview.",
+    "Concept websites for local businesses — a plumber, a restaurant, a beauty studio and a dental clinic. Each has a case study and a live preview.",
   path: "/projects",
 });
 

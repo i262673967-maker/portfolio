@@ -97,18 +97,16 @@ export default function Hero() {
               {/* Navy block sits behind, offset; the electric-blue block is rotated
                   on top and carries the device frames. Both are transform-only. */}
               <div className="absolute inset-0 hidden translate-x-3 translate-y-3 rotate-3 rounded-[28px] bg-navy sm:block" aria-hidden="true" />
-              {/* The three frames share the block instead of overlapping it. Overlap
-                  cannot work here: the demo inside the desktop frame has one text-free
-                  region — its photograph — and it is smaller than either secondary
-                  frame, so any corner a frame was tucked into cut a headline
-                  mid-word. `overflow-hidden` is gone for the same reason: it sliced
-                  the sticker's left edge and the bottom of the tucked frames. */}
+              {/* The three frames share the block instead of overlapping it. A frame
+                  tucked into a corner of the demo behind it lands on that demo's
+                  headline text, and `overflow-hidden` to hold the tuck sliced the
+                  sticker's left edge and the bottom of the tucked frames. */}
               <div className="relative -rotate-3 rounded-[28px] border-2 border-line bg-sky p-4 shadow-[6px_6px_0_var(--color-ink)] sm:p-6">
                 {/* The 2rem gap is not styling: the block is rotated -3deg, so its
                     lower edge tilts and eats about 14px of clearance at the sides. */}
                 <div className="flex flex-col gap-8 sm:gap-10">
                   <DeviceMockup device="desktop" hoverPeek>
-                    <LazyDemo demo="renovation" project={byDemo("renovation")} />
+                    <LazyDemo demo="plumber" project={byDemo("plumber")} />
                   </DeviceMockup>
 
                   {/* Below `sm` the block is a phone's full width; two more frames

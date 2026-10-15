@@ -1,15 +1,15 @@
 import type { Project } from "@/lib/data";
 
 /* Stand-in for the framed demo inside a project card. Rendering the real
-   concept websites in five cards meant five whole sites in the page HTML —
-   ~170 KB of markup and dozens of borrowed section headings. This draws the
+   concept websites in every card meant one whole site in the page HTML per
+   card — ~170 KB of markup and dozens of borrowed section headings. This draws the
    same idea from the project's own palette, name and industry in a few hundred
    bytes, with no headings and no invented copy. */
 export default function ConceptThumb({ project }: { project: Project }) {
   const { bg, fg, accent } = project.palette;
   /* The chip stands in for the concept's own hero button, so it takes that
      button's label. keySections are internal structure names: reading one as a
-     button put "Services" under the "Electrical Services" industry. */
+     button put a section label where a customer expects a call to action. */
   const action =
     project.content?.ctaPrimary?.replace(/\s*→\s*$/, "") ||
     project.keySections[1] ||

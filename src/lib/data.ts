@@ -351,25 +351,51 @@ export type ServiceDemoContent = {
      are invented for the fiction — the number stays inside the 555-01XX range and
      the page carries the concept note everywhere it is needed. */
   restaurant?: {
+    /* The service board above the header. A fire restaurant decides its evening
+       hours before it decides anything else, so the facts a diner needs come
+       before the photograph of the room. */
+    board: string[];
     hero: {
       src: string;
       alt: string;
       /* The headline is set in two parts so the second can carry the italic. */
       headline: string;
       accent: string;
+      eyebrow: string;
+      /* The paragraph that does the deciding: what the place is, and the one
+         limitation it does not hide. */
+      lede: string;
       /* The line a deciding diner looks for first: when the room is open. */
       hoursLine: string;
+      /* Three facts set as a hairline row under the actions — covers, seatings,
+         how often the card changes. */
+      facts: { label: string; value: string }[];
       caption: string;
     };
     intro: { eyebrow: string; body: string };
+    /* The two blocks service runs in, and why. Written as a schedule rather than
+       a gallery because a twenty-two-cover room with one grill is a constraint
+       the visitor has to plan around. */
+    seatings: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      blocks: { time: string; label: string; note: string }[];
+    };
     menu: {
       eyebrow: string;
       title: string;
       lead: string;
+      /* Explains the bare numbers on the card, and states the one thing every
+         printed card leaves unsaid. */
+      priceNote: string;
+      /* Sits under the ledger. No kitchen sharing one fire can promise a dish is
+         free of anything, so the page says so instead of implying it. */
+      allergy: string;
       /* Sits under the ledger: a menu this short cannot promise the dish on the
          day is the dish on the card. */
       note: string;
-      tabs: {
+      courses: {
         label: string;
         blurb: string;
         dishes: { name: string; desc: string; price: string }[];
@@ -388,14 +414,21 @@ export type ServiceDemoContent = {
       eyebrow: string;
       title: string;
       lead: string;
-      items: { src: string; alt: string; caption: string }[];
+      /* `ratio` is the file's own measured pixel ratio, held per plate rather
+         than looked up by position: the box then matches the photograph whatever
+         order the list is in, and nothing reflows when the file arrives. */
+      items: { src: string; alt: string; caption: string; ratio: string }[];
     };
     events: {
       eyebrow: string;
       title: string;
       body: string;
+      /* Stated as facts a host would confirm on the phone, not as a package. */
       points: string[];
       cta: string;
+      /* Written into the booking note when the room enquiry is pressed, so the
+         form the visitor arrives at already says what they are asking for. */
+      preset: string;
       src: string;
       alt: string;
     };
@@ -407,6 +440,11 @@ export type ServiceDemoContent = {
          tables in services, and a grid of times says so more honestly than a
          time picker that will accept 03:47. */
       times: string[];
+      /* Party sizes the form will take. Larger than this goes to the phone, and
+         the chips say so instead of a validation error after the fact. */
+      parties: number[];
+      /* Optional context a reservation book actually records. */
+      occasions: string[];
       hours: { day: string; time: string }[];
       address: string[];
       phone: { display: string; href: string };
@@ -415,6 +453,12 @@ export type ServiceDemoContent = {
       submit: string;
       /* Repeated beside the submit button: the last question before booking. */
       note: string;
+      /* The four questions a diner hesitates on, answered before they ask. */
+      hints: { date: string; time: string; party: string; notes: string };
+      /* The panel that replaces the form once it is submitted. It reads back
+         what was asked for and says, in the same breath, that none of it is
+         held — the request cannot reach a book from this page. */
+      confirm: { title: string; lead: string; edit: string };
     };
   };
 
@@ -1224,21 +1268,33 @@ export const projects: Project[] = [
     industry: "Local Dining",
     category: "Hospitality",
     summary:
-      "A restaurant site focused on atmosphere, menu, and getting the table booked.",
+      "A fire-led restaurant site that answers the diner's first questions before it shows the room: when it is open, how it seats, and what is on the card.",
     objective:
-      "Convey the atmosphere of the room and turn visitors into reservations.",
+      "Convey the atmosphere of the room, then remove every practical reason not to book a table.",
     strategy:
-      "Atmosphere-led. People choose a restaurant on feel before they look at the food, so the hero sets the mood and the menu sits close to the top where a deciding visitor expects to find it.",
-    designDirection: ["Warm", "Atmospheric", "Elegant", "Image-led"],
-    keySections: ["Hero", "Menu", "Story", "Gallery", "Reservations"],
+      "Facts first, photograph second. A deciding diner wants the service, the card and the constraints before the mood, so the hours board sits above the fold, the menu is the second section, and the booking form asks what a reservation book actually records — including the honest answer about one shared kitchen.",
+    designDirection: ["Printed card", "Fire ink", "Asymmetric editorial", "Image-led"],
+    keySections: [
+      "Service board",
+      "Hero",
+      "The kitchen",
+      "Seatings",
+      "The card",
+      "The room",
+      "Photographs",
+      "Banquet room",
+      "Reservations",
+    ],
     mobileNotes: [
       "Menu reflows to a single column with prices aligned right so it stays scannable",
-      "Reservation button stays in the sticky header on every scroll position",
-      "Navigation collapses on small screens while the reserve action stays visible",
+      "Party sizes are chips rather than a number box, so a thumb can set them",
+      "Reserve stays in the sticky header and in the pinned action bar",
+      "Photographs open in a viewer pinned inside the frame, not the browser window",
     ],
     conversionNotes: [
-      "Reserve call to action in the header, the hero, and the dedicated booking panel",
-      "Opening days and hours repeated next to the booking form to remove the last question",
+      "Reserve call to action in the header, the hero, the banquet room, and the booking panel",
+      "Hours, address and the walk-in counter policy printed beside the form, where the last doubts live",
+      "The confirmation reads the request back and states plainly that no table is held",
     ],
     accent: "#C8642B",
     /* Dark ember theme: near-black brown room, warm cream ink, burnt orange fire,
@@ -1285,25 +1341,66 @@ export const projects: Project[] = [
         "This form is part of a concept website: nothing has been booked and no request was sent. A real reservation book would confirm the table here.",
 
       restaurant: {
+        board: [
+          "Dinner Wednesday – Saturday, from 18:00",
+          "Sunday lunch 12:00 – 17:00",
+          "Closed Monday and Tuesday",
+          "Fire lit at 16:00 · oak and beech",
+        ],
         hero: {
           src: "/demos/ember-restaurant/hero-fire.webp",
           alt: "Steaks cooking over an open flame on a barred grill, a tall tongue of fire behind them.",
           headline: "Everything Here",
           accent: "Has Met A Flame.",
+          eyebrow: "Ash-fired kitchen · Twenty-two covers",
+          lede:
+            "One fire, two seatings, and a card that is rewritten on Monday. The room is small and the grill is at the back of it, so the kitchen is part of the evening rather than something happening elsewhere. If a dish is not working, we will tell you at the table instead of waiting for you to notice.",
           hoursLine: "Dinner Wednesday to Sunday · from 18:00",
+          facts: [
+            { label: "Covers", value: "22" },
+            { label: "Seatings", value: "18:00 / 21:00" },
+            { label: "The card", value: "Rewritten Mondays" },
+          ],
           caption: "Oak and beech, burned down since four o'clock",
         },
         intro: {
           eyebrow: "The Kitchen",
           body: "There is one fire in this building and it does most of the work. Meat and fish go straight onto the bars. Vegetables go into the ash under a foil hood, where they cook slower and taste of somewhere else. Bread arrives still ticking from the heat, and the butter is cultured in-house because it takes four days and we have them.",
         },
+        seatings: {
+          eyebrow: "Service",
+          title: "Two Blocks, Because One Grill Cannot Be In Two Places At Once",
+          body:
+            "The room is seated in blocks so the fire can keep up with it. Tables are held for the block you book, not for the whole evening, and nobody is rushed out between the two.",
+          blocks: [
+            {
+              time: "18:00",
+              label: "First block",
+              note: "The fire is fresh. This is the block to take if you want the grill's attention.",
+            },
+            {
+              time: "21:00",
+              label: "Second block",
+              note: "Coals by then, which is what the hearth vegetables want anyway.",
+            },
+            {
+              time: "12:00",
+              label: "Sunday only",
+              note: "One continuous lunch to 17:00, shorter card, no second block.",
+            },
+          ],
+        },
         menu: {
           eyebrow: "The Card",
           title: "This Week",
           lead:
-            "Nine things on the grill, four puddings, and a cellar list we keep short on purpose.",
+            "The card changes with the week, so this is what is on it right now. Everything is cooked to order — a full dinner in the first block takes about two hours.",
+          priceNote:
+            "The card is printed with numbers only, so it is reproduced that way here. No service charge is added to the table.",
+          allergy:
+            "Everything is cooked in one kitchen, over one fire, beside flour and nuts. We cannot promise a dish is free of anything, and we would rather say that than imply the opposite. Tell us when you book and we will be straight with you about what the kitchen can do that night.",
           note: "The card is rewritten on Monday. If a dish matters to you, say so when you book and we will tell you whether it is still on.",
-          tabs: [
+          courses: [
             {
               label: "Starters",
               blurb: "Small, salted, and meant to be eaten while the grill is still settling.",
@@ -1440,32 +1537,38 @@ export const projects: Project[] = [
         gallery: {
           eyebrow: "Photographs",
           title: "Fire, Tables, Plates",
-          lead: "Tap any photograph to see it larger. Escape or the arrow keys move through them.",
+          lead:
+            "Five photographs from the room, each licence-checked and credited at the foot of this section. Open one and the arrows or the left and right keys move through the set.",
           items: [
             {
               src: "/demos/ember-restaurant/gal-hearth.webp",
               alt: "Sausages and a split chicken on a chain-hung grill in front of a hearth fire.",
               caption: "The chain, lowered onto the coals",
+              ratio: "1100/733",
             },
             {
               src: "/demos/ember-restaurant/gal-grill.webp",
               alt: "Close view of empty iron grill bars with embers glowing underneath.",
               caption: "Bars, cleaned and hot",
+              ratio: "1100/700",
             },
             {
               src: "/demos/ember-restaurant/gal-table.webp",
               alt: "A row of small dishes laid along a wooden table over evergreen branches.",
               caption: "A long table, laid for nobody yet",
+              ratio: "800/1200",
             },
             {
               src: "/demos/ember-restaurant/gal-autumn.webp",
               alt: "A glazed purple dessert on a white plate beside an amber cocktail, with pale pumpkins behind.",
               caption: "Pudding and a digestif",
+              ratio: "1100/750",
             },
             {
               src: "/demos/ember-restaurant/gal-candles.webp",
               alt: "Empty restaurant tables lit by small battery lamps at night.",
               caption: "Nine o'clock, second service",
+              ratio: "1000/1000",
             },
           ],
         },
@@ -1480,6 +1583,7 @@ export const projects: Project[] = [
             "The grill is fired for your table only",
           ],
           cta: "Enquire About The Room",
+          preset: "Banquet room — up to 14, one menu agreed in advance",
           src: "/demos/ember-restaurant/events-room.webp",
           alt: "A long dark dining room set for a banquet, with tall candles in glass holders down the centre.",
         },
@@ -1487,8 +1591,10 @@ export const projects: Project[] = [
           eyebrow: "Reservations",
           title: "Find A Table",
           body:
-            "Dinner service, Wednesday to Sunday. Parties of two to eight are held here; anything larger goes through the phone so we can check the room will take you.",
+            "Parties of two to eight are held here; anything larger goes through the phone so we can check the room will take you. The form asks the questions a reservation book actually records.",
           times: ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+          parties: [2, 3, 4, 5, 6, 7, 8],
+          occasions: ["No occasion", "Birthday", "Anniversary", "Business dinner", "Just because"],
           hours: [
             { day: "Wednesday – Saturday", time: "18:00 – 23:30" },
             { day: "Sunday", time: "12:00 – 17:00" },
@@ -1498,6 +1604,18 @@ export const projects: Project[] = [
           phone: { display: "(555) 014-0166", href: "tel:+15550140166" },
           submit: "Find a Table",
           note: "Tables are held for the block you book, not for the evening. Running late is worth a call.",
+          hints: {
+            date: "Tonight onwards. A day the room has already served cannot be booked.",
+            time: "Dinner slots. Sunday lunch is one continuous service, so it goes through the phone.",
+            party: "Two to eight online. Anything larger is checked against the room first.",
+            notes: "Allergies, a wheelchair, a pram, a table you would rather not sit beside the grill. Say it here.",
+          },
+          confirm: {
+            title: "Asked for, not booked",
+            lead:
+              "This is what the form received. Nothing left this page, so the table is not held and nobody has been told to expect you.",
+            edit: "Change it",
+          },
         },
       },
     },

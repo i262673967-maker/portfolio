@@ -91,13 +91,13 @@ Files in `demos/maison-lune/`:
 
 | File | Slot | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
-| `hero.webp` | Hero | Cream salon: tan styling chairs, arched gold mirrors, a wash basin in the foreground | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-hair-salon-with-chairs-and-mirrors-2dliPhBcEkg |
-| `stations.webp` | Gallery | A row of styling chairs and arched mirrors along a cream wall | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-hair-salon-with-chairs-and-mirrors-GPcqxtH9Gjo |
-| `corner.webp` | Gallery | A white lounge chair and round standing mirror in a cream alcove | Franco Debartolo (@francotheshooter) | https://unsplash.com/photos/modern-white-chair-and-silver-vanity-mirror-w5Y86LS0cHw |
-| `braid.webp` | Gallery | Cornrow braids seen from behind, mid-style | Mohamed B. (@bangscreative) | https://unsplash.com/photos/close-up-of-a-person-getting-their-hair-braided-q_tPGU2FGXg |
-| `tools.webp` | Gallery | Nail scissors, files and wooden sticks laid on a grey towel | Ksenia Pixelesse (@pixelesse) | https://unsplash.com/photos/manicure-tools-laid-out-on-a-white-towel-vZrRwTOrIL0 |
-| `towels.webp` | Gallery | Rolled white towels stacked in warm sunlight on a wooden bench | iridial (@iridial_) | https://unsplash.com/photos/stack-of-white-rolled-towels-0Qv4fUvlSrI |
-| `marble.webp` | Gallery | Two tan styling chairs on a polished marble floor | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-pair-of-chairs-sitting-on-top-of-a-marble-floor-0XSNQhjdjh8 |
+| `hero.webp` | Hero, tall arch | Cream salon: tan styling chairs, arched gold mirrors, a wash basin in the foreground | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-hair-salon-with-chairs-and-mirrors-2dliPhBcEkg |
+| `marble.webp` | Hero, inset arch | Two tan styling chairs on a polished marble floor | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-pair-of-chairs-sitting-on-top-of-a-marble-floor-0XSNQhjdjh8 |
+| `tools.webp` | Price card still life | Nail scissors, files and wooden sticks laid on a grey towel | Ksenia Pixelesse (@pixelesse) | https://unsplash.com/photos/manicure-tools-laid-out-on-a-white-towel-vZrRwTOrIL0 |
+| `stations.webp` | Collage, wide | A row of styling chairs and arched mirrors along a cream wall | Tile Merchant Ireland (@tilemerchant) | https://unsplash.com/photos/a-hair-salon-with-chairs-and-mirrors-GPcqxtH9Gjo |
+| `braid.webp` | Collage, tall arch | Cornrow braids seen from behind, mid-style | Mohamed B. (@bangscreative) | https://unsplash.com/photos/close-up-of-a-person-getting-their-hair-braided-q_tPGU2FGXg |
+| `corner.webp` | Collage, wide | A white lounge chair and round standing mirror in a cream alcove | Franco Debartolo (@francotheshooter) | https://unsplash.com/photos/modern-white-chair-and-silver-vanity-mirror-w5Y86LS0cHw |
+| `towels.webp` | Collage, wide | Rolled white towels stacked in warm sunlight on a wooden bench | iridial (@iridial_) | https://unsplash.com/photos/stack-of-white-rolled-towels-0Qv4fUvlSrI |
 
 ### Maison Lune — shots considered and rejected
 

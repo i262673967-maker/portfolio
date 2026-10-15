@@ -470,7 +470,7 @@ export type ServiceDemoContent = {
      of what happens and how long it takes, and a request form — rather than a
      brochure of promises.
 
-     All OPTIONAL and read only by DentalDemo, so the four other concepts are
+     All OPTIONAL and read only by DentalDemo, so the other concepts are
      untouched. The practice name, street, hours and number are invented for the
      fiction; the number stays inside the 555-01XX range reserved for made-up
      businesses.
@@ -602,7 +602,7 @@ export type ServiceDemoContent = {
      Maison Lune is a soft, minimal beauty studio, so its layout is a service
      menu, a booking flow, a small team and a room — not a product grid or a
      service brochure. It reads the fields below; all OPTIONAL and read only by
-     SalonDemo, so the four other concepts are untouched.
+     SalonDemo, so the other concepts are untouched.
 
      Service names, durations, "from $" prices, stylist first names, the street,
      the hours and the phone are invented for the fiction (as the dishes and the
@@ -626,19 +626,40 @@ export type ServiceDemoContent = {
       note: string;
       ctaPrimary: string;
       ctaSecondary: string;
+      /* The shorter arch that rides over the tall plate at desktop width. Held
+         per slot rather than looked up by position, so the collage is a decision
+         the copy makes and not a side effect of array order. */
+      inset: { src: string; alt: string };
+      /* Set down the hero's right edge at desktop, the way a studio spells its
+         trade along a window. */
+      spine: string;
     };
-    /* The single large statement below the hero. */
+    /* The single large statement, set beside the three house rules. */
     statement: string;
+    /* The line the quote is signed with. Deliberately not a founding year, an
+         award or a client count — none of those are ours to invent. */
+    statementSign: string;
     menu: {
       eyebrow: string;
       title: string;
       lead: string;
-      /* Each tab is a treatment family; items carry a duration and a "from $"
+      /* The chip that shows every family. */
+      all: string;
+      /* The noun in the count line under the chips. The number itself is read
+         off the list, so this never drifts when a treatment is added. */
+      countNoun: string;
+      /* Each family is a ruled section of ONE continuous price card, not a
+         panel of cards behind a tab. Items carry a duration and a "from $"
          floor price, never a fixed quote. */
-      tabs: {
+      families: {
         label: string;
         items: { name: string; desc: string; duration: string; price: string }[];
       }[];
+      /* What a printed card leaves unsaid and a website has to say: where the
+         figure on the card stops being the figure you pay. */
+      footnotes: string[];
+      /* The still-life plate that sits beside the card's heading. */
+      plate: { src: string; alt: string; caption: string; ratio: string };
     };
     booking: {
       eyebrow: string;
@@ -653,34 +674,77 @@ export type ServiceDemoContent = {
       submit: string;
       /* Repeated beside the final step: nothing here really books. */
       note: string;
+      /* The two questions a studio is asked before anyone books, answered on the
+         page rather than left to a validation message. */
+      terms: { label: string; body: string }[];
+      /* The panel that replaces the wizard once it is requested. It reads back
+         what was asked for and says, in the same breath, that no chair is held. */
+      confirm: { title: string; lead: string; edit: string };
+      /* Words the step controls and the live stub need. They live here so the
+         component carries no English of its own. */
+      ui: {
+        summary: string;
+        back: string;
+        next: string;
+        unchosen: string;
+        needChoice: string;
+        legends: { service: string; stylist: string; time: string };
+        /* Under the calendar: the slots are the concept's, not the studio's. */
+        slotsNote: string;
+        /* Named so a screen reader hears a sentence, not "Noor" on its own. */
+        bookWithAria: string;
+      };
     };
     team: {
       eyebrow: string;
       title: string;
       intro: string;
-      /* Initials, never face photographs — a monogram plate stands in. */
-      members: { name: string; initials: string; role: string; focus: string }[];
+      /* Prefix for the row action that carries the name into the booking stub. */
+      bookWith: string;
+      /* Lead-in to the plain sentence that lists what each chair takes. */
+      takes: string;
+      members: {
+        name: string;
+        initials: string;
+        role: string;
+        focus: string;
+        /* Service names lifted from `menu.families` verbatim, so a stylist can
+           never advertise a treatment the card does not sell. */
+        sees: string[];
+      }[];
     };
     gallery: {
       eyebrow: string;
       title: string;
       lead: string;
-      items: { src: string; alt: string; caption: string }[];
+      /* `ratio` is the file's own measured pixel ratio, held per plate rather
+         than looked up by position: the box then matches the photograph whatever
+         order the list is in, and nothing reflows when the file arrives. A plate
+         taller than it is wide is arched, because that is the shape of the
+         mirrors in the room; a wide plate is only softened. */
+      items: { src: string; alt: string; caption: string; ratio: string }[];
     };
     studio: {
       eyebrow: string;
       title: string;
       points: { title: string; body: string }[];
     };
+    /* The new-client note. It rides at the foot of the statement block rather
+       than standing in its own boxed band, so the page has one fewer panel and
+       one fewer button. */
     offer: { title: string; body: string };
     visit: {
       eyebrow: string;
       title: string;
       address: string[];
+      /* One row per day. The week is drawn as a strip, so a grouped "Tue – Fri"
+         label would have to be unpicked to build it — better to keep the data
+         at the grain the layout needs. */
       hours: { day: string; time: string }[];
       phone: { display: string; href: string };
-      /* The map panel cannot show a real place, so it names what it is. */
-      mapNote: string;
+      /* Practical directions in place of the map panel that could only ever
+         pretend to be a map. */
+      arriving: string;
     };
   };
 };
@@ -1737,7 +1801,7 @@ export const projects: Project[] = [
             { day: "Monday – Tuesday", time: "Closed" },
           ],
           address: ["14 Ashgrove Lane", "Old Foundry Quarter"],
-          phone: { display: "(555) 014-0166", href: "tel:+15550140166" },
+          phone: { display: "(555) 555-0166", href: "tel:+15555550166" },
           submit: "Find a Table",
           note: "Tables are held for the block you book, not for the evening. Running late is worth a call.",
           hints: {
@@ -1765,22 +1829,24 @@ export const projects: Project[] = [
     industry: "Hair & Beauty",
     category: "Hospitality",
     summary:
-      "A soft, minimal beauty studio site built around a service menu and a booking flow.",
+      "A quiet cream studio site built around an arch-shaped price card, a stylist roster that drops you into the booking already filled, and an honest four-step request.",
     objective:
       "Make a small studio feel calm and premium, and turn a visitor into an appointment without a heavy storefront.",
     strategy:
-      "Restraint. A beauty studio sells on atmosphere and trust, so the layout behaves like the room itself — generous cream space, a light serif, one muted rose accent, and a booking flow that walks a visitor from service to time in four quiet steps.",
-    designDirection: ["Minimal", "Soft luxury", "Editorial serif", "Calm"],
-    keySections: ["Hero", "Service Menu", "Booking", "Team", "Gallery"],
+      "Restraint, and one shape. A beauty studio sells on atmosphere and trust, so the room's arches carry the layout — an arched hero plate, arched portrait plates, an arched booking stub — while everything a studio usually pads with cards and stock claims is set as ruled type instead: one continuous dotted-leader menu that filters by family, a roster you can book from directly, and a request that stops short of pretending to send.",
+    designDirection: ["Soft luxury", "Arch motif", "Didone editorial", "Calm"],
+    keySections: ["Hero", "Statement", "Price Card", "Roster", "Booking", "Gallery", "Visit"],
     mobileNotes: [
       "Nav collapses to a hamburger sheet below the tablet frame",
-      "The four-step booking stays one column so a choice never crowds the next",
+      "The live appointment stub moves above the choices, so a phone reads its own summary first",
       "A sticky Book bar keeps the appointment reachable with one thumb",
+      "Each gallery plate keeps the ratio measured from its file, so no photograph is cropped and no line jumps as it loads",
     ],
     conversionNotes: [
-      "Book Now appears in the header, the hero, and the sticky mobile bar",
-      "Service menu leads with durations and a from-price so a visitor can self-select",
-      "The booking summary updates live, so the choice is visible before it is confirmed",
+      "One booking destination — the header pill, the hero, the sheet, and the sticky bar all land on the same section",
+      "The roster's Book with links fill the stylist step before the flow even opens",
+      "Menu chips filter and recount in place, so a visitor finds their service without hunting a tab",
+      "The receipt repeats what was chosen and says plainly that no chair is held",
     ],
     accent: "#B5776A",
     palette: { bg: "#F7F2EC", fg: "#2B221D", accent: "#B5776A", surface: "#E9DFD3" },
@@ -1790,7 +1856,10 @@ export const projects: Project[] = [
          it shows lives under `salon` below. See ruling H. */
       navName: "Maison Lune",
       formNote:
-        "This book is part of a concept website: the appointment has not been taken and nothing was sent. A real studio would confirm it here.",
+        "This page is part of a concept website. Nothing was sent and no chair was held — the request stopped in your browser.",
+      imageSource:
+        "Photography: Tile Merchant Ireland, Franco Debartolo, Mohamed B., Ksenia Pixelesse and iridial — all used under the Unsplash License. This is a fictional studio; the rooms shown are not this studio's.",
+
       salon: {
         announcement: "Now booking spring appointments",
         hero: {
@@ -1803,14 +1872,22 @@ export const projects: Project[] = [
           note: "Appointments open",
           ctaPrimary: "Book an Appointment",
           ctaSecondary: "See the Menu",
+          inset: {
+            src: "/demos/maison-lune/marble.webp",
+            alt: "Two tan styling chairs on a polished marble floor, seen from behind.",
+          },
+          spine: "Hair · Colour · Skin · Nails",
         },
         statement:
           "We are a small studio. We would rather do fewer people well than fill a calendar — so a haircut is not squeezed between the appointments on either side of it.",
+        statementSign: "The rule the room is kept by",
         menu: {
           eyebrow: "The Menu",
           title: "What we do",
-          lead: "Four families of treatment. Prices are a starting point; the studio confirms the final figure at your consultation.",
-          tabs: [
+          lead: "A short menu, kept short on purpose. Every treatment is priced from a floor figure and timed so it does not have to be rushed.",
+          all: "Everything",
+          countNoun: "treatments shown",
+          families: [
             {
               label: "Hair",
               items: [
@@ -1844,25 +1921,89 @@ export const projects: Project[] = [
               ],
             },
           ],
+          footnotes: [
+            "A colour service is quoted after a look at your hair's history. The figure on this card is where that conversation starts, not where it ends.",
+            "A longer treatment runs over its listed time when a correction turns up. The studio tells you before it begins, never after.",
+          ],
+          plate: {
+            src: "/demos/maison-lune/tools.webp",
+            alt: "Nail scissors, files and wooden sticks laid out on a soft grey towel.",
+            caption: "The tools, laid out before the first client",
+            /* Measured from the file, not chosen for the layout. */
+            ratio: "800/531",
+          },
         },
         booking: {
           eyebrow: "Appointments",
           title: "Book in four steps",
-          body: "Pick what you would like, who you would like to see, and a time. Nothing here really reserves a chair — it is a concept demonstration of how a booking could feel.",
+          body: "Pick what you would like, who you would like to see, and when. Four steps, and a summary that fills itself in as you go.",
           steps: ["Service", "Stylist", "Time", "Review"],
-          days: ["Mon 12", "Tue 13", "Wed 14", "Thu 15", "Fri 16", "Sat 17"],
-          times: ["09:30", "11:00", "13:15", "15:00", "16:30"],
+          /* Tuesday to Saturday: the studio is shut on Mondays, so a Monday chip
+             would offer a day the room is closed. The last slot ends before the
+             earliest closing time on the board. */
+          days: ["Tue 13", "Wed 14", "Thu 15", "Fri 16", "Sat 17"],
+          times: ["09:30", "11:00", "13:15", "15:00"],
           submit: "Request Appointment",
           note: "Concept site — this booking does not send anywhere and no chair is held.",
+          terms: [
+            {
+              label: "Deposit",
+              body: "Colour and keratin bookings ask for a deposit ahead of the appointment. The studio confirms the amount when it replies, before anything is taken.",
+            },
+            {
+              label: "Running late",
+              body: "A treatment needs the time it was given. Past a quarter of an hour the chair is usually shortened rather than pushed back into the next appointment.",
+            },
+          ],
+          confirm: {
+            title: "Request noted",
+            lead: "This is the request as the page has it — the service, the stylist and the time picked in the three steps above.",
+            edit: "Change it",
+          },
+          ui: {
+            summary: "Your appointment",
+            back: "Back",
+            next: "Continue",
+            unchosen: "Not chosen yet",
+            needChoice: "Make a choice to continue",
+            legends: {
+              service: "What are you coming in for?",
+              stylist: "Anyone in particular?",
+              time: "When suits you?",
+            },
+            slotsNote:
+              "These days and slots belong to the concept, not to a diary. A real studio would show only the times its chairs are actually free.",
+            bookWithAria: "Request this stylist",
+          },
         },
         team: {
           eyebrow: "The Studio",
           title: "Who you'll see",
           intro: "Three stylists share the room. You can ask for a favourite, or let the studio pair you with whoever suits the service.",
+          bookWith: "Book with",
+          takes: "Takes",
           members: [
-            { name: "Noor", initials: "N", role: "Senior Stylist", focus: "Cuts, curl re-shaping and colour correction." },
-            { name: "Elise", initials: "E", role: "Colour Specialist", focus: "Balayage, lived-in blonde and toning." },
-            { name: "Priya", initials: "P", role: "Skin & Nails", focus: "Facials, brow shaping and gel finishes." },
+            {
+              name: "Noor",
+              initials: "N",
+              role: "Senior Stylist",
+              focus: "Cuts, curl re-shaping and colour correction.",
+              sees: ["Cut & Style", "Blow-dry", "Keratin smoothing"],
+            },
+            {
+              name: "Elise",
+              initials: "E",
+              role: "Colour Specialist",
+              focus: "Balayage, lived-in blonde and toning.",
+              sees: ["Root retouch", "Balayage", "Gloss & tone"],
+            },
+            {
+              name: "Priya",
+              initials: "P",
+              role: "Skin & Nails",
+              focus: "Facials, brow shaping and gel finishes.",
+              sees: ["Signature facial", "Brow shape", "Gel overlay"],
+            },
           ],
         },
         gallery: {
@@ -1870,12 +2011,10 @@ export const projects: Project[] = [
           title: "Inside the studio",
           lead: "A working room, photographed between appointments. No faces and no products posed as endorsements.",
           items: [
-            { src: "/demos/maison-lune/stations.webp", alt: "A row of tan styling chairs and arched gold mirrors along a cream wall.", caption: "The styling floor" },
-            { src: "/demos/maison-lune/corner.webp", alt: "A white lounge chair and a round standing mirror in a cream alcove.", caption: "The quiet corner" },
-            { src: "/demos/maison-lune/braid.webp", alt: "Fresh cornrow braids seen from behind, mid-style.", caption: "Braiding & texture" },
-            { src: "/demos/maison-lune/tools.webp", alt: "Nail scissors, files and wooden sticks laid on a soft grey towel.", caption: "The tools" },
-            { src: "/demos/maison-lune/towels.webp", alt: "A stack of rolled white towels warming in sunlight on a wooden bench.", caption: "Fresh from the wash" },
-            { src: "/demos/maison-lune/marble.webp", alt: "Two tan styling chairs on a polished marble floor.", caption: "Between appointments" },
+            { src: "/demos/maison-lune/stations.webp", alt: "A row of tan styling chairs and arched gold mirrors along a cream wall.", caption: "The styling floor", ratio: "1200/800" },
+            { src: "/demos/maison-lune/braid.webp", alt: "Fresh cornrow braids seen from behind, mid-style.", caption: "Braiding & texture", ratio: "880/1100" },
+            { src: "/demos/maison-lune/corner.webp", alt: "A white lounge chair and a round standing mirror in a cream alcove.", caption: "The quiet corner", ratio: "1200/800" },
+            { src: "/demos/maison-lune/towels.webp", alt: "A stack of rolled white towels warming in sunlight on a wooden bench.", caption: "Fresh from the wash", ratio: "1200/802" },
           ],
         },
         studio: {
@@ -1896,12 +2035,17 @@ export const projects: Project[] = [
           title: "Finding the studio",
           address: ["Maison Lune", "142 Alder Street", "Springfield"],
           hours: [
-            { day: "Tue – Fri", time: "9:00 – 18:00" },
-            { day: "Saturday", time: "9:00 – 16:00" },
-            { day: "Sun – Mon", time: "Closed" },
+            { day: "Mon", time: "Closed" },
+            { day: "Tue", time: "09:00 – 18:00" },
+            { day: "Wed", time: "09:00 – 18:00" },
+            { day: "Thu", time: "09:00 – 18:00" },
+            { day: "Fri", time: "09:00 – 18:00" },
+            { day: "Sat", time: "09:00 – 16:00" },
+            { day: "Sun", time: "Closed" },
           ],
-          phone: { display: "(555) 018-0142", href: "tel:+15550180142" },
-          mapNote: "Illustrative map — not a real location.",
+          phone: { display: "(555) 555-0187", href: "tel:+15555550187" },
+          arriving:
+            "There is no reception desk, so the door stays unlocked through the hours above and the stylist comes out to meet you. Alder Street is one-way from the corner, which puts the entrance on the far side of the building.",
         },
       },
     },
@@ -2251,7 +2395,7 @@ export const projects: Project[] = [
           "Rowanwood House, 4 Ashgrove Lane",
           "Meadowbank",
         ],
-        phone: { display: "(555) 019-0164", href: "tel:+15550190164" },
+        phone: { display: "(555) 555-0164", href: "tel:+15555550164" },
         positioning:
           "General and family dentistry. Two chairs, one plan, and a number before anything starts.",
       },

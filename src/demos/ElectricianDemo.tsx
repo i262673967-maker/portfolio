@@ -57,7 +57,7 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
   const chosen = helper?.options[job % (helper?.options.length || 1)];
 
   const panel = "rounded-2xl border border-[var(--d-line)] bg-[var(--d-soft)]";
-  const eyebrow = "font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]";
+  const eyebrow = "font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]";
 
   const navItems: DemoNavItem[] = [
     ["Services", "services"],
@@ -157,14 +157,11 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
           <DemoNav anchor={anchor} items={navItems} className="gap-6" />
 
           <div className="flex shrink-0 items-center gap-2">
-            {/* The number spelled out on the wide frames, a bare dial on the
-                narrow ones — the emergency call is never more than a tap away. */}
+            {/* The number spelled out on the wide frames. The narrow frames used to
+                carry a second, label-less copy of the same button — a bare yellow
+                disc with nothing on it, which read as a decoration rather than a
+                call. On a phone the number is in the sticky bar and the menu. */}
             {emergencyButton("Emergency Call", { show: "hidden @3xl:inline-flex" })}
-            {emergencyButton(<span className="sr-only">{phone?.label}</span>, {
-              className: "w-11 px-0",
-              dot: false,
-              show: "inline-flex @3xl:hidden",
-            })}
             <DemoMobileMenu anchor={anchor} items={navItems} action={["Quote helper", "quote"]} />
           </div>
         </div>
@@ -383,10 +380,21 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
           </p>
 
           <div className={`${panel} mt-8 grid @5xl:grid-cols-[1fr_1.5fr]`}>
-            <fieldset className="border-b border-[var(--d-line)] p-4 @5xl:border-b-0 @5xl:border-r @5xl:p-5">
-              <legend className="font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--d-muted)]">
+            {/* A `<legend>` is laid out on its fieldset's top border, and this
+               fieldset is the first cell of a bordered card — so the prompt sat
+               half outside the card, jammed against its rounded edge. The group
+               keeps its accessible name through aria-labelledby instead. */}
+            <div
+              role="radiogroup"
+              aria-labelledby={`${uid}-prompt`}
+              className="border-b border-[var(--d-line)] p-4 @5xl:border-b-0 @5xl:border-r @5xl:p-5"
+            >
+              <p
+                id={`${uid}-prompt`}
+                className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]"
+              >
                 {helper.prompt}
-              </legend>
+              </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {helper.options.map((o, i) => (
                   <label key={o.job} className="inline-flex min-h-11">
@@ -407,14 +415,14 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
                   </label>
                 ))}
               </div>
-            </fieldset>
+            </div>
 
             {/* Live, because the answer changes under the visitor's hands. */}
             <div aria-live="polite" className="p-4 @5xl:p-6">
               <h3 className="font-display text-[1.15rem] font-bold tracking-tight">{chosen.job}</h3>
               <div className="mt-5 grid gap-5 @md:grid-cols-2">
                 <div>
-                  <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--d-accent-text)]">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
                     {helper.checkLabel}
                   </p>
                   <p className="mt-2 text-[14px] leading-relaxed text-[var(--d-body)]">
@@ -422,7 +430,7 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
                   </p>
                 </div>
                 <div>
-                  <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--d-accent-text)]">
+                  <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
                     {helper.prepareLabel}
                   </p>
                   <p className="mt-2 text-[14px] leading-relaxed text-[var(--d-body)]">
@@ -471,7 +479,10 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
       {/* Closing call — the yellow floor, and the number at the size it deserves. */}
       <section
         id={anchor.id("contact")}
-        className="scroll-mt-24 bg-[var(--d-accent)] px-4 py-12 text-[var(--d-on-accent)] @5xl:px-8 @5xl:py-16"
+        /* pb-28 below @3xl is the sticky bar's own height — 44px of button plus
+           its padding and hairline. Without it the last action on the page sits
+           under the bar at every scroll position short of the very end. */
+        className="scroll-mt-24 bg-[var(--d-accent)] px-4 pt-12 pb-28 text-[var(--d-on-accent)] @3xl:pb-12 @5xl:px-8 @5xl:py-16"
       >
         <div className="mx-auto grid max-w-6xl gap-8 @5xl:grid-cols-[1.1fr_1fr] @5xl:items-center">
           <div>
@@ -492,7 +503,7 @@ export default function ElectricianDemo({ project, preview }: DemoProps) {
 
           {phone && (
             <div className="@5xl:text-right">
-              <p className="font-mono text-[12px] uppercase tracking-[0.16em]">{c.ctaPrimary}</p>
+              <p className="font-mono text-[12px] uppercase tracking-[0.1em]">{c.ctaPrimary}</p>
               {asCall(
                 "mt-1 inline-flex min-h-11 items-center font-display text-[2.2rem] leading-none font-bold tracking-tight underline decoration-[var(--d-on-accent)] decoration-2 underline-offset-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--d-on-accent)] @5xl:text-[3.2rem]",
                 phone.display,

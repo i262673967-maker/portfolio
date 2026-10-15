@@ -368,7 +368,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                     rather than a promise. */}
                 {option && (
                   <div aria-live="polite" className="mt-4 border-t border-[var(--d-line)] pt-4">
-                    <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--d-muted)]">
+                    <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]">
                       {co.nextTitle}
                     </p>
                     <div className="mt-2.5 flex flex-wrap items-center gap-2">
@@ -420,7 +420,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
         id={anchor.id("services")}
         className="scroll-mt-28 px-4 py-12 @5xl:mx-auto @5xl:max-w-6xl @5xl:px-8 @5xl:py-16"
       >
-        <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]">
+        <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
           Services
         </p>
         <h2 className="mt-2 font-display text-[1.7rem] font-extrabold tracking-tight @3xl:text-3xl">
@@ -478,7 +478,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
           className="scroll-mt-28 border-y border-[var(--d-line)] bg-[var(--d-soft)] px-4 py-12 @5xl:px-8 @5xl:py-16"
         >
           <div className="mx-auto max-w-6xl">
-            <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
               {process.eyebrow}
             </p>
             <h2 className="mt-2 max-w-2xl font-display text-[1.7rem] font-extrabold leading-tight tracking-tight @3xl:text-3xl">
@@ -535,7 +535,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
         >
           <div className="grid gap-8 @5xl:grid-cols-[1fr_1.2fr] @5xl:items-start">
             <div>
-              <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
                 {quoting.eyebrow}
               </p>
               <h2 className="mt-2 font-display text-[1.7rem] font-extrabold leading-tight tracking-tight @3xl:text-3xl">
@@ -577,7 +577,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
         >
           <div className="mx-auto grid max-w-6xl gap-8 @5xl:grid-cols-[1fr_1.25fr] @5xl:items-center">
             <div>
-              <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]">
+              <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
                 {areas.eyebrow}
               </p>
               <h2 className="mt-2 font-display text-[1.7rem] font-extrabold leading-tight tracking-tight @3xl:text-3xl">
@@ -636,7 +636,9 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
       </section>
 
       {/* Closing call — blue floor, the number at display size. */}
-      <section id={anchor.id("contact")} className="scroll-mt-28 px-4 py-12 @5xl:px-8 @5xl:py-16">
+      {/* pb-28 below @3xl clears the sticky action bar, which otherwise floats
+          over the last 65px of the viewport at every scroll position. */}
+      <section id={anchor.id("contact")} className="scroll-mt-28 px-4 pt-12 pb-28 @3xl:pb-12 @5xl:px-8 @5xl:py-16">
         <div className="mx-auto grid max-w-6xl gap-8 overflow-hidden rounded-3xl bg-[var(--d-accent)] px-5 py-10 text-[var(--d-on-accent)] @3xl:px-10 @5xl:grid-cols-[1.1fr_1fr] @5xl:items-center @5xl:px-14 @5xl:py-14">
           <div>
             <h2 className="font-display text-[1.6rem] font-extrabold leading-tight tracking-tight @3xl:text-[2.1rem]">
@@ -649,7 +651,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
           {phone && (
             <div className="@5xl:text-right">
               {availability && (
-                <p className="font-mono text-[12px] uppercase tracking-[0.16em]">{availability}</p>
+                <p className="font-mono text-[12px] uppercase tracking-[0.1em]">{availability}</p>
               )}
               {/* The number at the size it deserves on a call-first site. */}
               {/* The number at the size it deserves on a call-first site. The

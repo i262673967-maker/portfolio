@@ -13,9 +13,11 @@ const statusStyle = {
   bad: { row: "border-line bg-ink/[0.06]", icon: "text-ink", mark: <X className="h-3.5 w-3.5" /> },
 } as const;
 
+/* The extra top padding is breathing room after the full-bleed blue band above
+   it; the hairline alone let the two sections collide. */
 export default function FreeAudit() {
   return (
-    <section id="audit" className="border-t-2 border-line py-20 sm:py-28">
+    <section id="audit" className="border-t-2 border-line pt-24 pb-20 sm:pt-32 sm:pb-28">
       <div className="container-shell grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-14">
         <Reveal>
           <SectionHeading

@@ -28,13 +28,23 @@ export default function Hero() {
             </p>
 
             <h1
-              /* Fluid size tuned to this headline's measured wrap points, scaled
-                 up for the giant Bricolage display voice (clamp tops ~6rem at the
-                 widest desktop). The LCP is this real text and never gated. */
-              className="heading-display mt-5 text-balance text-[clamp(2rem,1.4rem_+_2.4vw,3rem)] font-extrabold leading-[1.02] sm:text-5xl lg:text-6xl xl:text-[5.25rem]"
+              /* Fluid size tuned to this headline's measured wrap points. Below
+                 `sm` the floor is set so the whole marked phrase fits on one
+                 line — see the span below — which is why it is smaller here than
+                 the old 2rem floor. Scales up again from 640px, where the copy
+                 wraps naturally. */
+              className="heading-display mt-5 text-balance text-[clamp(1.5rem,7.4vw,3rem)] font-extrabold leading-[1.02] sm:text-5xl lg:text-6xl xl:text-[5.25rem]"
             >
               Your Website Might Be{" "}
-              <span className="mark">Costing You Customers.</span>
+              {/* On a phone the phrase used to break as "Costing" + "You
+                  Customers.", leaving the highlighter swipe stranded across two
+                  line boxes. `block` puts it on its own line and `w-fit` keeps
+                  the swipe exactly as wide as the words rather than the line.
+                  From `sm` up it is inline again: the two-column hero gives the
+                  headline too narrow a box for one line at display size. */}
+              <span className="mark mt-1 block w-fit sm:mt-0 sm:inline">
+                Costing You Customers.
+              </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-ink-muted sm:text-[17px]">
@@ -87,28 +97,33 @@ export default function Hero() {
               {/* Navy block sits behind, offset; the electric-blue block is rotated
                   on top and carries the device frames. Both are transform-only. */}
               <div className="absolute inset-0 hidden translate-x-3 translate-y-3 rotate-3 rounded-[28px] bg-navy sm:block" aria-hidden="true" />
-              <div className="relative -rotate-3 overflow-hidden rounded-[28px] border-2 border-line bg-sky p-4 shadow-[6px_6px_0_var(--color-ink)] sm:p-6">
-                <div className="relative pb-[6%]">
-                  <div className="relative z-10">
-                    <DeviceMockup device="desktop" hoverPeek>
-                      <LazyDemo demo="renovation" project={byDemo("renovation")} />
-                    </DeviceMockup>
-                  </div>
+              {/* The three frames share the block instead of overlapping it. Overlap
+                  cannot work here: the demo inside the desktop frame has one text-free
+                  region — its photograph — and it is smaller than either secondary
+                  frame, so any corner a frame was tucked into cut a headline
+                  mid-word. `overflow-hidden` is gone for the same reason: it sliced
+                  the sticker's left edge and the bottom of the tucked frames. */}
+              <div className="relative -rotate-3 rounded-[28px] border-2 border-line bg-sky p-4 shadow-[6px_6px_0_var(--color-ink)] sm:p-6">
+                {/* The 2rem gap is not styling: the block is rotated -3deg, so its
+                    lower edge tilts and eats about 14px of clearance at the sides. */}
+                <div className="flex flex-col gap-8 sm:gap-10">
+                  <DeviceMockup device="desktop" hoverPeek>
+                    <LazyDemo demo="renovation" project={byDemo("renovation")} />
+                  </DeviceMockup>
 
-                  <div
-                    className="absolute -bottom-10 -right-4 z-20 hidden w-[46%] sm:block lg:-right-10"
-                  >
-                    <DeviceMockup device="tablet" chrome={false} hoverPeek>
-                      <LazyDemo idle demo="salon" project={byDemo("salon")} />
-                    </DeviceMockup>
-                  </div>
-
-                  <div
-                    className="absolute -bottom-14 -left-2 z-30 hidden w-[30%] sm:block lg:-left-8"
-                  >
-                    <DeviceMockup device="mobile" chrome={false} hoverPeek>
-                      <LazyDemo idle demo="restaurant" project={byDemo("restaurant")} />
-                    </DeviceMockup>
+                  {/* Below `sm` the block is a phone's full width; two more frames
+                      would stack a third screen of unreadable text under the fold. */}
+                  <div className="hidden items-start justify-center gap-4 sm:flex sm:gap-6">
+                    <div className="w-[42%]">
+                      <DeviceMockup device="tablet" chrome={false} hoverPeek>
+                        <LazyDemo idle demo="salon" project={byDemo("salon")} />
+                      </DeviceMockup>
+                    </div>
+                    <div className="w-[24%]">
+                      <DeviceMockup device="mobile" chrome={false} hoverPeek>
+                        <LazyDemo idle demo="restaurant" project={byDemo("restaurant")} />
+                      </DeviceMockup>
+                    </div>
                   </div>
                 </div>
 

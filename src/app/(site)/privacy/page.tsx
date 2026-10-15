@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             The short version: this site has one form, it collects four things, and they exist so I can
             answer you. Nothing is sold, nothing is shared for advertising, and there is no newsletter.
           </p>
-          <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+          <p className="mt-4 font-mono text-[12px] uppercase tracking-widest text-ink-muted">
             Last updated: 7 October 2026
           </p>
         </div>

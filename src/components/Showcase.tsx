@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Monitor, Tablet, Smartphone, ExternalLink, ArrowRight } from "lucide-react";
 import DeviceMockup, { type Device } from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
-import { featuredProjects, projects } from "@/lib/data";
+import { projects } from "@/lib/data";
 import { Reveal } from "./ui";
 
 const devices: { id: Device; label: string; icon: typeof Monitor }[] = [
@@ -14,12 +14,13 @@ const devices: { id: Device; label: string; icon: typeof Monitor }[] = [
   { id: "mobile", label: "Mobile", icon: Smartphone },
 ];
 
-/* The homepage work section: the three strongest concepts, each previewable
-   the way a customer would see it. The other projects live on /projects. */
+/* The homepage work section: every concept, each previewable the way a customer
+   would see it. Five names stacked into a column ate a third of a phone screen,
+   so below `sm` the selector is one snap-scrolling row instead. */
 export default function Showcase() {
   const [active, setActive] = useState(0);
   const [device, setDevice] = useState<Device>("desktop");
-  const project = featuredProjects[active];
+  const project = projects[active];
 
   return (
     <section id="work" className="relative border-y-2 border-line bg-paper-2 py-20 sm:py-28">
@@ -30,7 +31,7 @@ export default function Showcase() {
               on paper-2. The heading block is built by hand rather than through
               SectionHeading so the eyebrow can go ink-muted. */}
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-ink-muted">
+            <p className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">
               Concept Projects · Live Preview
             </p>
             <h2 className="heading-display mt-3 text-3xl sm:text-4xl md:text-[2.75rem]">
@@ -47,14 +48,17 @@ export default function Showcase() {
 
         {/* Project selector */}
         <Reveal delay={0.05}>
-          <div className="mt-10 flex flex-wrap justify-center gap-2">
-            {featuredProjects.map((p, i) => (
+          {/* Below `sm` this is one snap-scrolling row rather than a wrap: five
+              pills stacked vertically pushed the preview off a phone screen.
+              `shrink-0` keeps each pill at its own width inside the scroller. */}
+          <div className="pill-row mt-10 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0">
+            {projects.map((p, i) => (
               <button
                 key={p.slug}
                 type="button"
                 aria-pressed={i === active}
                 onClick={() => setActive(i)}
-                className={`min-h-11 rounded-full border-2 px-4 py-2 text-[13px] transition-all ${
+                className={`min-h-11 shrink-0 rounded-full border-2 px-4 py-2 text-[13px] whitespace-nowrap transition-all ${
                   i === active
                     ? "border-brand bg-brand text-on-brand"
                     : "border-line text-ink-muted hover:border-brand hover:text-ink"
@@ -106,11 +110,18 @@ export default function Showcase() {
 
         {/* Preview */}
         <div className="relative mt-10">
-          <span className="absolute -top-3 left-4 z-30 rounded-full border-2 border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-[0.18em] text-brand">
+          <span className="absolute -top-3 left-4 z-30 rounded-full border-2 border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-widest text-brand">
             Concept Project
           </span>
           <div key={`${project.slug}-${device}`} className="reveal">
-            <DeviceMockup device={device} previewLabel={`${project.name} — ${device} preview`}>
+            <DeviceMockup
+              device={device}
+              /* The desktop frame's own max is 960, which made this band taller
+                 than most phone screens; 720 keeps the same 16:10 preview at a
+                 height the visitor can see all of. */
+              maxWidth={device === "desktop" ? 720 : undefined}
+              previewLabel={`${project.name} — ${device} preview`}
+            >
               <LazyDemo eager demo={project.demo} project={project} />
             </DeviceMockup>
           </div>

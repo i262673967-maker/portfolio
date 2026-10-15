@@ -33,7 +33,7 @@ export default function ConceptThumb({ project }: { project: Project }) {
 
       <div className="grid flex-1 grid-cols-[1.4fr_1fr] gap-3 px-3 py-3">
         <div className="flex flex-col justify-center gap-1.5">
-          <span className="font-mono text-[12px] uppercase tracking-[0.16em]" style={{ color: accent }}>
+          <span className="font-mono text-[12px] uppercase tracking-widest" style={{ color: accent }}>
             {project.industry}
           </span>
           <span className="block h-2 rounded-full" style={{ width: "88%", background: fg, opacity: 0.85 }} />

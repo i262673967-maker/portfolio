@@ -77,13 +77,15 @@ body {
   .container-shell { padding-inline: 2.5rem; }
 }
 
-/* 12px floor: this is uppercase mono at 0.22em tracking, and below 12px it stops
-   reading as a label on a phone. Brand blue clears AA on paper/card (4.75/5.23),
-   so an eyebrow never sits directly on the paper-2 band. */
+/* 12px floor: this is uppercase mono, and below 12px it stops reading as a label
+   on a phone. Tracking is 0.1em, not the 0.22em it used to be — spread that wide
+   turned an uppercase word into a row of separate letters, which is the one thing
+   uppercase mono does worst. Brand blue clears AA on paper/card (4.75/5.23), so an
+   eyebrow never sits directly on the paper-2 band. */
 @utility eyebrow {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-brand);
 }
@@ -202,6 +204,15 @@ body {
   overflow-x: hidden;
   height: 100%;
   scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* The work section's project pills: one row you swipe on a phone instead of five
+   stacked chips, which pushed the preview below the fold. The strip still
+   scrolls, it just does not show a bar doing it. */
+@utility pill-row {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar { display: none; }
 }
 

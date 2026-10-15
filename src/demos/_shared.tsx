@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useRef, useState, useEffect } from "react";
+import { useId, useRef, useState, useEffect, createContext, useContext } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import type { Project } from "@/lib/data";
 import { demoFonts } from "./fonts";
@@ -176,7 +177,7 @@ export function DemoHeading({
 
 export function DemoBadge() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-current/20 bg-[var(--d-chip)] px-2.5 py-1 font-mono text-[12px] uppercase tracking-[0.12em] text-[var(--d-body)] backdrop-blur">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-current/20 bg-[var(--d-chip)] px-2.5 py-1 font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-body)] backdrop-blur">
       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--d-accent)]" />
       Concept Project
     </span>
@@ -597,6 +598,41 @@ export function DemoFaq({ items }: { items: { q: string; a: string }[] }) {
   );
 }
 
+/* The full-screen route (/demos/[slug]) carries no host bar of its own any
+   more: a strip above the concept's header cost a quarter of a phone screen.
+   It still needs a way back, and the only place that adds no height at the top
+   is the concept's own footer. The link is handed down through context rather
+   than a prop because the five demos each close their own page, and a prop
+   would have to be threaded through all of them.
+
+   Nothing provides this inside a device frame, so the preview of a concept
+   never shows a link to a page it is not on. */
+type DemoBack = { href: string; label: string };
+const DemoBackContext = createContext<DemoBack | null>(null);
+
+export function DemoBackProvider({
+  value,
+  children,
+}: {
+  value: DemoBack;
+  children: React.ReactNode;
+}) {
+  return <DemoBackContext.Provider value={value}>{children}</DemoBackContext.Provider>;
+}
+
+export function DemoBackLink({ className = "" }: { className?: string }) {
+  const back = useContext(DemoBackContext);
+  if (!back) return null;
+  return (
+    <Link
+      href={back.href}
+      className={`inline-flex min-h-11 items-center gap-1.5 text-[12px] text-[var(--d-accent-text)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)] ${className}`}
+    >
+      {back.label}
+    </Link>
+  );
+}
+
 export function DemoFooter({ name }: { name: string }) {
   return (
     <footer className="border-t border-[var(--d-line)] px-4 py-6 @5xl:px-8">
@@ -605,7 +641,10 @@ export function DemoFooter({ name }: { name: string }) {
           <span className="block font-display text-[14px] text-[var(--d-body)]">{name}</span>
           <span className="mt-1.5 block max-w-md">{DEMO_NOTE}</span>
         </div>
-        <span className="font-mono uppercase tracking-[0.1em]">Concept project · not a live client</span>
+        <div className="flex flex-col gap-1 @3xl:items-end">
+          <span className="font-mono uppercase tracking-[0.1em]">Concept project · not a live client</span>
+          <DemoBackLink />
+        </div>
       </div>
     </footer>
   );

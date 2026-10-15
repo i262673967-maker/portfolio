@@ -1437,11 +1437,6 @@ export const projects: Project[] = [
   },
 ];
 
-/* The homepage previews three concepts; the full set lives on /projects. */
-export const featuredProjects = ["atlas-renovation", "flowright-plumbing", "voltwise-electrical"]
-  .map((slug) => projects.find((p) => p.slug === slug))
-  .filter((p): p is Project => p !== undefined);
-
 export type Service = {
   title: string;
   body: string;

@@ -130,14 +130,14 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
             <div className="flex items-center gap-4 @3xl:flex-col @3xl:items-end @3xl:gap-3">
               <DemoBadge />
               {hero && (
-                <p className="font-mono text-[12px] uppercase tracking-[0.16em] text-[var(--d-muted)]">
+                <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]">
                   {hero.caption}
                 </p>
               )}
               {/* 3 — the scroll cue, a real link to the section below. */}
               <a
                 href={anchor.href("work")}
-                className="inline-flex min-h-11 items-center gap-2 font-mono text-[12px] uppercase tracking-[0.16em] text-[var(--d-accent-text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
+                className="inline-flex min-h-11 items-center gap-2 font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
               >
                 Scroll
                 <span aria-hidden="true" className="block h-px w-8 bg-current" />
@@ -185,7 +185,7 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
                   sizes="(min-width: 1024px) 57vw, 100vw"
                   className="aspect-[4/3] w-full @3xl:aspect-[16/10]"
                 />
-                <figcaption className="mt-3 font-mono text-[12px] uppercase tracking-[0.16em] text-[var(--d-muted)]">
+                <figcaption className="mt-3 font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]">
                   {item.type}
                 </figcaption>
               </figure>
@@ -231,7 +231,7 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
                   i === 0 ? "@5xl:border-l-0 @5xl:pl-0" : "@5xl:pl-6"
                 }`}
               >
-                <span className="font-mono text-[12px] tracking-[0.16em] text-[var(--d-accent-text)]">
+                <span className="font-mono text-[12px] tracking-[0.1em] text-[var(--d-accent-text)]">
                   {step.no}
                 </span>
                 <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">{step.title}</h3>
@@ -251,7 +251,7 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
       >
         <div className="@5xl:grid @5xl:grid-cols-[1.35fr_1fr] @5xl:gap-14">
           <div>
-            <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-[var(--d-accent-text)]">
+            <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-accent-text)]">
               {c.servicesEyebrow}
             </p>
             <h2 className="mt-2 font-display text-[1.75rem] leading-tight font-semibold tracking-tight @3xl:text-3xl">
@@ -272,7 +272,7 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
                     onFocus={() => setActive(i)}
                     className="flex min-h-11 items-baseline gap-4 py-4 transition-colors hover:text-current focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--d-accent)]"
                   >
-                    <span className="font-mono text-[12px] tracking-[0.16em] text-[var(--d-muted)]">
+                    <span className="font-mono text-[12px] tracking-[0.1em] text-[var(--d-muted)]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="font-display text-[1.05rem] font-semibold tracking-tight @3xl:text-xl">
@@ -330,11 +330,15 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
          measured against #1B1B1A rather than the page colour. */}
       <section
         id={anchor.id("contact")}
-        className="demo-reveal bg-[var(--d-fg)] px-4 py-16 text-[var(--d-bg)] @5xl:px-8 @5xl:py-24"
+        /* The extra bottom padding below @3xl is the sticky action bar's own
+           height: the bar is 44px of button plus its padding and hairline, and
+           without it the submit button sits under the bar at every scroll
+           position short of the very end. */
+        className="demo-reveal bg-[var(--d-fg)] px-4 pt-16 pb-28 text-[var(--d-bg)] @3xl:pb-16 @5xl:px-8 @5xl:py-24"
       >
         <div className="mx-auto max-w-7xl @5xl:grid @5xl:grid-cols-[1fr_1.15fr] @5xl:gap-16">
           <div>
-            <p className={`font-mono text-[12px] uppercase tracking-[0.2em] ${paperSoft}`}>
+            <p className={`font-mono text-[12px] uppercase tracking-[0.1em] ${paperSoft}`}>
               {contact?.eyebrow}
             </p>
             <h2 className={`mt-3 font-display text-[1.9rem] leading-[1.1] font-semibold tracking-tight @3xl:text-[2.4rem] ${paper}`}>
@@ -347,12 +351,15 @@ export default function RenovationDemo({ project, preview }: DemoProps) {
             </p>
           </div>
 
+          {/* The note above and this form are siblings that only become columns at
+             @5xl, so below that they stacked with no gap at all and the first
+             field label sat directly under the note. */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               setSent(true);
             }}
-            className="flex flex-col gap-4"
+            className="mt-8 flex flex-col gap-4 @5xl:mt-0"
           >
             <Field id={anchor.id("name")} label={contact?.name ?? "Name"}>
                 <input
@@ -435,7 +442,7 @@ function Field({
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className={`font-mono text-[12px] uppercase tracking-[0.14em] ${paperSoft}`}
+        className={`font-mono text-[12px] uppercase tracking-[0.1em] ${paperSoft}`}
       >
         {label}
       </label>

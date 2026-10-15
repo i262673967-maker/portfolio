@@ -19,6 +19,7 @@ export default function DeviceMockup({
   chrome = true,
   hoverPeek = false,
   previewLabel,
+  maxWidth,
 }: {
   device: Device;
   children: React.ReactNode;
@@ -29,6 +30,10 @@ export default function DeviceMockup({
      rendered website is treated as still decoration — the navigable version
      lives on the demo's own route. */
   previewLabel?: string;
+  /** Caps the frame narrower than the device's own max. The homepage work
+     section uses it to keep the band short — the frame keeps its aspect ratio,
+     so a narrower box is a proportionally shorter one. */
+  maxWidth?: number;
 }) {
   const spec = SPEC[device];
   const screenRef = useRef<HTMLDivElement>(null);
@@ -49,7 +54,7 @@ export default function DeviceMockup({
   return (
     <div
       className="mx-auto w-full"
-      style={{ maxWidth: spec.max }}
+      style={{ maxWidth: maxWidth ?? spec.max }}
       role={previewLabel ? "img" : undefined}
       aria-label={previewLabel}
     >

@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { DemoProps } from "./_shared";
 import {
   DEMO_NOTE,
+  DemoBackLink,
   DemoBadge,
   DemoFaq,
   DemoHeading,
@@ -684,9 +685,15 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
               </p>
             </div>
           </div>
-          <p className="mx-auto mt-12 max-w-7xl font-mono text-[12px] uppercase tracking-[0.14em] text-[var(--d-muted)]">
-            Concept project · not a live client
-          </p>
+          <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-5 gap-y-1">
+            <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]">
+              Concept project · not a live client
+            </p>
+            {/* This concept builds its own footer rather than the shared one, so
+                the way back to the project list has to be placed here too. It only
+                renders on the standalone route. */}
+            <DemoBackLink />
+          </div>
         </footer>
         <DemoStickyCta label="Reserve" href={anchor.href("visit")} />
       </div>

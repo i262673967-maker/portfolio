@@ -49,7 +49,7 @@ export function TradeMarquee() {
   const row = [...tradeTypes, ...tradeTypes];
   return (
     <section className="bg-navy py-6 sm:py-8">
-      <p className="text-center font-mono text-[12px] uppercase tracking-[0.22em] text-mark">
+      <p className="text-center font-mono text-[12px] uppercase tracking-widest text-mark">
         Websites I build for local businesses
       </p>
       <div className="marquee mt-4" aria-hidden="true">
@@ -76,7 +76,7 @@ export function Problems() {
     <section id="problems" className="bg-brand py-20 sm:py-28">
       <div className="container-shell">
         <Reveal>
-          <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-white/90">
+          <p className="font-mono text-[12px] uppercase tracking-widest text-white/90">
             Sound Familiar?
           </p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl md:text-[2.75rem]">
@@ -155,7 +155,7 @@ export function WhyWorks() {
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <Reveal>
             <div className="card-pop h-full p-6">
-              <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+              <p className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">
                 Generic website
               </p>
               <ul className="mt-5 space-y-3 text-sm text-ink-muted">
@@ -171,7 +171,7 @@ export function WhyWorks() {
 
           <Reveal delay={0.06}>
             <div className="relative h-full overflow-hidden rounded-[22px] border-2 border-brand bg-card p-6 shadow-[4px_4px_0_var(--color-brand)]">
-              <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-brand">
+              <p className="font-mono text-[12px] uppercase tracking-widest text-brand">
                 Website built around the business
               </p>
               <ul className="mt-5 space-y-3 text-sm text-ink">
@@ -262,7 +262,7 @@ export function Services() {
                         {featured ? <span className="mark">{s.title}</span> : s.title}
                       </h3>
                       {featured && (
-                        <span className="rounded-full border-2 border-brand px-2.5 py-1 font-mono text-[12px] font-semibold uppercase tracking-[0.18em] text-brand">
+                        <span className="rounded-full border-2 border-brand px-2.5 py-1 font-mono text-[12px] font-semibold uppercase tracking-widest text-brand">
                           Start Here
                         </span>
                       )}
@@ -303,7 +303,7 @@ export function Process() {
     <section id="process" className="bg-navy py-20 sm:py-28">
       <div className="container-shell">
         <Reveal>
-          <p className="font-mono text-[12px] uppercase tracking-[0.22em] text-mark">Process</p>
+          <p className="font-mono text-[12px] uppercase tracking-widest text-mark">Process</p>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl md:text-[2.75rem]">
             A clear process, start to finish.
           </h2>
@@ -339,14 +339,19 @@ export function About() {
     <section id="about" className="py-20 sm:py-28">
       <div className="container-shell grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
         <Reveal>
-          <div className="relative mx-auto grid aspect-square w-full max-w-sm place-items-center rounded-full bg-navy p-10 shadow-[6px_6px_0_var(--color-mark)]">
+          {/* logo.png is a navy disc on a black square with no alpha, so the old
+             padding ring showed the file's own black margin as a heavy dark band
+             inside the circle. The box clips instead, and the mark is scaled just
+             past the clip so the disc — not the black — reaches the edge.
+             Capped at 200px on phones, where a 384px circle dominated the fold. */}
+          <div className="relative mx-auto aspect-square w-full max-w-[200px] overflow-hidden rounded-full bg-navy shadow-[6px_6px_0_var(--color-mark)] sm:max-w-[260px]">
             <Image
               src="/logo.png"
               alt={`${site.brand} logo`}
-              width={240}
-              height={240}
-              sizes="(min-width: 1024px) 240px, 55vw"
-              className="h-auto w-full max-w-[15rem] rounded-full object-contain"
+              width={260}
+              height={260}
+              sizes="(min-width: 640px) 260px, 200px"
+              className="size-full scale-[1.06] object-cover"
             />
           </div>
         </Reveal>
@@ -355,7 +360,7 @@ export function About() {
           <SectionHeading eyebrow="About" title={site.role} />
 
           <div className="mt-5 max-w-xl">
-            <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+            <p className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">
               Who you&apos;re dealing with
             </p>
             <div className="mt-3 space-y-3 text-[15px] leading-relaxed text-ink-muted">
@@ -367,13 +372,13 @@ export function About() {
 
           <dl className="card-pop mt-8 max-w-xl space-y-4 p-6 text-sm">
             <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
-              <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+              <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-widest text-ink-muted">
                 Studio
               </dt>
               <dd className="text-ink">{site.brand}</dd>
             </div>
             <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
-              <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+              <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-widest text-ink-muted">
                 Email
               </dt>
               <dd>
@@ -384,7 +389,7 @@ export function About() {
             </div>
             {!isTodo(site.experience) && (
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
-                <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-[0.2em] text-ink-muted">
+                <dt className="w-28 shrink-0 font-mono text-[12px] uppercase tracking-widest text-ink-muted">
                   Focus
                 </dt>
                 <dd className="text-ink">{site.experience}</dd>
@@ -401,7 +406,9 @@ export function About() {
    single primary action used at the other conversion points. */
 export function FinalCta() {
   return (
-    <section className="bg-mark py-20 sm:py-24">
+    /* The id is the sticky phone bar's cue to stand down over this band — it
+       carries the same action, and the band is the last ask on the page. */
+    <section id="final-cta" className="bg-mark py-20 sm:py-24">
       <div className="container-shell">
         <Reveal>
           <div className="rounded-[28px] border-2 border-ink p-8 text-center sm:p-14">
@@ -412,14 +419,16 @@ export function FinalCta() {
             <p className="mx-auto mt-3 max-w-lg text-[15px] leading-relaxed text-ink">
               {finalCta.body}
             </p>
+            {/* The short form of the action: on the yellow band the long label
+                wrapped onto two lines inside a pill button. */}
             <Link
               href="/#contact"
               className="btn-pop group mt-7 inline-flex min-h-11 items-center justify-center gap-2 bg-brand px-7 py-3.5 text-[15px] font-semibold text-on-brand"
             >
-              {cta.primary}
+              {cta.nav}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.2em] text-ink">
+            <p className="mt-4 font-mono text-[12px] uppercase tracking-widest text-ink">
               {finalCta.note}
             </p>
           </div>

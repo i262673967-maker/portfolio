@@ -512,7 +512,7 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
            filling it in. */}
         <section
           id={anchor.id("visit")}
-          className="demo-reveal border-t border-[var(--d-line)] px-4 py-16 @5xl:px-8 @5xl:py-24"
+          className="demo-reveal border-t border-[var(--d-line)] px-4 pt-16 pb-28 @3xl:pb-16 @5xl:px-8 @5xl:py-24"
         >
           <div className="mx-auto max-w-7xl">
             <div className="text-center">

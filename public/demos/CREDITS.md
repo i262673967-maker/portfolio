@@ -23,9 +23,20 @@ Files in `demos/atlas-renovation/`:
 
 Files in `demos/flowright-plumbing/`:
 
-| File | Subject | Photographer | Unsplash page |
-| --- | --- | --- | --- |
-| `hero-pipes.webp` | Hands and back of head tightening under-sink pipework | Timur Shakerzianov (@shaker_jpg) | https://unsplash.com/photos/a-man-working-on-a-pipe-in-a-cabinet-wzIjLL4KB-4 |
+| File | Slot | Subject | Photographer | Unsplash page |
+| --- | --- | --- | --- | --- |
+| `hero-pipes.webp` | Hero | Hands and back of head tightening under-sink pipework | Timur Shakerzianov (@shaker_jpg) | https://unsplash.com/photos/a-man-working-on-a-pipe-in-a-cabinet-wzIjLL4KB-4 |
+| `bathroom.webp` | Bathroom refits | Double-vanity bathroom: freestanding tub, glass shower, black brassware | Ibrar Tariq | https://unsplash.com/photos/b8bBTyWj6gM |
+| `warm-room.webp` | Heating | Vaulted living/dining room with a lit wood-burning stove | Clay Banks | https://unsplash.com/photos/b0y9W2jPoSI |
+
+`bathroom.webp` and `warm-room.webp` are copies of two files already licensed for
+the Atlas Renovation concept, kept under their original credit. The Unsplash
+License permits this; the duplication is temporary while both concepts are on the
+branch, and the Atlas copies go when that concept is removed.
+
+A third Atlas shot, `work-kitchen.webp` (Franco Debartolo), was **not** reused: a
+framed photograph of a person sits on the counter, which is the same test that
+retired Maison Lune's framed-faces shot.
 
 ## VoltWise Electrical — /demos/voltwise-electrical
 
@@ -120,7 +131,8 @@ Files in `demos/maison-lune/`:
 ## Notes
 
 - No face is visible in any of these photos. The FlowRight hero shows hands and
-  the back of a head only, so nobody in it can be identified. The VoltWise band
+  the back of a head only, so nobody in it can be identified; its bathroom and
+  warm-room plates contain no people at all. The VoltWise band
   shows a board and its wiring with no person in frame at all. Ember & Oak's two
   story photographs show hands only — `story-hands.webp` is cropped to forearms
   and a table, `story-dessert.webp` to hands and a bowl with a strand of hair at

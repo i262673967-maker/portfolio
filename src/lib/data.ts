@@ -235,25 +235,82 @@ export type ServiceDemoContent = {
     steps: { title: string; body: string }[];
     note: string;
   };
-  areas?: { eyebrow: string; title: string; intro: string; places: string[]; note: string };
-
-  /* The hero's mini booking card. `options` is read by index against
-     `services`, so picking a service in the card rewrites the "what happens
-     next" panel — the concept's signature interaction. `window` strings are
-     illustrative and always shown under `note`. */
-  callout?: {
+  /* Coverage is grouped by how long it takes someone to arrive, which is the only
+     grouping a homeowner can act on. The flat list the area checker tests against
+     is derived from these, so a place can never be listed and unfindable. */
+  areas?: {
+    eyebrow: string;
     title: string;
     intro: string;
-    serviceLabel: string;
-    areaLabel: string;
-    areaPlaceholder: string;
-    timeLabel: string;
-    times: string[];
-    submit: string;
-    sendNote: string;
-    nextTitle: string;
     note: string;
-    options: { next: string; window: string }[];
+    zones: { name: string; travel: string; places: string[] }[];
+  };
+
+  /* --- FlowRight's home-services layout ---------------------------------------
+     The call-first redesign reads the fields below. All of it is read only by
+     PlumberDemo, so the renovation, restaurant and salon concepts are untouched.
+
+     `groups` replaces a grid of equal service cards: nine services in three
+     kinds of call, because what decides who you phone is whether it is urgent,
+     planned, or part of a build. `quickPicks[].job` must match a service title
+     exactly — pressing a hero chip writes it into the quote form's job field, and
+     the form's options are derived from `groups`, so a mismatch is a broken
+     control rather than a typo. */
+  home?: {
+    heroKicker: string;
+    quickPicks: { label: string; detail: string; job: string }[];
+    groups: {
+      name: string;
+      when: string;
+      items: { title: string; body: string; tags: string[] }[];
+    }[];
+    heating: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      points: { title: string; body: string }[];
+      image: { src: string; alt: string; caption: string };
+    };
+    installs: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      points: string[];
+      image: { src: string; alt: string; caption: string };
+    };
+    areaCheck: {
+      label: string;
+      placeholder: string;
+      submit: string;
+      /* `{place}` is replaced with what the visitor typed, so the answer always
+         names the place they asked about. */
+      hit: string;
+      miss: string;
+      blank: string;
+      note: string;
+    };
+    quote: {
+      eyebrow: string;
+      title: string;
+      intro: string;
+      labels: {
+        name: string;
+        phone: string;
+        area: string;
+        job: string;
+        urgency: string;
+        details: string;
+      };
+      placeholders: { name: string; phone: string; area: string; details: string };
+      urgencies: { value: string; hint: string }[];
+      submit: string;
+      /* The confirmation is the whole point of the form: it repeats what was
+         asked for and says plainly that nothing left the browser. */
+      successTitle: string;
+      successLead: string;
+      note: string;
+    };
+    closing: { eyebrow: string; hours: { day: string; time: string }[] };
   };
 
   /* --- Electrician-concept fields ---------------------------------------------
@@ -649,60 +706,71 @@ export const projects: Project[] = [
     index: "02",
     demo: "plumber",
     name: "FlowRight Plumbing",
-    businessType: "Local Trade",
+    businessType: "Home Services",
     industry: "Plumbing & Heating",
     category: "Trade",
     summary:
-      "An urgent, call-first plumbing site built so a homeowner can book a callout in seconds.",
+      "A call-first plumbing and heating site: the number at display size, a quote request that validates what it asks for, and a coverage list you can check yourself.",
     objective:
-      "Turn a panicked visitor into a booked callout fast — clear prices, clear coverage area, one obvious action.",
+      "Carry two very different visitors on one page — the person standing over a burst pipe at 9pm, and the homeowner planning a bathroom or a boiler for next spring.",
     strategy:
-      "Emergency-first. Someone searching this has a problem right now, so the page answers three things before anything else: can you help, how fast, what will it cost. Everything after that is reassurance.",
-    designDirection: ["Bold", "Urgent", "Call-first", "High-contrast"],
-    keySections: ["Hero", "Emergency callouts", "Services", "Prices", "Coverage", "FAQ", "Contact"],
+      "Two doors, one page. The emergency door is a phone number you cannot miss and three quick picks that write the job into the form for you. The planning door is a service ledger grouped by the kind of call, a heating section, and a quote request that checks itself before it claims anything. Rates, insurance, response times and coverage are the four things a concept site cannot invent, so each is explained rather than claimed.",
+    designDirection: ["Trade signage", "Call-first", "Cold-water blue", "Warm heat accent"],
+    keySections: [
+      "Hero",
+      "Quick picks",
+      "Service ledger",
+      "Heating",
+      "Bathroom refits",
+      "Quote request",
+      "Service areas",
+      "FAQ",
+      "Contact",
+    ],
     mobileNotes: [
-      "Built for the phone screen first — most callouts are searched on mobile",
-      "Booking action stays reachable with one thumb from every section",
-      "Prices and coverage shown as stacked blocks rather than a table",
+      "The number is the first large tap target on the screen and stays in the thumb bar",
+      "The quote form runs one column, validates before it confirms, and never fakes a send",
+      "Service areas are grouped by travel time instead of a map nobody can read at 390px",
     ],
     conversionNotes: [
-      "The booking call to action appears above the fold, mid-page, and again at the end",
-      "\"Fixed price before we start\" is the single objection the page is built to answer",
+      "Three routes into the same quote form: the hero's quick picks, every ledger row, and the sticky bar",
+      "The confirmation repeats the job, area and urgency that were asked for, then says plainly that nothing was sent",
     ],
-    accent: "#1d5bff",
-    /* Bright, call-first, utility-clear: white page, ink-navy text, one electric
-       blue for action, aqua only where it can be a fill, and grey panels to hold
-       cards apart without borders. Text tokens are derived against all of them. */
+    accent: "#0b57d0",
+    /* Cold water, warm heat. White page, deep ink-navy text and one signal blue
+       for every action; the second colour is a warm amber reserved for the heating
+       material, so the two halves of the trade read apart without a new palette.
+       Text tokens are derived against all three surfaces. */
     palette: {
       bg: "#ffffff",
-      fg: "#0b1b33",
-      accent: "#1d5bff",
-      surface: "#f3f6fb",
-      accent2: "#19c3d6",
+      fg: "#071a2c",
+      accent: "#0b57d0",
+      surface: "#eef3f9",
+      accent2: "#f5b942",
     },
     content: {
       logoLetter: "F",
-      navName: "FlowRight Plumbing",
-      headline: "Blocked, Burst, Or Leaking?",
-      headlineAccent: "Fixed Today, Not Next Week.",
+      navName: "FlowRight",
+      headline: "Burst Pipe, Cold House,",
+      headlineAccent: "One Number Fixes Both.",
       intro:
-        "Local plumbers for emergencies, boiler services, and bathroom installs. You get a fixed price before we start, and a van on the road fast.",
-      ctaPrimary: "Book a Callout →",
-      ctaSecondary: "See Our Prices",
-      servicesTitle: "What we get called for",
-      services: [
-        { title: "Emergency Plumbing", body: "Bursts, leaks, and no-water callouts, day or night." },
-        { title: "Boilers", body: "Servicing, repairs, and full replacements with a clear quote." },
-        { title: "Leak Detection", body: "Finding the source without tearing your house apart." },
-        { title: "Bathroom Installs", body: "Full refits, or swapping out the bits that are failing." },
-        { title: "Drain Unblocking", body: "Sinks, toilets, and outside drains cleared properly." },
-        { title: "Landlord Work", body: "Repairs and yearly checks for rental property, booked around the tenant." },
-      ],
+        "Emergency plumbing, boilers, heating and bathroom work under one number. Someone picks up, and the price is written down before a tool comes out of the van.",
+      ctaPrimary: "Request a quote",
+      ctaSecondary: "See what we cover",
+
       faqTitle: "Before you call",
       faqs: [
         {
           q: "How fast can you get here?",
           a: "Emergency jobs are prioritised, but arrival time depends on availability, location, and the current workload. We confirm the expected arrival time when the callout is booked.",
+        },
+        {
+          q: "Do you do heating as well as plumbing?",
+          a: "Yes. Boilers, radiators, controls and underfloor loops are most of the work, so a cold house comes to the same number as a burst pipe and gets the same person looking at it.",
+        },
+        {
+          q: "Can you give me a price over the phone?",
+          a: "Not for the job itself. A price for work nobody has seen is a guess, and the guess becomes your bill. What a phone call can do is establish what we need to look at, and what the visit costs.",
         },
         {
           q: "Do you charge for a quote?",
@@ -714,9 +782,18 @@ export const projects: Project[] = [
           q: "Are you insured?",
           a: "This is a concept website, so no specific insurance claim is displayed. On a real business website, this should only be stated once the business has confirmed its actual insurance details.",
         },
+        {
+          q: "Which areas do you cover?",
+          a: "The list under 'Where we work' is grouped by how long it takes someone to arrive. If your street is not on it, ask anyway — a short call is cheaper than a wrong assumption.",
+        },
       ],
       ctaTitle: "Water won't wait. Neither do we.",
-      ctaBody: "Tell us what's wrong and get a fixed price before any work starts.",
+      ctaBody: "Tell us what is wrong and get a written price before any work starts.",
+
+      /* The honest line under a submit that cannot submit. It is the concept's own
+         wording so it can answer the ask in the visitor's terms. */
+      formNote:
+        "Concept site: nothing was sent, stored or booked. This confirmation is the only thing the button does.",
 
       /* --- FlowRight's own layout content. The number is the fictional
          business's, in the range reserved for invented phone numbers; the studio's
@@ -726,15 +803,23 @@ export const projects: Project[] = [
         href: "tel:+15555550142",
         label: "Call FlowRight",
       },
-      availability: "Someone picks up. Day or night.",
-      trustChips: ["Upfront pricing", "Clean, tidy work", "Clear communication"],
+      availability: "Emergencies answered any hour. Same number, day or night.",
+      trustChips: [
+        "Plumbing and heating under one number",
+        "Price written before work starts",
+        "Clean, tidy work",
+      ],
+      servicesEyebrow: "What we get called for",
+      servicesTitle: "Grouped by the kind of call, because that decides who you phone.",
+      imageSource:
+        "Photography here is licensed stock standing in for the trade's own site pictures. It is concept material, not a record of completed work.",
       hero: {
         src: "/demos/flowright-plumbing/hero-pipes.webp",
-        alt: "A plumber's hands and the back of their head as they tighten white pipework inside a kitchen cabinet.",
+        alt: "A plumber seen from behind, head down inside a kitchen cabinet, both hands on the white pipework under a sink while a work light throws cold blue across the cupboard.",
       },
       emergency: {
         title: "Water where it shouldn't be?",
-        body: "Shut the valve under the sink or at the stopcock, then call. We talk you through it while you're on the line.",
+        body: "Shut the valve under the sink or at the stopcock, then call. We stay on the line while you find it.",
         callLabel: "Call the emergency line",
         note: "Concept site: this is a fictional number and it reaches no one.",
       },
@@ -774,59 +859,191 @@ export const projects: Project[] = [
       },
       areas: {
         eyebrow: "Where we work",
-        title: "A short list of places, close enough to reach quickly.",
-        intro: "Distance decides how fast someone can be with you, so the area is stated up front.",
-        places: [
-          "Northgate",
-          "Ashvale",
-          "Kingsley Row",
-          "Cedar Flats",
-          "Old Foundry",
-          "Marlow Bend",
-          "Riverside Wharf",
-          "Fern Hill",
+        title: "Grouped by how long it takes someone to reach you.",
+        intro:
+          "Distance decides how fast a van can be outside, so the area is stated up front instead of hidden behind a contact form.",
+        zones: [
+          {
+            name: "Inner ring",
+            travel: "Emergency slots the same day",
+            places: ["Northgate", "Ashvale", "Kingsley Row", "Cedar Flats"],
+          },
+          {
+            name: "Outer suburbs",
+            travel: "Same or next day",
+            places: ["Old Foundry", "Marlow Bend", "Riverside Wharf", "Fern Hill"],
+          },
+          {
+            name: "Further afield",
+            travel: "Ask, and we say yes or no on the phone",
+            places: ["Hollowmere", "Bracken Ridge", "Wexley Fields"],
+          },
         ],
-        note: "Concept: these neighbourhoods are invented and the panel is a design element, not a coverage claim.",
+        note: "Concept: these neighbourhoods are invented for the design and the travel times are illustrative. A live site would publish the firm's actual coverage.",
       },
-      callout: {
-        title: "Request a callout",
-        intro: "Two choices and we know what to send.",
-        serviceLabel: "What is wrong?",
-        areaLabel: "Your area",
-        areaPlaceholder: "Neighbourhood or ZIP",
-        timeLabel: "When works for you",
-        times: ["As soon as possible", "Later today", "Tomorrow morning", "This week"],
-        submit: "Send request",
-        sendNote:
-          "Concept site: this form has no backend, so nothing is sent and nothing is stored.",
-        nextTitle: "What happens next",
-        note: "Concept: response times shown are illustrative.",
-        options: [
+
+      home: {
+        heroKicker: "Plumbing & heating · 24/7 callouts",
+        /* Each pick writes its job into the quote form and moves you there, so the
+           fastest path from a symptom to a request is one tap. `job` must match a
+           service title in `groups` exactly. */
+        quickPicks: [
+          { label: "Burst or leaking", detail: "Water where it should not be", job: "Emergency plumbing" },
+          { label: "No hot water", detail: "Boiler or heating fault", job: "Boilers & heating" },
+          { label: "Blocked drain", detail: "Sink, toilet or outside drain", job: "Drains & toilets" },
+        ],
+        groups: [
           {
-            next: "A plumber rings back to confirm the address and what to shut off while you wait.",
-            window: "Callback inside the hour",
+            name: "Urgent",
+            when: "Answered today",
+            items: [
+              {
+                title: "Emergency plumbing",
+                body: "Bursts, major leaks and no water. The first thing we do on the phone is find your stopcock with you.",
+                tags: ["Burst pipe", "No water", "Overflowing tank"],
+              },
+              {
+                title: "Leak detection",
+                body: "Acoustic and thermal tracing, so the repair opens one floorboard instead of six.",
+                tags: ["Hidden leak", "Damp patch", "Meter running"],
+              },
+              {
+                title: "Drains & toilets",
+                body: "Sinks, toilets and outside drains cleared, then shown what came out and what caused it.",
+                tags: ["Blocked drain", "Toilet not flushing", "Sewage smell"],
+              },
+            ],
           },
           {
-            next: "We book a visit to look at the boiler and write the price before any work.",
-            window: "Visit within two days",
+            name: "Heating",
+            when: "Booked this week",
+            items: [
+              {
+                title: "Boilers & heating",
+                body: "Repairs, servicing and like-for-like replacements, quoted after someone has actually seen the unit.",
+                tags: ["No hot water", "Boiler locking out", "Pilot keeps going out"],
+              },
+              {
+                title: "Radiators & controls",
+                body: "Cold tops, balancing, room thermostats and smart controls fitted to the system you already have.",
+                tags: ["Cold radiators", "Noisy system", "Thermostat upgrade"],
+              },
+              {
+                title: "Underfloor & heat pumps",
+                body: "Loops laid with the floor, and low-flow systems sized room by room from drawings you can read.",
+                tags: ["Underfloor loop", "Heat pump", "New build"],
+              },
+            ],
           },
           {
-            next: "We agree a time to trace it, and tell you what the search costs first.",
-            window: "Slot in the next few days",
-          },
-          {
-            next: "Someone comes to measure and talk the layout through before anything is quoted.",
-            window: "Survey this week",
-          },
-          {
-            next: "We clear it, then show you what came out and what was causing it.",
-            window: "Same-day or next-day",
-          },
-          {
-            next: "We confirm the property, what paperwork you need, and a date that suits the tenant.",
-            window: "Scheduled around your tenant",
+            name: "Installed",
+            when: "Scheduled around the build",
+            items: [
+              {
+                title: "Bathroom refits",
+                body: "Suites, showers and wet rooms: first fix before finish, pressure-tested before the panels go on.",
+                tags: ["Full bathroom", "Shower room", "Wet room"],
+              },
+              {
+                title: "Kitchen & utility plumbing",
+                body: "Sinks, dishwashers and washing-machine runs moved or replaced alongside the units.",
+                tags: ["Move a sink", "Appliance feeds", "Utility room"],
+              },
+              {
+                title: "Landlord & rental work",
+                body: "Repairs and annual checks booked around the tenant, with the paperwork listed before the visit.",
+                tags: ["Rental repair", "Annual check", "Tenant access"],
+              },
+            ],
           },
         ],
+        heating: {
+          eyebrow: "Heating",
+          title: "A cold radiator is usually a water problem wearing a heating coat.",
+          body: "Most heat complaints are flow, controls or a boiler asked to do more than the system can carry. The same people fit both sides of it, so nobody gets sent twice.",
+          points: [
+            {
+              title: "Seen before it is quoted",
+              body: "A boiler price written without looking at the flue, the filter and the system size is a guess with a logo on it.",
+            },
+            {
+              title: "Balanced, not just bled",
+              body: "Cold tops and noisy pipes normally mean flow, not a failed part. The whole circuit gets checked before anything is replaced.",
+            },
+            {
+              title: "Sized room by room",
+              body: "Underfloor loops and low-flow emitters are worked out from the rooms they heat, so the controls can actually hold a temperature.",
+            },
+          ],
+          image: {
+            src: "/demos/flowright-plumbing/warm-room.webp",
+            alt: "A vaulted timber living and dining room with a lit stove behind a glass screen, chairs pulled up to it, and nobody in the room.",
+            caption: "Stock photograph of a warm room — concept material, not a FlowRight installation.",
+          },
+        },
+        installs: {
+          eyebrow: "Bathrooms & kitchens",
+          title: "The suite is the easy half. What sits behind the tile decides how long it lasts.",
+          body: "A refit is pipework, falls, pressure and access, finished in the order that lets someone get back in in ten years without cutting the room apart.",
+          points: [
+            "First fix before finish, so nothing is buried untested.",
+            "Pressure-tested in front of you before a single panel goes up.",
+            "Left clean at the end of every day on site, not just the last one.",
+          ],
+          image: {
+            src: "/demos/flowright-plumbing/bathroom.webp",
+            alt: "A bright bathroom with twin basins on a long vanity, a freestanding tub under a shuttered window, and a glass shower with black brassware.",
+            caption: "Stock photograph of a finished bathroom — concept material, not a FlowRight job.",
+          },
+        },
+        areaCheck: {
+          label: "Type your area",
+          placeholder: "Northgate, or a postcode",
+          submit: "Check",
+          hit: "“{place}” is on the list — we cover it.",
+          miss: "“{place}” is not on the list. Ask anyway; a short call is cheaper than a wrong assumption.",
+          blank: "Type an area and it is checked against the list above.",
+          note: "Concept: this checks against an invented list. On a live site it would answer from the firm's real coverage.",
+        },
+        quote: {
+          eyebrow: "Request a quote",
+          title: "Tell us what is wrong. We tell you what we need to see.",
+          intro:
+            "Two minutes. A real person reads it before anyone is given a number, and the job comes out of the list above.",
+          labels: {
+            name: "Your name",
+            phone: "Number to ring back",
+            area: "Area or postcode",
+            job: "What is the job?",
+            urgency: "How soon?",
+            details: "Anything we should know?",
+          },
+          placeholders: {
+            name: "Jordan Avery",
+            phone: "(555) 555-0199",
+            area: "Northgate",
+            details: "Boiler model, how long it has been doing it, whether you can get under the stairs.",
+          },
+          urgencies: [
+            { value: "Today", hint: "Emergency slot" },
+            { value: "This week", hint: "Routine repair" },
+            { value: "Next month", hint: "Planned work" },
+            { value: "Just planning", hint: "No dates yet" },
+          ],
+          submit: "Send request",
+          successTitle: "Understood. Nothing left this browser.",
+          successLead: "Here is what the form read back to you:",
+          note: "Concept site with no backend: pressing send validates the fields and shows this confirmation. No request is made, stored or booked.",
+        },
+        closing: {
+          eyebrow: "FlowRight Plumbing · Plumbing & heating",
+          hours: [
+            { day: "Emergencies", time: "Any hour, every day" },
+            { day: "Mon–Fri", time: "07:30 – 18:00" },
+            { day: "Saturday", time: "09:00 – 14:00" },
+            { day: "Sunday", time: "Emergency line only" },
+          ],
+        },
       },
     },
   },

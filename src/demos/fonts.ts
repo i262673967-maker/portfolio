@@ -1,4 +1,4 @@
-import { Bodoni_Moda, Cormorant_Garamond, DM_Sans, Fraunces, Inter, Jost, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
+import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Fraunces, Inter, Jost, Space_Grotesk } from "next/font/google";
 import type { DemoKey } from "@/lib/data";
 
 /* Each concept site gets its own type pairing — display for headings, body for
@@ -42,19 +42,28 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
-/* FlowRight's single-family pairing. Plus Jakarta Sans carries both the display
-   weight (700–800 for the headline and the phone number) and the running copy,
-   which is what the brief asks for and keeps the concept at one file rather
-   than two. Manrope was the other candidate; it loses its shape at 800 where
-   this one stays open, and Sora already occupies the geometric-grotesque slot
-   site-wide. Same rule as above: `preload: false`, wrapper-scoped, so no other
-   page fetches it. */
-const plusJakarta = Plus_Jakarta_Sans({
+/* FlowRight's trade-signage pairing. Barlow Condensed is the lettering you see
+   down the side of a van and on a job board: it holds a phone number at
+   display size without eating the horizontal space a call-first layout needs,
+   and it is visibly not the serif the restaurant, salon and renovation concepts
+   are built on. Barlow — the same superfamily at normal width — carries the
+   running copy, so the two halves of the page are related rather than borrowed.
+   Two files, two weights each: `preload: false`, wrapper-scoped, so no other
+   page fetches either. */
+const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
   display: "swap",
   preload: false,
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-plus-jakarta",
+  weight: ["700", "800"],
+  variable: "--font-barlow-condensed",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  weight: ["400", "600"],
+  variable: "--font-barlow",
 });
 
 /* VoltWise's technical pairing. Space Grotesk carries the headline and every
@@ -127,9 +136,9 @@ export const demoFonts: Record<DemoKey, DemoFontSlot> = {
     body: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
   },
   plumber: {
-    className: plusJakarta.variable,
-    display: "var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif",
-    body: "var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif",
+    className: `${barlowCondensed.variable} ${barlow.variable}`,
+    display: "var(--font-barlow-condensed), ui-sans-serif, system-ui, sans-serif",
+    body: "var(--font-barlow), ui-sans-serif, system-ui, sans-serif",
   },
   electrician: {
     className: `${spaceGrotesk.variable} ${inter.variable}`,

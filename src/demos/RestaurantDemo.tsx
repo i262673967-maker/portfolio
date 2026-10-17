@@ -313,7 +313,18 @@ export default function RestaurantDemo({ project, preview }: DemoProps) {
            ratio. Nothing here is a card sitting on a photograph — a fire-lit room
            can be anywhere between near-black and a blown-out ember, and no type
            is asked to prove itself against pixels chosen by a camera. */}
-        <section id={anchor.id("top")} className="px-4 pt-12 @3xl:pt-16 @5xl:px-8 @5xl:pt-20">
+        {/* Ruling K: on the standalone route the hero owns the fold — a floor of
+            88% of the viewport with the block centred inside it. `svh` rather than
+            `vh` because a phone collapses its address bar on scroll, and a floor
+            measured against the tall viewport would push the first plate below the
+            fold instead of framing it. The device frames already dictate their own
+            height, so this applies only when `preview` is false. */}
+        <section
+          id={anchor.id("top")}
+          className={`px-4 pt-12 @3xl:pt-16 @5xl:px-8 @5xl:pt-20 ${
+            preview ? "" : "flex min-h-[88svh] flex-col justify-center"
+          }`}
+        >
           <div className="mx-auto grid max-w-7xl gap-10 @5xl:grid-cols-[1.35fr_1fr] @5xl:gap-16">
             <div>
               <DemoBadge />

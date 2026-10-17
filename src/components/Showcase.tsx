@@ -41,7 +41,8 @@ export default function Showcase() {
               Each of these is a fully-designed website for a fictional local business —
               labelled as a concept, never presented as a live client. Pick one, then switch
               between desktop, tablet, and mobile. The same site reflows exactly as it would
-              on a real device.
+              on a real device, and you can scroll inside the frame to read it the way a
+              visitor would.
             </p>
           </div>
         </Reveal>
@@ -121,6 +122,7 @@ export default function Showcase() {
                  height the visitor can see all of. */
               maxWidth={device === "desktop" ? 720 : undefined}
               previewLabel={`${project.name} — ${device} preview`}
+              scrollable
             >
               <LazyDemo eager demo={project.demo} project={project} />
             </DeviceMockup>

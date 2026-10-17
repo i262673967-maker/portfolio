@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Monitor, Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
-import DeviceMockup, { type Device } from "./DeviceMockup";
+import { Smartphone, ArrowRight, ExternalLink, ArrowLeft, Target } from "lucide-react";
+import DeviceMockup from "./DeviceMockup";
 import LazyDemo from "./LazyDemo";
 import { cta, type Project } from "@/lib/data";
 
@@ -12,8 +11,6 @@ import { cta, type Project } from "@/lib/data";
 const PALETTE_ROLE: Record<string, string> = { bg: "Background", fg: "Text", accent: "Accent" };
 
 export default function CaseStudy({ project, prev, next }: { project: Project; prev?: Project; next?: Project }) {
-  const [device, setDevice] = useState<Device>("desktop");
-
   return (
     <div className="pb-20">
       {/* Header */}
@@ -37,34 +34,36 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
         </div>
       </div>
 
-      {/* Live preview with device toggle */}
+      {/* Ruling C: the concept is embedded at this page's own width instead of
+          behind a device shell. A framed preview cannot be scrolled or tapped —
+          its subtree is `inert`, which is what holds accessibility at 100 — and a
+          visitor who came here to look at the work reads that as a broken page.
+          Inline it runs top to bottom in the case study's own scroll, picks its
+          desktop layout above 1024px through container queries, and drops to its
+          phone layout on a phone. `preview` stays true, so the concept keeps its
+          headings at <h2> and this page keeps a single <h1>. */}
       <div className="container-shell mt-12">
-        <div className="flex justify-center">
-          <div className="inline-flex rounded-full border-2 border-line bg-card p-1">
-            {([["desktop", Monitor, "Desktop"], ["mobile", Smartphone, "Mobile"]] as const).map(([id, Icon, label]) => (
-              <button
-                key={id}
-                type="button"
-                aria-label={`Preview on ${label.toLowerCase()}`}
-                aria-pressed={device === id}
-                onClick={() => setDevice(id)}
-                className={`relative inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2 text-[13px] transition-colors ${device === id ? "text-on-brand" : "text-ink-muted hover:text-ink"}`}
-              >
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute inset-0 rounded-full bg-brand transition-opacity duration-200 ${device === id ? "opacity-100" : "opacity-0"}`}
-                />
-                <Icon className="relative z-10 h-4 w-4" /><span className="relative z-10">{label}</span>
-              </button>
-            ))}
-          </div>
+        <p className="max-w-prose text-[15px] leading-relaxed text-ink-muted">
+          The full concept at this page&apos;s own width — scroll it the way a visitor
+          would read it. Its menu and forms are live, and a request entered here is
+          never sent anywhere.
+        </p>
+        <div className="demo-embed relative mt-8">
+          <LazyDemo eager demo={project.demo} project={project} />
         </div>
-        <div className="mt-8">
-          <div key={device} className="reveal">
-            <DeviceMockup device={device} previewLabel={`${project.name} — ${device} preview`}>
-              <LazyDemo eager demo={project.demo} project={project} />
-            </DeviceMockup>
-          </div>
+      </div>
+
+      {/* The responsive story still gets told, and a small frame plainly reads as
+          a picture of the site rather than a site to explore — so this one keeps
+          the shell, stays inert, and mounts only once it is near the viewport. */}
+      <div className="container-shell mt-16">
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+          The same page on a phone
+        </h2>
+        <div className="mt-6">
+          <DeviceMockup device="mobile" previewLabel={`${project.name} — mobile preview`}>
+            <LazyDemo demo={project.demo} project={project} />
+          </DeviceMockup>
         </div>
       </div>
 

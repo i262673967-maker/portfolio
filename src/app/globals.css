@@ -207,6 +207,17 @@ body {
   &::-webkit-scrollbar { display: none; }
 }
 
+/* A concept embedded inline at the page's own width belongs to the case study's
+   scroll instead of to a viewport of its own, so the two bars the concept pins to
+   its window must be released: left sticky they would slide out from behind the
+   portfolio's navbar and stack on top of the portfolio's own action bar. The
+   header goes `relative`, not `static`, because the mobile menu sheet measures
+   itself against it. Written outside any layer so it beats the `sticky` utility.
+   Inner sticky columns are left alone — a price card that follows you down a
+   section behaves correctly in page flow. */
+.demo-embed header.sticky { position: relative; }
+.demo-embed .sticky.bottom-0 { position: static; }
+
 /* The work section's project pills: one row you swipe on a phone instead of five
    stacked chips, which pushed the preview below the fold. The strip still
    scrolls, it just does not show a bar doing it. */

@@ -76,7 +76,7 @@ export default function Navbar() {
               key={item.label}
               href={item.href}
               aria-current={isCurrent(item.href) ? "page" : undefined}
-              className={`rounded-full px-2.5 py-2 text-[14px] font-medium transition-colors hover:bg-ink/[0.06] hover:text-ink xl:px-3.5 ${
+              className={`link-pop rounded-full px-2.5 py-2 text-[14px] font-medium hover:bg-ink/[0.06] hover:text-ink xl:px-3.5 ${
                 isCurrent(item.href) ? "text-ink" : "text-ink-muted"
               }`}
             >

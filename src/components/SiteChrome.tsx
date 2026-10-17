@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import StickyCta from "./StickyCta";
 import Footer from "./Footer";
+import Motion from "./Motion";
 
 /* The site shell in one place: the (site) layout uses it for every page, and the
    root not-found page uses it so an unmatched URL still gets the nav, the footer
@@ -20,6 +21,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <StickyCta />
+      {/* Drives the motion CSS cannot do on its own: the observer behind the
+          reveal fallback and the marquee pause, and the cursor spotlight. */}
+      <Motion />
     </div>
   );
 }

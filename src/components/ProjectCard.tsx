@@ -15,11 +15,11 @@ export default function ProjectCard({
   return (
     <div
       className="reveal"
-      style={{ "--reveal-delay": `${(i % 3) * 0.08}s`, "--reveal-y": "24px" } as React.CSSProperties}
+      style={{ "--reveal-step": `${Math.min(i, 6)}`, "--reveal-y": "24px" } as React.CSSProperties}
     >
       {/* The card previews a website that contains its own links, so the card
           itself can't be an <a>. A stretched overlay keeps it clickable. */}
-      <div className="card-pop group relative flex h-full flex-col overflow-hidden transition-all duration-300">
+      <div className="card-pop card-spot group relative flex h-full flex-col overflow-hidden">
         <div className="relative overflow-hidden border-b-2 border-line bg-paper-2 p-3">
           <span className="absolute left-4 top-4 z-20 rounded-full border-2 border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-widest text-brand">
             Concept Project

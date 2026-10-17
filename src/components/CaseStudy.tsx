@@ -16,7 +16,7 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
       {/* Header */}
       <div className="border-b-2 border-line pt-28 pb-14">
         <div className="container-shell">
-          <Link href="/projects" className="inline-flex min-h-11 items-center gap-1.5 text-[13px] text-ink-muted transition-colors hover:text-ink">
+          <Link href="/projects" className="inline-flex min-h-11 items-center gap-1.5 text-[13px] text-ink-muted link-pop hover:text-ink">
             <ArrowLeft className="h-4 w-4" /> All projects
           </Link>
           <div className="mt-6 flex flex-wrap items-end justify-between gap-6">

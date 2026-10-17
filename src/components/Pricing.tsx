@@ -28,8 +28,8 @@ export function Pricing() {
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {pricingPackages.map((p, i) => (
-            <Reveal key={p.name} delay={(i % 3) * 0.06}>
-              <div className={p.featured ? filledCard : `${cardBase} card-pop`}>
+            <Reveal key={p.name} step={i}>
+              <div className={p.featured ? filledCard : `${cardBase} card-pop card-spot`}>
                 {p.featured && (
                   <span className="absolute right-4 top-4 rotate-3 rounded-full bg-mark px-2.5 py-1 font-mono text-[12px] font-semibold uppercase tracking-widest text-ink">
                     Most popular
@@ -72,7 +72,7 @@ export function Pricing() {
 
         {/* Terms + the one primary action. */}
         <Reveal delay={0.08}>
-          <div className="card-pop mt-6 p-6 text-center sm:p-8">
+          <div className="card-pop card-spot mt-6 p-6 text-center sm:p-8">
             <p className="mx-auto max-w-xl text-[14px] leading-relaxed text-ink-muted">
               {packageTerms.included}
             </p>
@@ -124,8 +124,8 @@ export function CarePlans() {
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {carePlans.map((p, i) => (
-            <Reveal key={p.name} delay={(i % 3) * 0.06}>
-              <div className={p.featured ? featuredCard : `${cardBase} card-pop`}>
+            <Reveal key={p.name} step={i}>
+              <div className={p.featured ? featuredCard : `${cardBase} card-pop card-spot`}>
                 {p.featured && (
                   <span className="absolute right-4 top-4 rounded-full bg-brand px-2.5 py-1 font-mono text-[12px] font-semibold uppercase tracking-widest text-on-brand">
                     Most popular
@@ -156,7 +156,7 @@ export function CarePlans() {
         {/* TODO(Ismail): "No lock-in contracts. Cancel anytime." stays withheld
            until he confirms it as a term he actually offers. */}
         <Reveal delay={0.08}>
-          <div className="card-pop mt-6 p-6 text-center sm:p-8">
+          <div className="card-pop card-spot mt-6 p-6 text-center sm:p-8">
             <p className="mx-auto max-w-xl text-[14px] leading-relaxed text-ink-muted">
               Care plans are optional.
             </p>

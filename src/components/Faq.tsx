@@ -45,7 +45,7 @@ export function Faq() {
 
         <div className="mt-12 grid gap-4 lg:grid-cols-2">
           {faqItems.map((item, i) => (
-            <Reveal key={item.q} delay={(i % 2) * 0.06}>
+            <Reveal key={item.q} step={i % 2}>
               <details className="group h-full rounded-2xl border-2 border-line bg-card px-5 py-4">
                 <summary className="-mx-1 flex min-h-11 cursor-pointer list-none items-start gap-3 rounded-lg pr-1 text-[15px] font-semibold text-ink marker:content-none">
                   <span

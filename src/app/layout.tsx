@@ -57,6 +57,19 @@ export default function RootLayout(props: LayoutProps<"/">) {
       className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-paper text-ink">
+        {/* Three lines, and they run before the first pixel of the page paints.
+           Where the engine can drive an animation from scroll position, the CSS
+           does it alone and this says nothing. Where it cannot, this flags the
+           document so the entrance is armed by an observer instead of by page load
+           — and a visitor with scripting off never sets the flag, so they keep the
+           load-time entrance in the stylesheet, which leaves every section visible
+           either way. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(window.CSS&&CSS.supports&&!CSS.supports('animation-timeline','view()'))document.documentElement.dataset.motion='io';",
+          }}
+        />
         {props.children}
         <script
           type="application/ld+json"

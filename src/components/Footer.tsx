@@ -57,7 +57,7 @@ export default function Footer() {
                 sections, not to the footer chrome. */}
             <Link
               href="/#contact"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-white transition-colors hover:text-mark"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-white link-pop hover:text-mark"
             >
               {cta.nav}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -72,7 +72,7 @@ export default function Footer() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="inline-flex min-h-11 items-center text-sm text-white/70 transition-colors hover:text-white"
+                      className="inline-flex min-h-11 items-center text-sm text-white/70 link-pop hover:text-white"
                     >
                       {label}
                     </Link>

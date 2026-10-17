@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Motion from "@/components/Motion";
 import { Demo } from "@/demos";
 import { DemoBackProvider } from "@/demos/_shared";
 import { pageMeta } from "@/lib/metadata";
@@ -44,6 +45,9 @@ export default async function DemoPage(props: PageProps<"/demos/[slug]">) {
         <DemoBackProvider value={{ href: "/projects", label: "← All concept projects" }}>
           <Demo demo={project.demo} project={project} preview={false} />
         </DemoBackProvider>
+        {/* The concept's own section entrances are armed here the same way they are
+           on the host pages: this route has no device frame to hold them still. */}
+        <Motion />
       </main>
     </div>
   );

@@ -33,6 +33,19 @@
 
 :root {
   color-scheme: light;
+
+  /* Motion tokens — one vocabulary for every duration, easing and distance on the
+     host site and inside the concepts, so a lift or an entrance reads the same
+     everywhere. Kept deliberately inside the 150–600ms band the site aims at; the
+     marquee is the only loop and the hero drift the only long transition. */
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-tap: 160ms; /* hover and press */
+  --motion-short: 300ms; /* small state changes, heading arrival */
+  --motion-mid: 500ms; /* a concept section arriving */
+  --motion-long: 600ms; /* a section arriving */
+  --motion-rise: 20px; /* how far an entrance travels */
+  --motion-lift: 2px; /* how far a hovered card lifts */
+  --motion-stagger: 70ms; /* gap between sibling entrances */
 }
 
 html {
@@ -106,8 +119,8 @@ body {
   background: var(--color-card);
   box-shadow: 4px 4px 0 var(--color-ink);
   transition:
-    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    transform var(--motion-tap) var(--motion-ease),
+    box-shadow var(--motion-tap) var(--motion-ease);
 }
 
 @utility btn-pop {
@@ -115,28 +128,106 @@ body {
   border-radius: 999px;
   box-shadow: 4px 4px 0 var(--color-ink);
   transition:
-    transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+    transform var(--motion-tap) var(--motion-ease),
+    box-shadow var(--motion-tap) var(--motion-ease);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .card-pop:hover {
-    transform: translate(-2px, -2px);
+    transform: translate(calc(var(--motion-lift) * -1), calc(var(--motion-lift) * -1));
     box-shadow: 6px 6px 0 var(--color-ink);
   }
   .btn-pop:hover {
-    transform: translate(-2px, -2px);
+    transform: translate(calc(var(--motion-lift) * -1), calc(var(--motion-lift) * -1));
     box-shadow: 6px 6px 0 var(--color-ink);
   }
+}
+
+/* Pressed: the block sits back down into its own shadow. Deliberately NOT inside
+   the hover query — a tap presses too, and that acknowledgement matters most on a
+   phone. Only a control presses: `.card-pop` is used on static panels where
+   selecting the text inside would otherwise make the card jump. */
+@media (prefers-reduced-motion: no-preference) {
   .btn-pop:active {
     transform: translate(0, 0);
     box-shadow: 2px 2px 0 var(--color-ink);
   }
 }
 
-/* A highlighter swipe behind a word. The word text stays in ink/navy (12.55:1 on
-   the yellow); the yellow is painted in via background-size so it can animate its
-   own width from 0 to full on load without touching layout. */
+/* A text link that answers the pointer: the same 2px travel as a lifted card and
+   a press on `:active`, but no shadow, because a nav or footer link is not a
+   surface. Colour changes ride along in the same transition so nothing snaps. */
+@utility link-pop {
+  transition:
+    color var(--motion-tap) var(--motion-ease),
+    background-color var(--motion-tap) var(--motion-ease),
+    transform var(--motion-tap) var(--motion-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .link-pop:hover {
+    transform: translate(0, calc(var(--motion-lift) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link-pop:active {
+    transform: scale(0.985);
+  }
+}
+
+/* The cursor spotlight. A pointer-following wash of brand blue sits BEHIND the
+   card's content: `isolation` makes the card a stacking context, and a child with
+   a negative z-index paints after that context's own background but before its
+   in-flow descendants, so no text ever sits under a tinted layer and contrast is
+   unchanged. Only `opacity` animates; the pointer position arrives as two custom
+   properties written by one delegated, rAF-throttled listener (Motion.tsx). A
+   device with no fine pointer never sees it, and the card's resting state is the
+   shipped look. */
+@property --spot-x {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+@property --spot-y {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@utility card-spot {
+  position: relative;
+  isolation: isolate;
+}
+
+.card-spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background-image: radial-gradient(
+    22rem 22rem at var(--spot-x) var(--spot-y),
+    color-mix(in oklab, var(--color-brand) 16%, transparent),
+    transparent 70%
+  );
+  transition: opacity var(--motion-short) var(--motion-ease);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card-spot:hover::before,
+  .card-spot:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+/* A highlighter behind a word. The word text stays in ink/navy (12.55:1 on the
+   yellow). There used to be a `mark-swipe` here that animated background-size
+   from 0% to 100%: `background-color` is already the same `--color-mark`, so it
+   repainted every frame to show nothing. It also broke two motion rules (paint
+   only, and nothing animating in the hero/LCP window), so it is gone. */
 @utility mark {
   background-color: var(--color-mark);
   background-image: linear-gradient(var(--color-mark), var(--color-mark));
@@ -144,17 +235,6 @@ body {
   background-position: 0 88%;
   background-size: 100% 0.36em;
   padding-inline: 0.08em;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .mark {
-    animation: mark-swipe 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
-  }
-}
-
-@keyframes mark-swipe {
-  from { background-size: 0% 0.36em; }
-  to { background-size: 100% 0.36em; }
 }
 
 /* A rotated circular sticker badge (e.g. "Free audit"). Sits as decoration. */
@@ -191,6 +271,13 @@ body {
   }
 }
 
+/* Nothing animates off-screen. CSS has no way to know a strip has left the
+   viewport, so the shared observer in Motion.tsx marks it, and a marked strip
+   stops burning compositor work while the visitor reads elsewhere. */
+.marquee.is-out .marquee-track {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;
@@ -218,6 +305,72 @@ body {
 .demo-embed header.sticky { position: relative; }
 .demo-embed .sticky.bottom-0 { position: static; }
 
+/* Inside a device frame the concept is a picture of a website, not a second page
+   to perform for. The band's frame is scrollable and its screen holds ten more
+   viewport-heights of content, so every ambient and arrival animation there would
+   be measured, played and composited inside a box that is already the most
+   expensive subtree on the page. They are held at their finished state instead —
+   which is the same thing a visitor on `reduce`, or on an engine without scroll
+   timelines, already sees. The deliberate exception is input-driven motion (a tab
+   crossfade, a confirmation, a hovered plate): a frame the visitor is invited to
+   tap should answer the tap. On the concept's own routes — /demos/<slug> and the
+   inline embed on /work/<slug> — all of it plays. */
+.demo-scroll
+  :is(
+    .demo-reveal,
+    .demo-rail-x,
+    .demo-rail-y,
+    .demo-ken-burns,
+    .demo-pulse,
+    .demo-lune-parallax,
+    .demo-header-fire,
+    .demo-header-lune,
+    .demo-header-dental,
+    .reveal,
+    .heading-reveal
+  ) {
+  animation: none;
+}
+
+/* ---------------------------------------------------------------
+   Page-to-page motion, declared in CSS so it costs no JavaScript: a
+   cross-document view transition, opted into by every route through this
+   stylesheet. Engines that do not know the at-rule ignore the block entirely and
+   load the next page instantly, which is the whole fallback. `next/link` handles
+   most clicks client-side, so this covers real document loads — a typed address,
+   a reload, a redirect, or a visitor with scripts off; the short cross-fade below
+   is what those navigations look like.
+   --------------------------------------------------------------- */
+@view-transition {
+  navigation: auto;
+}
+
+/* Named rather than leaning on the UA's `fade-in`/`fade-out`, so the timing comes
+   from the same tokens as everything else and the reduced-motion override below
+   has something of ours to switch off. */
+@keyframes vt-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes vt-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+::view-transition-old(root) {
+  animation: vt-out var(--motion-short) var(--motion-ease) both;
+}
+::view-transition-new(root) {
+  animation: vt-in var(--motion-short) var(--motion-ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* The work section's project pills: one row you swipe on a phone instead of five
    stacked chips, which pushed the preview below the fold. The strip still
    scrolls, it just does not show a bar doing it. */
@@ -233,7 +386,7 @@ body {
    by just over half a frame to say there is more below it. Mouse-capable devices
    only, and never when the visitor has asked for reduced motion. */
 .demo-peek {
-  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 900ms var(--motion-ease);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -244,11 +397,14 @@ body {
 
 /* Entrance animation with no JavaScript dependency: the element's resting
    state is fully visible and the animation only plays on top of it, so crawlers,
-   disabled JS and old engines that never run the bundle still show all content. */
+   disabled JS and old engines that never run the bundle still show all content.
+   `--reveal-step` is a sibling's ordinal (0–6) and `--reveal-delay` a hand-set
+   offset; one shared keyframe serves both the whole-section entrance and the
+   shorter, nearer arrival of a heading. */
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(var(--reveal-y, 1rem));
+    transform: translateY(var(--reveal-y, var(--motion-rise)));
   }
   to {
     opacity: 1;
@@ -257,17 +413,49 @@ body {
 }
 
 @utility reveal {
-  animation: reveal-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --reveal-dur: var(--motion-long);
+  --reveal-y: var(--motion-rise);
+  animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
+  animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger) + var(--reveal-delay, 0s));
+}
+
+/* A heading arriving under its section: half the travel, half the time, and never
+   inside the hero — SectionHeading is only used below it, so the largest
+   contentful paint stays untouched. */
+@utility heading-reveal {
+  --reveal-dur: var(--motion-short);
+  --reveal-y: 0.6rem;
+  animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
   animation-delay: var(--reveal-delay, 0s);
 }
 
 /* Where the platform supports it, drive the same keyframes from scroll position
-   instead of page load so sections still arrive as they enter the viewport. */
+   instead of page load so sections still arrive as they enter the viewport. The
+   sibling step becomes a share of the entry range, which is how a stagger reads
+   when time is not what drives the animation. */
 @supports (animation-timeline: view()) {
-  .reveal {
+  .reveal,
+  .heading-reveal {
     animation-delay: 0s;
     animation-timeline: view();
-    animation-range: entry 0% entry 100%;
+    animation-range: entry calc(var(--reveal-step, 0) * 9%) entry 100%;
+  }
+}
+
+/* Engines without scroll-driven animation get the same entrance on their own
+   terms: one shared IntersectionObserver plays it as the element arrives instead
+   of at page load. The `data-motion` flag is written by a two-line inline script
+   only when this branch applies AND JavaScript really ran, so a visitor with
+   scripts disabled keeps the load-time entrance above and every resting state
+   stays visible in every case — nothing is ever left hidden waiting for a trigger
+   that cannot fire. */
+@supports not (animation-timeline: view()) {
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal) {
+    animation: none;
+  }
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal).is-in {
+    animation: reveal-in var(--reveal-dur, var(--motion-long)) var(--motion-ease) both;
+    animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger) + var(--reveal-delay, 0s));
   }
 }
 
@@ -280,27 +468,22 @@ body {
   }
 }
 
-/* The same entrance for a section of a concept website. Measured against the
-   frame's own scroll box rather than the browser window, because the demo is the
-   thing scrolling inside the device. Only opacity and transform animate, the
-   resting state is fully visible, and nothing is applied at all when the visitor
-   has asked for reduced motion — so a browser that cannot run scroll-driven
-   animation, or a page whose bundle never arrives, still shows every section. */
-@keyframes demo-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--demo-reveal-y, 0.75rem));
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+/* The same entrance for a section of a concept website, on the host's own
+   motion tokens: measured against the frame's own scroll box rather than the
+   browser window, because the demo is the thing scrolling inside the device. Only
+   opacity and transform animate, the resting state is fully visible, and nothing
+   is applied at all when the visitor has asked for reduced motion — so a browser
+   that cannot run scroll-driven animation, or a page whose bundle never arrives,
+   still shows every section. */
+@utility demo-reveal {
+  --reveal-dur: var(--motion-mid);
+  --reveal-y: 0.75rem;
 }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .demo-reveal {
-      animation: demo-reveal-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
       animation-timeline: view();
       animation-range: entry 0% entry 45%;
     }
@@ -310,12 +493,12 @@ body {
        without scroll-driven animation — or who asked for reduced motion — simply
        sees a drawn connector, which is exactly what the animation ends on. */
     .demo-rail-x {
-      animation: rail-draw-x 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: rail-draw-x var(--motion-long) var(--motion-ease) both;
       animation-timeline: view();
       animation-range: entry 10% entry 60%;
     }
     .demo-rail-y {
-      animation: rail-draw-y 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: rail-draw-y var(--motion-long) var(--motion-ease) both;
       animation-timeline: view();
       animation-range: entry 10% entry 60%;
     }
@@ -478,7 +661,7 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .demo-lune-step {
-    animation: lune-step-in 300ms ease-out both;
+    animation: lune-step-in var(--motion-short) var(--motion-ease) both;
   }
 }
 
@@ -489,10 +672,12 @@ body {
    hover, so it never sees a stuck "lifted" card) and behind no-preference. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .demo-lune-lift {
-    transition: box-shadow 0.35s ease, transform 0.35s ease;
+    transition:
+      box-shadow var(--motion-short) var(--motion-ease),
+      transform var(--motion-short) var(--motion-ease);
   }
   .demo-lune-lift img {
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform var(--motion-long) var(--motion-ease);
   }
   .demo-lune-lift:hover {
     transform: translateY(-3px);
@@ -595,7 +780,13 @@ body[data-nav-open="true"] .sticky-cta {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .heading-reveal {
+    animation: none;
+  }
+  /* Same weight as the arming rule above, so it wins if a page was already
+     flagged before the visitor switched their motion preference. */
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal).is-in {
     animation: none;
   }
 }

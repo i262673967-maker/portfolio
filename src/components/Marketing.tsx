@@ -92,8 +92,8 @@ export function Problems() {
           {problems.map((p, i) => {
             const Icon = iconMap[p.icon] ?? Target;
             return (
-              <Reveal key={p.title} delay={(i % 4) * 0.05}>
-                <div className="card-pop h-full p-5">
+              <Reveal key={p.title} step={i}>
+                <div className="card-pop card-spot h-full p-5">
                   <span className="font-display text-3xl font-extrabold text-brand">{two(i + 1)}</span>
                   <span className="mt-3 grid h-10 w-10 place-items-center rounded-lg bg-brand/[0.1] text-brand">
                     <Icon className="h-5 w-5" />
@@ -154,7 +154,7 @@ export function WhyWorks() {
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <Reveal>
-            <div className="card-pop h-full p-6">
+            <div className="card-pop card-spot h-full p-6">
               <p className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">
                 Generic website
               </p>
@@ -253,7 +253,7 @@ export function Services() {
           {services.map((s, i) => {
             const featured = s.featured === true;
             return (
-              <Reveal key={s.title} delay={i * 0.04}>
+              <Reveal key={s.title} step={i}>
                 <div className="grid gap-2 border-b-2 border-line py-7 sm:grid-cols-[4rem_1fr] sm:gap-6">
                   <span className="font-display text-2xl font-extrabold text-brand">{two(i + 1)}</span>
                   <div>
@@ -315,7 +315,7 @@ export function Process() {
 
         <div className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-3">
           {processSteps.map((p, i) => (
-            <Reveal key={p.step} delay={i * 0.05} className="w-[80%] shrink-0 snap-start sm:w-auto">
+            <Reveal key={p.step} step={i} className="w-[80%] shrink-0 snap-start sm:w-auto">
               <div className="h-full rounded-[22px] border-2 border-white/15 bg-white/[0.06] p-5">
                 <span className="font-display text-2xl font-extrabold text-mark">{p.step}</span>
                 <h3 className="mt-3 font-display text-[1rem] font-bold tracking-tight text-white">

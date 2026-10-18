@@ -7,8 +7,8 @@ import RestaurantDemo from "./RestaurantDemo";
 import DentalDemo from "./DentalDemo";
 
 export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
-  /* FlowRight is a bright concept site, so it gets its own layout rather than
-     a recoloured copy of the dark local-service one. */
+  /* BlueLine is a bright concept site built from a supplied design, so it gets its
+     own layout rather than a recoloured copy of the dark local-service one. */
   plumber: PlumberDemo,
   restaurant: RestaurantDemo,
   /* Maison Lune is a soft, light beauty studio — a service menu and a booking

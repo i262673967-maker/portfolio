@@ -1,16 +1,50 @@
 # Demo imagery credits
 
-Photographs used inside the concept demos. Every image on this page is a
-licensed stock photograph, not a project we built. Each concept website already
-carries an on-screen "concept" note; this file records the source and licence so
-the attribution survives outside the browser.
+Photographs used inside the concept demos, and the one concept that uses none.
+
+Everything listed under a concept heading below is a licensed stock photograph,
+not a project we built. Each concept website already carries an on-screen
+"concept" note; this file records the source and licence so the attribution
+survives outside the browser.
 
 All photos below are used under the **Unsplash License**
 (https://unsplash.com/license) — "Free to use under the Unsplash License."
 
-## FlowRight Plumbing — /demos/flowright-plumbing
+The exception is BlueLine Plumbing, whose plates are generated artwork rather
+than stock photographs. It has its own section first because its provenance is a
+different kind, and its files are not covered by the Unsplash Licence at all.
 
-Files in `demos/flowright-plumbing/`:
+## BlueLine Plumbing — /demos/blueline-plumbing
+
+Files in `demos/blueline-plumbing/` (17): a hero, three before/after pairs, a
+service van, and nine service plates.
+
+These are **generated images that arrived with the supplied reference design**
+for this concept. They are not documentary photographs of a real job, not stock
+photographs, and not credited to a photographer — there is no camera behind any of
+them, so no licence is claimed and none is needed. The concept says the same thing
+on screen, in its own words: the story band carries a one-line provenance note, the
+before/after band labels its plates "Illustrative before/after images shown for this
+portfolio demonstration", and the footer states that all names, reviews, images and
+contact details are illustrative.
+
+Two of the seventeen were inspected frame by frame in this pass, and both depict
+generated people with visible faces:
+
+- `hero-pipes.webp` — one technician at a valve, face in three-quarter view.
+- `service-van.webp` — two technicians beside a van, both facing the camera, and
+  near-identical to each other in a way generated faces usually are.
+
+Nobody in either is a real person, so nothing here can be misattributed to a
+client or a worker. It does break the standard the rest of this file holds its
+photographs to — "no face is visible" — which is why it is written down rather
+than quietly kept. The remaining fifteen files were not individually inspected in
+this pass, so nothing is claimed about them either way.
+
+## FlowRight Plumbing — retired, files still on disk
+
+The plumbing concept before BlueLine. Its three files are in
+`demos/flowright-plumbing/` and are **no longer referenced by any page**:
 
 | File | Slot | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
@@ -18,9 +52,10 @@ Files in `demos/flowright-plumbing/`:
 | `bathroom.webp` | Bathroom refits | Double-vanity bathroom: freestanding tub, glass shower, black brassware | Ibrar Tariq | https://unsplash.com/photos/b8bBTyWj6gM |
 | `warm-room.webp` | Heating | Vaulted living/dining room with a lit wood-burning stove | Clay Banks | https://unsplash.com/photos/b0y9W2jPoSI |
 
-`bathroom.webp` and `warm-room.webp` first shipped inside the Atlas Renovation
-concept, which has since been removed from this branch. Their files went with it;
-these two copies keep the original credit, which the Unsplash License permits.
+The credits stay listed while the files stay on disk. `bathroom.webp` and
+`warm-room.webp` first shipped inside the Atlas Renovation concept, which has
+since been removed from this branch; their Atlas copies went with it, and these
+two kept the original credit, which the Unsplash License permits.
 
 A third former Atlas shot (a white-cabinet kitchen by Franco Debartolo) was **not**
 reused: a framed photograph of a person sits on the counter, which is the same test
@@ -135,9 +170,10 @@ at the downloaded frame, which is the standard applied to every plate here.
 
 ## Notes
 
-- No face is visible in any of these photos. The FlowRight hero shows hands and
-  the back of a head only, so nobody in it can be identified; its bathroom and
-  warm-room plates contain no people at all. Ember & Oak's two
+- No face is visible in any of the **stock photographs** listed above. The retired
+  FlowRight hero showed hands and the back of a head only, so nobody in it could be
+  identified, and its bathroom and warm-room plates contain no people at all. BlueLine's
+  generated plates are the exception and are handled in its own section. Ember & Oak's two
   story photographs show hands only — `story-hands.webp` is cropped to forearms
   and a table, `story-dessert.webp` to hands and a bowl with a strand of hair at
   the very edge — so no guest or staff member can be recognised.
@@ -149,6 +185,10 @@ at the downloaded frame, which is the standard applied to every plate here.
 - Rowanwood Dental's four plates contain no people at all — two empty rooms, a tray
   of instruments and an empty waiting area — so no patient, dentist or receptionist
   is depicted anywhere on that concept, and none is named either.
-- The before/after drag slider originally planned for this demo was **dropped**:
-  no genuine licence-verifiable pair of the same space was available, and a
-  "before" was not to be faked with a filter, crop, or desaturated copy.
+- A before/after drag slider was **dropped from the stock-photo demos** and never
+  came back on one: no genuine licence-verifiable pair of the same space was
+  available, and a "before" was not to be faked from a real photograph with a
+  filter, a crop, or a desaturated copy. The plumbing concept does ship a working
+  slider, and it can say so because nothing is being passed off — both halves of
+  each BlueLine pair are generated images of the same fictional job, and the band
+  labels them illustrative on screen.

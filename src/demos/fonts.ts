@@ -1,4 +1,4 @@
-import { Barlow, Barlow_Condensed, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Jost, Newsreader, Public_Sans } from "next/font/google";
+import { Archivo, Bodoni_Moda, Cormorant_Garamond, DM_Sans, Jost, Newsreader, Public_Sans } from "next/font/google";
 import type { DemoKey } from "@/lib/data";
 
 /* Each concept site gets its own type pairing — display for headings, body for
@@ -33,28 +33,19 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
-/* FlowRight's trade-signage pairing. Barlow Condensed is the lettering you see
-   down the side of a van and on a job board: it holds a phone number at
-   display size without eating the horizontal space a call-first layout needs,
-   and it is visibly not the serif the restaurant, salon and dental concepts
-   are built on. Barlow — the same superfamily at normal width — carries the
-   running copy, so the two halves of the page are related rather than borrowed.
-   Two files, two weights each: `preload: false`, wrapper-scoped, so no other
-   page fetches either. */
-const barlowCondensed = Barlow_Condensed({
+/* BlueLine's pairing. Archivo is a wide, flat-sided grotesque that stays readable
+   at the heavy 800 the headlines are set in — the voice of a signage lettering
+   plate rather than a magazine, and visibly none of the serifs the restaurant,
+   salon and dental concepts are built on. Running copy uses Instrument Sans,
+   which the site root already loads (`--font-instrument`), so this slot ships one
+   new file and the concept pays for exactly that: `preload: false`, wrapper-scoped
+   like every other slot. */
+const archivo = Archivo({
   subsets: ["latin"],
   display: "swap",
   preload: false,
-  weight: ["700", "800"],
-  variable: "--font-barlow-condensed",
-});
-
-const barlow = Barlow({
-  subsets: ["latin"],
-  display: "swap",
-  preload: false,
-  weight: ["400", "600"],
-  variable: "--font-barlow",
+  weight: ["600", "700", "800"],
+  variable: "--font-archivo",
 });
 
 /* Ember & Oak's hospitality pairing. Cormorant Garamond is a high-contrast,
@@ -126,9 +117,9 @@ const publicSans = Public_Sans({
 
 export const demoFonts: Record<DemoKey, DemoFontSlot> = {
   plumber: {
-    className: `${barlowCondensed.variable} ${barlow.variable}`,
-    display: "var(--font-barlow-condensed), ui-sans-serif, system-ui, sans-serif",
-    body: "var(--font-barlow), ui-sans-serif, system-ui, sans-serif",
+    className: archivo.variable,
+    display: "var(--font-archivo), ui-sans-serif, system-ui, sans-serif",
+    body: "var(--font-instrument), ui-sans-serif, system-ui, sans-serif",
   },
   restaurant: {
     className: `${cormorant.variable} ${dmSans.variable}`,

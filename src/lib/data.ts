@@ -160,7 +160,6 @@ export type DemoKey = "plumber" | "restaurant" | "salon" | "dental";
    project carries nothing its demo cannot draw. `navName` is the one field all
    four read (their headers and footers). */
 export type ServiceDemoContent = {
-  logoLetter?: string;
   navName: string;
   headline?: string;
   headlineAccent?: string;
@@ -169,10 +168,6 @@ export type ServiceDemoContent = {
   ctaSecondary?: string;
   servicesTitle?: string;
   services?: { title: string; body: string }[];
-  galleryTitle?: string;
-  whyTitle?: string;
-  whyIntro?: string;
-  whyPoints?: string[];
   faqTitle?: string;
   faqs?: { q: string; a: string }[];
   ctaTitle?: string;
@@ -201,14 +196,13 @@ export type ServiceDemoContent = {
     accent?: string;
   };
   statement?: string;
-  process?: { eyebrow: string; title: string; intro: string; steps: { no: string; title: string; body: string }[] };
   servicesEyebrow?: string;
   contact?: { eyebrow: string; name: string; email: string; projectType: string; message: string; submit: string; projectOptions: string[] };
 
-  /* --- Plumber-concept fields ------------------------------------------------
-     The call-first plumbing layout is built around a phone number, an urgent
-     band, a quoting explanation and a coverage panel. All OPTIONAL, so the
-     restaurant, salon and dental concepts read none of it.
+  /* --- Plumbing-concept fields -----------------------------------------------
+     The call-first plumbing layout is built around a phone number, an hours
+     strip, a hero chip row and an urgent band. All OPTIONAL, so the restaurant,
+     salon and dental concepts read none of it.
 
      `phone` is the fictional business's number, never the studio's: the site's
      own contact rules (see the studio config at the top of this file) still hold
@@ -217,90 +211,157 @@ export type ServiceDemoContent = {
   phone?: { display: string; href: string; label: string };
   availability?: string;
   trustChips?: string[];
+  /* `callLabel` is the verb only — the band writes `{callLabel} {phone.display}`,
+     so a number can never be edited into one of the two places and left in the
+     other. */
   emergency?: { title: string; body: string; callLabel: string; note: string };
-  quoting?: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    steps: { title: string; body: string }[];
-    note: string;
-  };
-  /* Coverage is grouped by how long it takes someone to arrive, which is the only
-     grouping a homeowner can act on. The flat list the area checker tests against
-     is derived from these, so a place can never be listed and unfindable. */
-  areas?: {
-    eyebrow: string;
-    title: string;
-    intro: string;
-    note: string;
-    zones: { name: string; travel: string; places: string[] }[];
-  };
 
-  /* --- FlowRight's home-services layout ---------------------------------------
-     The call-first redesign reads the fields below. All of it is read only by
-     PlumberDemo, so the restaurant, salon and dental concepts are untouched.
+  /* --- BlueLine's residential one-pager --------------------------------------
+     The reference is a five-view site (home, services, about, areas, contact)
+     behind a hash router. A demo must not navigate away from the page it is
+     embedded on, so the five views become anchored bands of one scrolling page
+     and every word they draw lives here.
 
-     `groups` replaces a grid of equal service cards: nine services in three
-     kinds of call, because what decides who you phone is whether it is urgent,
-     planned, or part of a build. `quickPicks[].job` must match a service title
-     exactly — pressing a hero chip writes it into the quote form's job field, and
-     the form's options are derived from `groups`, so a mismatch is a broken
-     control rather than a typo. */
-  home?: {
-    heroKicker: string;
-    quickPicks: { label: string; detail: string; job: string }[];
-    groups: {
-      name: string;
-      when: string;
-      items: { title: string; body: string; tags: string[] }[];
+     Read only by PlumberDemo, so the other three concepts are untouched. Fields
+     the shared base already covers — hero photo, services grid, FAQ pairs,
+     closing call — are not repeated here.
+
+     `serviceDetails[].title` is what the form's service select offers, so the
+     "Request this service" buttons can only ever name a real option. */
+  blueline?: {
+    /* The wordmark is two tones plus a trade label, so it is stored in pieces
+       rather than split by the component counting characters. */
+    brand: { lead: string; accent: string; sub: string };
+    topbarNote: string;
+    heroEyebrow: string;
+    heroPhoneNote: string;
+    heroBadge: string;
+    heroStatus: { title: string; body: string };
+    /* The band of service names that scrolls under the hero. */
+    ticker: string[];
+    trust: { title: string; body: string }[];
+    servicesIntro: string;
+    viewAll: string;
+    /* The heading the service-detail stack runs under. The reference keeps it on
+       its own page, so it has to be read from somewhere once the five views
+       become bands of one page. */
+    detailsHead: { eyebrow: string; title: string; intro: string };
+    /* The base fields carry the FAQ's own title and pairs; this is the line under
+       the heading, and the number the closing band prints before the digits. */
+    faqIntro: string;
+    finalPhone: string;
+    serviceDetails: {
+      kicker: string;
+      title: string;
+      body: string;
+      benefits: string[];
+      image: { src: string; alt: string };
+      request: string;
+      call: string;
     }[];
-    heating: {
-      eyebrow: string;
-      title: string;
-      body: string;
-      points: { title: string; body: string }[];
-      image: { src: string; alt: string; caption: string };
-    };
-    installs: {
-      eyebrow: string;
-      title: string;
-      body: string;
-      points: string[];
-      image: { src: string; alt: string; caption: string };
-    };
-    areaCheck: {
-      label: string;
-      placeholder: string;
-      submit: string;
-      /* `{place}` is replaced with what the visitor typed, so the answer always
-         names the place they asked about. */
-      hit: string;
-      miss: string;
-      blank: string;
-      note: string;
-    };
-    quote: {
+    helpCard: { title: string; body: string };
+    hoursCard: { title: string; rows: { label: string; value: string }[]; status: string };
+    why: {
       eyebrow: string;
       title: string;
       intro: string;
-      labels: {
-        name: string;
-        phone: string;
-        area: string;
-        job: string;
-        urgency: string;
-        details: string;
-      };
-      placeholders: { name: string; phone: string; area: string; details: string };
-      urgencies: { value: string; hint: string }[];
-      submit: string;
-      /* The confirmation is the whole point of the form: it repeats what was
-         asked for and says plainly that nothing left the browser. */
-      successTitle: string;
-      successLead: string;
-      note: string;
+      link: string;
+      items: { title: string; body: string }[];
     };
-    closing: { eyebrow: string; hours: { day: string; time: string }[] };
+    emergencyStatus: string;
+    beforeAfter: {
+      eyebrow: string;
+      title: string;
+      intro: string;
+      note: string;
+      pairs: {
+        after: string;
+        afterAlt: string;
+        before: string;
+        beforeAlt: string;
+        caption: string;
+        /* The slider is a real range input, so it needs its own accessible name. */
+        slider: string;
+      }[];
+    };
+    reviews: {
+      eyebrow: string;
+      title: string;
+      intro: string;
+      note: string;
+      items: { quote: string; name: string; place: string; initials: string }[];
+    };
+    /* One list of places serves the coverage chips, the per-city cards and the
+       map's dots, so a town cannot be listed in one and missing from another.
+       `dot` holds the artwork's own coordinates: the circle, and where its label
+       sits. */
+    areas: {
+      eyebrow: string;
+      title: string;
+      /* The one-line standfirst, then the paragraph that sits beside the map. */
+      head: string;
+      intro: string;
+      cta: string;
+      note: string;
+      mapNote: string;
+      mapAria: string;
+      mapPlate: string;
+      /* Heading over the per-city cards. */
+      cardsTitle: string;
+      places: {
+        name: string;
+        note: string;
+        hub?: boolean;
+        dot: { x: number; y: number; tx: number; ty: number; anchor: "start" | "middle" };
+      }[];
+    };
+    /* Second paragraph of the coverage band, run under `areas.cardsTitle` so the
+       per-city cards have a lede. */
+    areasIntro: string;
+    about: { eyebrow: string; title: string; paras: string[]; list: string[]; cta: string };
+    story: { title: string; paras: string[] };
+    values: { eyebrow: string; title: string; items: { no: string; title: string; body: string }[] };
+    steps: { eyebrow: string; title: string; items: { no: string; title: string; body: string }[] };
+    contactHead: { eyebrow: string; title: string; intro: string };
+    form: {
+      name: string;
+      namePlaceholder: string;
+      phone: string;
+      phonePlaceholder: string;
+      email: string;
+      emailPlaceholder: string;
+      service: string;
+      /* The empty option, taken from the reference's own markup so the form's
+         copy still lives only in this file. */
+      serviceOption: string;
+      otherOption: string;
+      message: string;
+      messagePlaceholder: string;
+      submit: string;
+      fine: string;
+      successTitle: string;
+      /* `{name}` and `{service}` are filled from what the visitor typed, so the
+         confirmation repeats the request instead of a generic thank-you. */
+      successLead: string;
+      /* `{phone}` keeps the number in one place — see `phone.display`. */
+      successDemo: string;
+      reset: string;
+    };
+    contactCards: { title: string; lines: string[]; phone?: boolean; dark?: boolean }[];
+    fictionalNote: string;
+    footer: {
+      tag: string;
+      explore: string;
+      servicesTitle: string;
+      contactTitle: string;
+      address: string;
+      legal: string;
+      demo: string;
+    };
+    dialogs: {
+      privacy: { title: string; paras: string[] };
+      terms: { title: string; paras: string[] };
+    };
   };
 
   /* --- Restaurant-concept fields ------------------------------------------------
@@ -727,7 +788,7 @@ export type Project = {
   conversionNotes: string[];
   accent: string; // hex used to tint the case study
   /* `surface` and `accent2` are optional extras for a concept whose palette has
-     more than one colour in it — FlowRight's aqua and grey panels. DemoVars
+     more than one colour in it — BlueLine's copper accent and pale panel. DemoVars
      emits them as --d-surface / --d-accent-2 and measures its text tokens
      against the surface, so an extra colour can never quietly break contrast. */
   palette: { bg: string; fg: string; accent: string; surface?: string; accent2?: string };
@@ -738,347 +799,658 @@ export type Project = {
    never presented as real clients. */
 export const projects: Project[] = [
   {
-    slug: "flowright-plumbing",
+    slug: "blueline-plumbing",
     index: "01",
     demo: "plumber",
-    name: "FlowRight Plumbing",
+    name: "BlueLine Plumbing",
     businessType: "Home Services",
-    industry: "Plumbing & Heating",
+    industry: "Residential Plumbing",
     category: "Trade",
     summary:
-      "A call-first plumbing and heating site: the number at display size, a quote request that validates what it asks for, and a coverage list you can check yourself.",
+      "A residential plumbing one-pager built from a supplied design: the number in the strip, the header, the hero and every service row, nine services explained twice, and a coverage map drawn rather than embedded.",
     objective:
-      "Carry two very different visitors on one page — the person standing over a burst pipe at 9pm, and the homeowner planning a bathroom or a boiler for next spring.",
+      "Carry the two visitors a plumbing site gets on one page — the person with water spreading across a floor right now, and the homeowner comparing who to let into the house next week.",
     strategy:
-      "Two doors, one page. The emergency door is a phone number you cannot miss and three quick picks that write the job into the form for you. The planning door is a service ledger grouped by the kind of call, a heating section, and a quote request that checks itself before it claims anything. Rates, insurance, response times and coverage are the four things a concept site cannot invent, so each is explained rather than claimed.",
-    designDirection: ["Trade signage", "Call-first", "Cold-water blue", "Warm heat accent"],
+      "Call-first from the top strip to the thumb bar, so there is no scroll depth at which phoning is work. Everything else on the page is a reason the call is worth making: nine services given twice, once as a grid and once in full with what each one includes; before-and-after sliders; coverage on a drawn map with a card per town; and a form that reads its own fields back and then says plainly that nothing was sent.",
+    designDirection: ["Trade signage", "Call-first", "Cold-water blue", "Copper accent"],
     keySections: [
       "Hero",
-      "Quick picks",
-      "Service ledger",
-      "Heating",
-      "Bathroom refits",
-      "Quote request",
+      "Trust strip",
+      "Services",
+      "Why BlueLine",
+      "Emergency",
+      "Before & after",
+      "Testimonials",
       "Service areas",
+      "About",
+      "Service details",
       "FAQ",
       "Contact",
     ],
     mobileNotes: [
-      "The number is the first large tap target on the screen and stays in the thumb bar",
-      "The quote form runs one column, validates before it confirms, and never fakes a send",
-      "Service areas are grouped by travel time instead of a map nobody can read at 390px",
+      "Call and request stay pinned to the bottom of the frame until it reaches tablet width",
+      "The coverage map is a drawn illustration, so it reads at 390px where a real map would not",
+      "Every band runs one column until the frame is wide enough for the two-column split",
     ],
     conversionNotes: [
-      "Three routes into the same quote form: the hero's quick picks, every ledger row, and the sticky bar",
-      "The confirmation repeats the job, area and urgency that were asked for, then says plainly that nothing was sent",
+      "The number appears in the top strip, the header, the hero, the emergency band, every service row, the contact cards and the thumb bar",
+      "Each service's request button writes its own name into the form's select, so a click never promises more than a pre-filled field",
+      "The confirmation repeats the name and the service that were typed, then states that nothing left the browser",
     ],
-    accent: "#0b57d0",
-    /* Cold water, warm heat. White page, deep ink-navy text and one signal blue
-       for every action; the second colour is a warm amber reserved for the heating
-       material, so the two halves of the trade read apart without a new palette.
-       Text tokens are derived against all three surfaces. */
+    accent: "#1160c9",
+    /* Blue water on a pale page, copper for the things that are hot or urgent.
+       The navy of the emergency band and the footer is painted by the demo
+       itself, since DemoVars only derives text tokens for the light surfaces —
+       inside a navy band the component uses its own light ink instead. */
     palette: {
-      bg: "#ffffff",
-      fg: "#071a2c",
-      accent: "#0b57d0",
-      surface: "#eef3f9",
-      accent2: "#f5b942",
+      bg: "#f5f8fb",
+      fg: "#0e1c2b",
+      accent: "#1160c9",
+      surface: "#ebf1f7",
+      accent2: "#c2672e",
     },
     content: {
-      logoLetter: "F",
-      navName: "FlowRight",
-      headline: "Burst Pipe, Cold House,",
-      headlineAccent: "One Number Fixes Both.",
+      navName: "BlueLine",
+      headline: "Reliable Plumbing",
+      headlineAccent: "Services in Austin, TX",
       intro:
-        "Emergency plumbing, boilers, heating and bathroom work under one number. Someone picks up, and the price is written down before a tool comes out of the van.",
-      ctaPrimary: "Request a quote",
-      ctaSecondary: "See what we cover",
+        "Fast, professional plumbing solutions for homeowners throughout Austin and surrounding areas.",
+      ctaPrimary: "Request Service",
+      ctaSecondary: "Call Now",
 
-      faqTitle: "Before you call",
+      imageSource:
+        "Photography on this concept is generated artwork made for the design, not documentary photographs of a real job.",
+      hero: {
+        src: "/demos/blueline-plumbing/hero-pipes.webp",
+        alt: "Technician servicing copper water pipes in a home utility room",
+      },
+
+      servicesEyebrow: "What We Do",
+      servicesTitle: "Complete Residential Plumbing Services",
+      services: [
+        {
+          title: "Emergency Plumbing",
+          body: "Burst pipes, major leaks, and backups handled fast — day or night.",
+        },
+        {
+          title: "Drain Cleaning",
+          body: "Slow and clogged drains cleared at the source, not just patched.",
+        },
+        {
+          title: "Water Heater Repair",
+          body: "No hot water, strange noises, or leaks diagnosed and fixed.",
+        },
+        {
+          title: "Water Heater Installation",
+          body: "Right-sized replacements installed cleanly and correctly.",
+        },
+        {
+          title: "Leak Detection",
+          body: "Hidden leaks located precisely — without guesswork demolition.",
+        },
+        {
+          title: "Sewer Line Repair",
+          body: "Main line backups, odors, and root intrusion addressed properly.",
+        },
+        {
+          title: "Faucet & Fixture Repair",
+          body: "Drips, low pressure, and dated fixtures repaired or upgraded.",
+        },
+        {
+          title: "Toilet Repair",
+          body: "Running, clogging, or leaking toilets fixed — or replaced.",
+        },
+        {
+          title: "Pipe Repair",
+          body: "Corroded, leaking, or damaged pipes repaired with lasting materials.",
+        },
+      ],
+
+      faqTitle: "Common Plumbing Questions",
       faqs: [
         {
-          q: "How fast can you get here?",
-          a: "Emergency jobs are prioritised, but arrival time depends on availability, location, and the current workload. We confirm the expected arrival time when the callout is booked.",
+          q: "What plumbing services do you offer?",
+          a: "We handle emergency plumbing, drain cleaning, water heater repair and installation, leak detection, sewer line repair, faucet and fixture repair, toilet repair, and pipe repair for homes throughout the Austin area.",
         },
         {
-          q: "Do you do heating as well as plumbing?",
-          a: "Yes. Boilers, radiators, controls and underfloor loops are most of the work, so a cold house comes to the same number as a burst pipe and gets the same person looking at it.",
+          q: "Do you offer emergency plumbing in Austin?",
+          a: "Yes. Burst pipes, active leaks, and sewage backups are treated as priorities. Call (512) 555-0147 any time and we'll dispatch the nearest available plumber.",
         },
         {
-          q: "Can you give me a price over the phone?",
-          a: "Not for the job itself. A price for work nobody has seen is a guess, and the guess becomes your bill. What a phone call can do is establish what we need to look at, and what the visit costs.",
+          q: "How quickly can a plumber get to my home?",
+          a: "It depends on your location and our current schedule. Emergencies are prioritized, and we always give you an expected arrival window when you call or request service.",
         },
         {
-          q: "Do you charge for a quote?",
-          a: "Ask for a quote and the work can be discussed before anything begins. The final scope and price should be clear before work starts.",
+          q: "Do you provide upfront pricing?",
+          a: "Yes. We assess the problem, explain what we found, and provide a clear estimate before any work begins — so you can decide with the full picture.",
         },
         {
-          /* The insurance question deliberately shows no claim: on a real site it
-             can only be answered once the business confirms its actual cover. */
-          q: "Are you insured?",
-          a: "This is a concept website, so no specific insurance claim is displayed. On a real business website, this should only be stated once the business has confirmed its actual insurance details.",
+          q: "What areas do you serve?",
+          a: "Austin and surrounding communities including Round Rock, Cedar Park, Pflugerville, Georgetown, Leander, Kyle, and Buda. Not sure if you're covered? Send a request and we'll confirm.",
         },
         {
-          q: "Which areas do you cover?",
-          a: "The list under 'Where we work' is grouped by how long it takes someone to arrive. If your street is not on it, ask anyway — a short call is cheaper than a wrong assumption.",
+          q: "How do I request service?",
+          a: "Call us at (512) 555-0147 or use the contact form on this site. Tell us what's going on and a good time to reach you, and we'll take it from there.",
         },
       ],
-      ctaTitle: "Water won't wait. Neither do we.",
-      ctaBody: "Tell us what is wrong and get a written price before any work starts.",
 
-      /* The honest line under a submit that cannot submit. It is the concept's own
-         wording so it can answer the ask in the visitor's terms. */
-      formNote:
-        "Concept site: nothing was sent, stored or booked. This confirmation is the only thing the button does.",
+      ctaTitle: "Have a Plumbing Problem? Let's Fix It.",
+      ctaBody:
+        "One call gets a professional plumber on the way to your Austin home — with upfront pricing and workmanship we stand behind.",
+      formNote: "Demo form — submissions are not sent or stored.",
 
-      /* --- FlowRight's own layout content. The number is the fictional
-         business's, in the range reserved for invented phone numbers; the studio's
-         own contact rules are unaffected. --- */
       phone: {
-        display: "(555) 555-0142",
-        href: "tel:+15555550142",
-        label: "Call FlowRight",
+        display: "(512) 555-0147",
+        href: "tel:+15125550147",
+        label: "Call Now",
       },
-      availability: "Emergencies answered any hour. Same number, day or night.",
-      trustChips: [
-        "Plumbing and heating under one number",
-        "Price written before work starts",
-        "Clean, tidy work",
-      ],
-      servicesEyebrow: "What we get called for",
-      servicesTitle: "Grouped by the kind of call, because that decides who you phone.",
-      imageSource:
-        "Photography here is licensed stock standing in for the trade's own site pictures. It is concept material, not a record of completed work.",
-      hero: {
-        src: "/demos/flowright-plumbing/hero-pipes.webp",
-        alt: "A plumber seen from behind, head down inside a kitchen cabinet, both hands on the white pipework under a sink while a work light throws cold blue across the cupboard.",
-      },
+      availability: "Mon–Sat 7 AM – 7 PM · 24/7 Emergency Dispatch",
+      trustChips: ["Licensed & Insured", "Fast Response", "Upfront Pricing", "Satisfaction Guaranteed"],
       emergency: {
-        title: "Water where it shouldn't be?",
-        body: "Shut the valve under the sink or at the stopcock, then call. We stay on the line while you find it.",
-        callLabel: "Call the emergency line",
-        note: "Concept site: this is a fictional number and it reaches no one.",
-      },
-      process: {
-        eyebrow: "How a callout works",
-        title: "Three steps, and you approve the price in the middle.",
-        intro: "No mystery visits. You know what is happening at every point.",
-        steps: [
-          {
-            no: "01",
-            title: "You tell us what is wrong",
-            body: "A sentence is enough. We ask the two or three questions that decide which van to send.",
-          },
-          {
-            no: "02",
-            title: "We look, then write the price",
-            body: "The plumber finds the cause and gives you a fixed price for the work before touching a tool.",
-          },
-          {
-            no: "03",
-            title: "You say go, we fix it",
-            body: "If you approve, the work happens there and then where it can. If not, you pay for the look, not the job.",
-          },
-        ],
-      },
-      quoting: {
-        eyebrow: "Pricing, plainly",
-        title: "You hear the number before the work, not after it.",
-        intro: "This is the part most people worry about, so it is the part we are clearest about.",
-        steps: [
-          { title: "Assess", body: "We find the actual cause, not just the symptom you can see." },
-          { title: "Fixed quote first", body: "One price for the job, written down, before anything starts." },
-          { title: "You approve", body: "Nothing happens until you say the price is fine. Saying no costs you the visit only." },
-          { title: "We fix it", body: "The work is done, tested in front of you, and the area is left clean." },
-        ],
-        note: "No rates are listed here. This is a concept business with no real price list to publish, and inventing figures would be a claim about money rather than a design decision.",
-      },
-      areas: {
-        eyebrow: "Where we work",
-        title: "Grouped by how long it takes someone to reach you.",
-        intro:
-          "Distance decides how fast a van can be outside, so the area is stated up front instead of hidden behind a contact form.",
-        zones: [
-          {
-            name: "Inner ring",
-            travel: "Emergency slots the same day",
-            places: ["Northgate", "Ashvale", "Kingsley Row", "Cedar Flats"],
-          },
-          {
-            name: "Outer suburbs",
-            travel: "Same or next day",
-            places: ["Old Foundry", "Marlow Bend", "Riverside Wharf", "Fern Hill"],
-          },
-          {
-            name: "Further afield",
-            travel: "Ask, and we say yes or no on the phone",
-            places: ["Hollowmere", "Bracken Ridge", "Wexley Fields"],
-          },
-        ],
-        note: "Concept: these neighbourhoods are invented for the design and the travel times are illustrative. A live site would publish the firm's actual coverage.",
+        title: "Burst Pipe? Backed-Up Drain? Don't Wait.",
+        body: "Water damage gets worse by the minute. Call BlueLine Plumbing and we'll dispatch the nearest available plumber to your Austin home.",
+        callLabel: "Call",
+        note: "If water is actively spreading, shut off your main valve first — then call us.",
       },
 
-      home: {
-        heroKicker: "Plumbing & heating · 24/7 callouts",
-        /* Each pick writes its job into the quote form and moves you there, so the
-           fastest path from a symptom to a request is one tap. `job` must match a
-           service title in `groups` exactly. */
-        quickPicks: [
-          { label: "Burst or leaking", detail: "Water where it should not be", job: "Emergency plumbing" },
-          { label: "No hot water", detail: "Boiler or heating fault", job: "Boilers & heating" },
-          { label: "Blocked drain", detail: "Sink, toilet or outside drain", job: "Drains & toilets" },
+      blueline: {
+        brand: { lead: "Blue", accent: "Line", sub: "Plumbing" },
+        topbarNote: "Residential Plumbing · Austin, TX & Surrounding Areas",
+        heroEyebrow: "Residential Plumbing · Austin, Texas",
+        heroPhoneNote: "24/7 emergency plumbing dispatch",
+        heroBadge: "Austin, TX · Locally Focused",
+        heroStatus: {
+          title: "Emergency line open",
+          body: "Plumbers on call across Austin today.",
+        },
+        ticker: [
+          "Emergency Plumbing",
+          "Drain Cleaning",
+          "Water Heaters",
+          "Leak Detection",
+          "Sewer Line Repair",
+          "Faucets & Fixtures",
+          "Toilet Repair",
+          "Pipe Repair",
+          "Serving Austin, TX",
         ],
-        groups: [
+        trust: [
           {
-            name: "Urgent",
-            when: "Answered today",
-            items: [
-              {
-                title: "Emergency plumbing",
-                body: "Bursts, major leaks and no water. The first thing we do on the phone is find your stopcock with you.",
-                tags: ["Burst pipe", "No water", "Overflowing tank"],
-              },
-              {
-                title: "Leak detection",
-                body: "Acoustic and thermal tracing, so the repair opens one floorboard instead of six.",
-                tags: ["Hidden leak", "Damp patch", "Meter running"],
-              },
-              {
-                title: "Drains & toilets",
-                body: "Sinks, toilets and outside drains cleared, then shown what came out and what caused it.",
-                tags: ["Blocked drain", "Toilet not flushing", "Sewage smell"],
-              },
-            ],
+            title: "Licensed & Insured",
+            body: "Professional work from an accountable, covered team.",
           },
           {
-            name: "Heating",
-            when: "Booked this week",
-            items: [
-              {
-                title: "Boilers & heating",
-                body: "Repairs, servicing and like-for-like replacements, quoted after someone has actually seen the unit.",
-                tags: ["No hot water", "Boiler locking out", "Pilot keeps going out"],
-              },
-              {
-                title: "Radiators & controls",
-                body: "Cold tops, balancing, room thermostats and smart controls fitted to the system you already have.",
-                tags: ["Cold radiators", "Noisy system", "Thermostat upgrade"],
-              },
-              {
-                title: "Underfloor & heat pumps",
-                body: "Loops laid with the floor, and low-flow systems sized room by room from drawings you can read.",
-                tags: ["Underfloor loop", "Heat pump", "New build"],
-              },
-            ],
+            title: "Fast Response",
+            body: "Quick dispatch for leaks, clogs, and no-hot-water emergencies.",
           },
           {
-            name: "Installed",
-            when: "Scheduled around the build",
-            items: [
-              {
-                title: "Bathroom refits",
-                body: "Suites, showers and wet rooms: first fix before finish, pressure-tested before the panels go on.",
-                tags: ["Full bathroom", "Shower room", "Wet room"],
-              },
-              {
-                title: "Kitchen & utility plumbing",
-                body: "Sinks, dishwashers and washing-machine runs moved or replaced alongside the units.",
-                tags: ["Move a sink", "Appliance feeds", "Utility room"],
-              },
-              {
-                title: "Landlord & rental work",
-                body: "Repairs and annual checks booked around the tenant, with the paperwork listed before the visit.",
-                tags: ["Rental repair", "Annual check", "Tenant access"],
-              },
-            ],
+            title: "Upfront Pricing",
+            body: "Clear estimates explained before any work begins.",
+          },
+          {
+            title: "Satisfaction Guaranteed",
+            body: "We stand behind every repair and installation we complete.",
           },
         ],
-        heating: {
-          eyebrow: "Heating",
-          title: "A cold radiator is usually a water problem wearing a heating coat.",
-          body: "Most heat complaints are flow, controls or a boiler asked to do more than the system can carry. The same people fit both sides of it, so nobody gets sent twice.",
-          points: [
-            {
-              title: "Seen before it is quoted",
-              body: "A boiler price written without looking at the flue, the filter and the system size is a guess with a logo on it.",
-            },
-            {
-              title: "Balanced, not just bled",
-              body: "Cold tops and noisy pipes normally mean flow, not a failed part. The whole circuit gets checked before anything is replaced.",
-            },
-            {
-              title: "Sized room by room",
-              body: "Underfloor loops and low-flow emitters are worked out from the rooms they heat, so the controls can actually hold a temperature.",
-            },
-          ],
-          image: {
-            src: "/demos/flowright-plumbing/warm-room.webp",
-            alt: "A vaulted timber living and dining room with a lit stove behind a glass screen, chairs pulled up to it, and nobody in the room.",
-            caption: "Stock photograph of a warm room — concept material, not a FlowRight installation.",
-          },
-        },
-        installs: {
-          eyebrow: "Bathrooms & kitchens",
-          title: "The suite is the easy half. What sits behind the tile decides how long it lasts.",
-          body: "A refit is pipework, falls, pressure and access, finished in the order that lets someone get back in in ten years without cutting the room apart.",
-          points: [
-            "First fix before finish, so nothing is buried untested.",
-            "Pressure-tested in front of you before a single panel goes up.",
-            "Left clean at the end of every day on site, not just the last one.",
-          ],
-          image: {
-            src: "/demos/flowright-plumbing/bathroom.webp",
-            alt: "A bright bathroom with twin basins on a long vanity, a freestanding tub under a shuttered window, and a glass shower with black brassware.",
-            caption: "Stock photograph of a finished bathroom — concept material, not a FlowRight job.",
-          },
-        },
-        areaCheck: {
-          label: "Type your area",
-          placeholder: "Northgate, or a postcode",
-          submit: "Check",
-          hit: "“{place}” is on the list — we cover it.",
-          miss: "“{place}” is not on the list. Ask anyway; a short call is cheaper than a wrong assumption.",
-          blank: "Type an area and it is checked against the list above.",
-          note: "Concept: this checks against an invented list. On a live site it would answer from the firm's real coverage.",
-        },
-        quote: {
-          eyebrow: "Request a quote",
-          title: "Tell us what is wrong. We tell you what we need to see.",
+        servicesIntro:
+          "From dripping faucets to full sewer line repairs, one call covers your whole home.",
+        viewAll: "View All Services",
+        detailsHead: {
+          eyebrow: "Our Services",
+          title: "Plumbing Services in Austin, TX",
           intro:
-            "Two minutes. A real person reads it before anyone is given a number, and the job comes out of the list above.",
-          labels: {
-            name: "Your name",
-            phone: "Number to ring back",
-            area: "Area or postcode",
-            job: "What is the job?",
-            urgency: "How soon?",
-            details: "Anything we should know?",
-          },
-          placeholders: {
-            name: "Jordan Avery",
-            phone: "(555) 555-0199",
-            area: "Northgate",
-            details: "Boiler model, how long it has been doing it, whether you can get under the stairs.",
-          },
-          urgencies: [
-            { value: "Today", hint: "Emergency slot" },
-            { value: "This week", hint: "Routine repair" },
-            { value: "Next month", hint: "Planned work" },
-            { value: "Just planning", hint: "No dates yet" },
-          ],
-          submit: "Send request",
-          successTitle: "Understood. Nothing left this browser.",
-          successLead: "Here is what the form read back to you:",
-          note: "Concept site with no backend: pressing send validates the fields and shows this confirmation. No request is made, stored or booked.",
+            "Professional residential plumbing from a local team — every job explained clearly, priced upfront, and finished right.",
         },
-        closing: {
-          eyebrow: "FlowRight Plumbing · Plumbing & heating",
-          hours: [
-            { day: "Emergencies", time: "Any hour, every day" },
-            { day: "Mon–Fri", time: "07:30 – 18:00" },
-            { day: "Saturday", time: "09:00 – 14:00" },
-            { day: "Sunday", time: "Emergency line only" },
+        faqIntro: "Quick answers for Austin homeowners.",
+        finalPhone: "Or call directly:",
+        serviceDetails: [
+          {
+            kicker: "Urgent Care",
+            title: "Emergency Plumbing",
+            body: "Burst pipes, active leaks, sewage backups, and sudden loss of water. When water is moving where it shouldn't, speed matters — call and we'll dispatch the nearest available plumber.",
+            benefits: [
+              "Priority dispatch for urgent calls, day or night",
+              "Guidance on shutoffs and damage control while we're en route",
+              "Clear explanation of the fix and the price before work begins",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-emergency.webp",
+              alt: "Technician shutting off a water valve during an emergency plumbing call",
+            },
+            request: "Request This Service",
+            call: "Call for emergencies",
+          },
+          {
+            kicker: "Clogs & Flow",
+            title: "Drain Cleaning",
+            body: "Slow drains, recurring clogs, and gurgling lines in sinks, tubs, showers, and main drains. We clear the blockage at its source instead of just punching a hole through it.",
+            benefits: [
+              "Blockages cleared at the source, not temporarily patched",
+              "Careful methods that respect your pipes",
+              "Practical tips to prevent repeat clogs",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-drain.webp",
+              alt: "Plumber feeding a drain auger cable into a sink drain",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Hot Water",
+            title: "Water Heater Repair",
+            body: "No hot water, water that runs out too fast, odd noises, or pooling around the tank. We diagnose gas and electric tank heaters and give you a straight answer on repair versus replacement.",
+            benefits: [
+              "Thorough diagnosis of heating elements, valves, and thermostats",
+              "Honest repair-vs-replace guidance",
+              "Fast turnaround to get hot water back",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-heater-repair.webp",
+              alt: "Technician diagnosing a residential water heater with a multimeter",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Hot Water",
+            title: "Water Heater Installation",
+            body: "When a repair no longer makes sense, we help you choose the right replacement for your household and install it cleanly — new connections, drain pan, and a tidy finish.",
+            benefits: [
+              "Sizing and selection help for your household's needs",
+              "Old unit removed and hauled away",
+              "Clean, careful installation with new copper connections",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-heater-install.webp",
+              alt: "Newly installed water heater with clean copper connections",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Find It First",
+            title: "Leak Detection",
+            body: "Unexplained water bills, damp spots, or the sound of running water with everything off. We use systematic detection methods to pinpoint hidden leaks behind walls and under slabs.",
+            benefits: [
+              "Precise location of hidden leaks — no guesswork demolition",
+              "Clear report of what we found and what it means",
+              "Repair plan before any walls are opened",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-leak-detection.webp",
+              alt: "Technician using an electronic leak detection device along a bathroom wall",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Main Line",
+            title: "Sewer Line Repair",
+            body: "Multiple drains backing up, sewer odors, or soggy patches in the yard point to the main line. We assess the problem and lay out your repair or replacement options plainly.",
+            benefits: [
+              "Assessment that identifies the real cause — roots, age, or bellied lines",
+              "Repair and replacement options explained side by side",
+              "Work planned to minimize disruption to your yard",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-sewer.webp",
+              alt: "Plumber working at a residential sewer cleanout pipe in a lawn",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Fixtures",
+            title: "Faucet and Fixture Repair",
+            body: "Dripping faucets, low pressure, worn cartridges, and dated fixtures. We repair what's worth repairing and install beautiful new fixtures when it's time for an upgrade.",
+            benefits: [
+              "Drips and leaks stopped at the component level",
+              "Modern fixture upgrades installed carefully",
+              "Counters and finishes protected throughout",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-faucet.webp",
+              alt: "Gloved hands installing a modern brushed nickel kitchen faucet",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Fixtures",
+            title: "Toilet Repair",
+            body: "Running toilets, constant clogs, leaks at the base, or slow refills. We repair components and seals — or install a new, efficient toilet when replacement makes more sense.",
+            benefits: [
+              "Running and wasting water stopped fast",
+              "Seals, flappers, and fill valves replaced properly",
+              "New toilet installation, leveled and sealed",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-toilet.webp",
+              alt: "Plumber installing a new toilet in a bright bathroom",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+          {
+            kicker: "Pipework",
+            title: "Pipe Repair",
+            body: "Corroded, leaking, or damaged supply pipes — including pinhole leaks common in older Austin homes. We repair or replace sections with durable materials and clean fittings.",
+            benefits: [
+              "Damaged sections repaired or replaced — not just clamped",
+              "Quality copper and brass materials built to last",
+              "System pressure-tested before we leave",
+            ],
+            image: {
+              src: "/demos/blueline-plumbing/service-pipe-repair.webp",
+              alt: "Neatly repaired copper pipe with clean brass fittings",
+            },
+            request: "Request This Service",
+            call: "Call us",
+          },
+        ],
+        helpCard: {
+          title: "Not Sure What You Need?",
+          body: "Describe the symptom — a drip, a clog, no hot water — and we'll point you in the right direction.",
+        },
+        hoursCard: {
+          title: "Hours & Availability",
+          rows: [
+            { label: "Mon – Sat", value: "7:00 AM – 7:00 PM" },
+            { label: "Sunday", value: "Emergency dispatch" },
+            { label: "Emergencies", value: "24/7" },
           ],
+          status: "Emergency line open now",
+        },
+        why: {
+          eyebrow: "Why BlueLine",
+          title: "Why Choose BlueLine Plumbing",
+          intro:
+            "Plumbing problems are stressful enough. Working with your plumber shouldn't be. Here's what Austin homeowners can expect from our team.",
+          link: "Request service today",
+          items: [
+            {
+              title: "Local Austin Expertise",
+              body: "We know Austin homes — from older central-city bungalows to new builds across the suburbs — and the plumbing issues that come with them.",
+            },
+            {
+              title: "Fast, On-Time Response",
+              body: "We dispatch quickly for urgent calls and keep you informed about arrival times, so you're never left wondering.",
+            },
+            {
+              title: "Upfront, Straightforward Pricing",
+              body: "You'll understand the problem and the price before we pick up a tool. No surprises on the invoice.",
+            },
+            {
+              title: "Respect for Your Home",
+              body: "Floor protection, tidy work areas, and a full walkthrough before we leave — your home treated like our own.",
+            },
+          ],
+        },
+        emergencyStatus: "24/7 emergency dispatch available",
+        beforeAfter: {
+          eyebrow: "Before & After",
+          title: "The Difference a Professional Makes",
+          intro:
+            "Drag the slider on each photo to compare worn-out plumbing with a clean, professional BlueLine result.",
+          note: "Illustrative before/after images shown for this portfolio demonstration.",
+          pairs: [
+            {
+              after: "/demos/blueline-plumbing/pipes-after.webp",
+              afterAlt: "New gleaming copper pipes installed under a kitchen sink",
+              before: "/demos/blueline-plumbing/pipes-before.webp",
+              beforeAlt: "Old corroded leaking copper pipe before repair",
+              caption: "Corroded supply pipes replaced with new copper",
+              slider: "Compare before and after pipe repair",
+            },
+            {
+              after: "/demos/blueline-plumbing/heater-after.webp",
+              afterAlt: "New white water heater with clean copper connections",
+              before: "/demos/blueline-plumbing/heater-before.webp",
+              beforeAlt: "Old rusty corroded water heater tank before replacement",
+              caption: "Failing water heater swapped for a new, properly drained install",
+              slider: "Compare before and after water heater replacement",
+            },
+            {
+              after: "/demos/blueline-plumbing/faucet-after.webp",
+              afterAlt: "New matte black bathroom faucet on a clean white sink",
+              before: "/demos/blueline-plumbing/faucet-before.webp",
+              beforeAlt: "Old stained dripping faucet on a worn sink before replacement",
+              caption: "Worn, dripping faucet upgraded to a modern fixture",
+              slider: "Compare before and after faucet replacement",
+            },
+          ],
+        },
+        reviews: {
+          eyebrow: "Testimonials",
+          title: "What Austin Homeowners Say",
+          intro: "Straightforward feedback from residential service calls.",
+          note: "Sample testimonials written for this portfolio demonstration.",
+          items: [
+            {
+              quote: "They found a slab leak fast and explained every step before touching a thing.",
+              name: "Marcus H.",
+              place: "Round Rock, TX",
+              initials: "MH",
+            },
+            {
+              quote: "Called about a water heater in the morning and had hot water again the same day.",
+              name: "Elena G.",
+              place: "South Austin, TX",
+              initials: "EG",
+            },
+            {
+              quote: "Upfront pricing, clean work, and they left the utility room spotless.",
+              name: "Tommy W.",
+              place: "Cedar Park, TX",
+              initials: "TW",
+            },
+          ],
+        },
+        areas: {
+          eyebrow: "Service Areas",
+          title: "Serving Austin & Surrounding Areas",
+          head: "One local team, covering the Austin metro — north to Georgetown, south to Kyle, and everywhere in between.",
+          intro:
+            "Based in Austin and working throughout the metro — from central neighborhoods to fast-growing communities north and south of the city.",
+          cta: "Check Service Availability",
+          note: "Don't see your neighborhood? Send a request and we'll confirm availability.",
+          mapNote: "Map is a stylized illustration for this demo website.",
+          mapAria: "Stylized demo map of the Austin metro service area",
+          mapPlate: "AUSTIN METRO · DEMO MAP",
+          cardsTitle: "Local to Austin, at Home Across the Metro",
+          places: [
+            {
+              name: "Austin",
+              note: "Our home base — central neighborhoods to new suburbs, all residential plumbing services.",
+              hub: true,
+              dot: { x: 320, y: 298, tx: 320, ty: 328, anchor: "middle" },
+            },
+            {
+              name: "Round Rock",
+              note: "Water heaters, drains, and fixture work for homes across Round Rock.",
+              dot: { x: 352, y: 168, tx: 368, ty: 173, anchor: "start" },
+            },
+            {
+              name: "Cedar Park",
+              note: "Fast response for leaks, clogs, and urgent plumbing needs.",
+              dot: { x: 236, y: 152, tx: 138, ty: 157, anchor: "start" },
+            },
+            {
+              name: "Pflugerville",
+              note: "Residential repairs and installations throughout Pflugerville.",
+              dot: { x: 432, y: 192, tx: 448, ty: 197, anchor: "start" },
+            },
+            {
+              name: "Georgetown",
+              note: "Full-service plumbing for Georgetown homes and new builds.",
+              dot: { x: 300, y: 88, tx: 316, ty: 93, anchor: "start" },
+            },
+            {
+              name: "Leander",
+              note: "Drain cleaning, pipe repair, and water heater service in Leander.",
+              dot: { x: 182, y: 96, tx: 112, ty: 101, anchor: "start" },
+            },
+            {
+              name: "Kyle",
+              note: "South metro coverage for repairs and scheduled installations.",
+              dot: { x: 300, y: 432, tx: 316, ty: 437, anchor: "start" },
+            },
+            {
+              name: "Buda",
+              note: "Reliable residential plumbing service across Buda.",
+              dot: { x: 248, y: 474, tx: 196, ty: 479, anchor: "start" },
+            },
+          ],
+        },
+        areasIntro:
+          "Our plumbers live and work in the same communities we serve. That means we understand the housing stock, the soil, and the water conditions that shape plumbing problems in Central Texas.",
+        about: {
+          eyebrow: "About BlueLine",
+          title: "Your Neighborhood Austin Plumbing Team",
+          paras: [
+            "BlueLine Plumbing exists for one reason: to make home plumbing problems disappear — quickly, honestly, and without the runaround.",
+            "BlueLine Plumbing was built on a simple idea: treat every home like it's our own. That means showing up when we say we will, explaining the problem in plain language, and fixing it right the first time.",
+            "From quick fixture repairs to water heater replacements and sewer line work, we focus on doing residential plumbing the way it should be done.",
+          ],
+          list: [
+            "Residential plumbing specialists",
+            "Clear estimates before work begins",
+            "Clean, careful workmanship in every home",
+          ],
+          cta: "More About This Concept",
+        },
+        story: {
+          title: "Built Around Respect — for Homes and for Homeowners",
+          paras: [
+            "Plumbing is personal. We're invited into your home, often on a stressful day, and asked to fix something essential. We take that seriously.",
+            "That's why every BlueLine visit follows the same rhythm: listen first, explain clearly, price upfront, work carefully, and leave the space cleaner than we found it. Whether it's a five-minute cartridge swap or a full water heater replacement, the standard doesn't change.",
+            "We focus on residential plumbing across the Austin metro because homes are what we know — from vintage bungalows with original pipework to brand-new builds in the suburbs.",
+          ],
+        },
+        values: {
+          eyebrow: "Our Values",
+          title: "The BlueLine Way",
+          items: [
+            {
+              no: "01",
+              title: "Show Up on Time",
+              body: "Your day is planned around us. We commit to arrival windows and communicate if anything shifts.",
+            },
+            {
+              no: "02",
+              title: "Explain Before We Work",
+              body: "You'll see what we see, understand the options, and approve the price before a single tool comes out.",
+            },
+            {
+              no: "03",
+              title: "Leave It Better",
+              body: "Protected floors, tidy work, and a walkthrough at the end. Your home should feel better than before we arrived.",
+            },
+          ],
+        },
+        steps: {
+          eyebrow: "The Process",
+          title: "How a Service Call Works",
+          items: [
+            {
+              no: "01",
+              title: "Call or Request Online",
+              body: "Tell us what's happening and when you're available. Emergencies get priority dispatch.",
+            },
+            {
+              no: "02",
+              title: "Assess & Quote",
+              body: "We diagnose the problem, show you what we found, and provide a clear upfront estimate.",
+            },
+            {
+              no: "03",
+              title: "Fix It Right",
+              body: "Approved work is completed carefully, tested, and walked through with you before we leave.",
+            },
+          ],
+        },
+        contactHead: {
+          eyebrow: "Contact",
+          title: "Request a Plumber in Austin, TX",
+          intro:
+            "Tell us what's going on and we'll take it from there. For active leaks or flooding, call us first so we can prioritize your visit.",
+        },
+        form: {
+          name: "Name",
+          namePlaceholder: "Your full name",
+          phone: "Phone",
+          phonePlaceholder: "(512) 555-0000",
+          email: "Email",
+          emailPlaceholder: "you@example.com",
+          service: "Service Needed",
+          serviceOption: "Select a service…",
+          otherOption: "Other / Not Sure",
+          message: "Message",
+          messagePlaceholder:
+            "Briefly describe the issue — e.g., 'Kitchen sink won't drain since last night.'",
+          submit: "Request Service",
+          fine: "Demo form — submissions are not sent or stored.",
+          successTitle: "Request Received",
+          successLead:
+            "Thanks, {name} — we've noted your request for {service}. In a live deployment, our team would reach out to confirm your visit.",
+          successDemo:
+            "This is a demonstration form; nothing was transmitted. For immediate help, call {phone}.",
+          reset: "Submit Another Request",
+        },
+        contactCards: [
+          {
+            title: "Call or Text",
+            lines: ["Fastest way to schedule or get emergency help."],
+            phone: true,
+          },
+          {
+            title: "Business Hours",
+            lines: [
+              "Monday – Saturday: 7:00 AM – 7:00 PM",
+              "Sunday: Emergency dispatch only",
+            ],
+          },
+          {
+            title: "Service Area",
+            lines: [
+              "Austin, TX and surrounding communities — Round Rock, Cedar Park, Pflugerville, Georgetown, Leander, Kyle, and Buda.",
+            ],
+          },
+          {
+            title: "24/7 Emergency Service",
+            lines: [
+              "Burst pipes and active leaks don't wait for business hours. Emergency dispatch is available around the clock.",
+            ],
+            dark: true,
+          },
+        ],
+        fictionalNote:
+          "BlueLine Plumbing is a fictional company. Contact details shown here are for demonstration only.",
+        footer: {
+          tag: "Residential plumbing services in Austin, Texas. Fast response, upfront pricing, and professional workmanship.",
+          explore: "Explore",
+          servicesTitle: "Services",
+          contactTitle: "Contact",
+          address: "Austin, TX & surrounding areas",
+          legal: "© 2026 BlueLine Plumbing. All rights reserved.",
+          demo: "BlueLine Plumbing is a fictional business created for a web design portfolio demonstration. All names, reviews, images, and contact details are illustrative.",
+        },
+        dialogs: {
+          privacy: {
+            title: "Privacy Policy",
+            paras: [
+              "This is a demonstration website for a fictional company. No personal information is collected, stored, or transmitted. Forms on this site are for visual demonstration only.",
+              "In a production deployment, this section would describe data collection, cookie usage, and contact-data handling in plain language.",
+            ],
+          },
+          terms: {
+            title: "Terms of Service",
+            paras: [
+              "This website is a portfolio demonstration featuring a fictional business, BlueLine Plumbing. Content is illustrative and does not constitute an offer of real services.",
+              "In a production deployment, this section would outline the terms governing use of the website and scheduling of services.",
+            ],
+          },
         },
       },
     },

@@ -1,106 +1,392 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { ArrowRight, Check, Droplets, Flame, MapPin, Phone } from "lucide-react";
-import type { DemoProps } from "./_shared";
 import {
+  ArrowRight,
+  Award,
+  Check,
+  ChevronsLeftRight,
+  Clock,
+  Droplet,
+  Gauge,
+  House,
+  MapPin,
+  Phone,
+  Search,
+  ShieldCheck,
+  ShowerHead,
+  Siren,
+  Tag,
+  ThermometerSun,
+  Toilet,
+  Waves,
+  Wrench,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+import type { Project } from "@/lib/data";
+import {
+  DEMO_NOTE,
   DemoBadge,
+  DemoBackLink,
   DemoFaq,
-  DemoFooter,
   DemoHeading,
   DemoImage,
   DemoMobileMenu,
   DemoNav,
-  DemoStickyCta,
   DemoVars,
   useDemoAnchors,
   type DemoNavItem,
+  type DemoProps,
 } from "./_shared";
 
-/* 02 — FlowRight Plumbing: plumbing AND heating, on one page, for two entirely
-   different visitors.
+/* 01 — BlueLine Plumbing: Austin residential plumbing, one scrolling page.
 
-   The composition follows that split rather than a template. Someone with water
-   where it should not be gets the number at signage size and three quick picks
-   that write the job into the form for them; someone planning a bathroom or a
-   boiler gets a service ledger grouped by the kind of call, a heating section in
-   the palette's warm colour, and a quote request that validates what it asks for
-   before it claims anything.
+   The design, the layout and the copy of this concept were supplied as a finished
+   reference site, so this file rebuilds that reference rather than inventing a
+   direction: the navy strip and sticky header, a split hero with the number under
+   it, a service ticker, four trust tiles, the nine services twice (once as a grid,
+   once in full beside a sticky hours card), before/after plates you can drag, a
+   coverage map drawn as artwork instead of an embedded tile layer, and a form that
+   reads back what was typed and then says plainly that nothing left the browser.
 
-   Type is Barlow Condensed over Barlow — van lettering, not a serif — and the
-   only two colours doing work are cold-water blue for action and amber for heat.
-   No rates, insurance claims, response guarantees or coverage promises are
-   invented; the four sections that would normally carry them each say why they
-   do not. */
+   The reference is five views behind a hash router. A demo must never navigate
+   away from the page it is embedded on, so those five views became five anchored
+   bands of one page and each view's heading was carried into the data as the
+   standfirst over its band. Nothing was dropped — only reached by scrolling
+   instead of by routing.
+
+   Copper marks heat and urgency, blue does the asking. Where a literal colour is
+   painted it is the concept's own from the reference (`#0b2135`, `#9e4f1b`,
+   `#4da3ff`), never one invented here; everything else reads a `--d-*` token. */
+
+type Blueline = NonNullable<NonNullable<Project["content"]>["blueline"]>;
+type BaPair = Blueline["beforeAfter"]["pairs"][number];
+type Place = Blueline["areas"]["places"][number];
+
+/* Icons are held by position, not by name, so a service renamed in the data
+   cannot quietly borrow another service's tool. Every call site falls back to the
+   wrench rather than rendering nothing. */
+const SERVICE_ICONS: LucideIcon[] = [
+  Siren, // Emergency Plumbing
+  Waves, // Drain Cleaning
+  ThermometerSun, // Water Heater Repair
+  Gauge, // Water Heater Installation
+  Search, // Leak Detection
+  Wrench, // Sewer Line Repair
+  ShowerHead, // Faucet and Fixture Repair
+  Toilet, // Toilet Repair
+  Droplet, // Pipe Repair
+];
+const TRUST_ICONS: LucideIcon[] = [ShieldCheck, Zap, Tag, Award];
+const WHY_ICONS: LucideIcon[] = [MapPin, Clock, Tag, House];
+const CONTACT_ICONS: LucideIcon[] = [Phone, Clock, MapPin, Siren];
+
+const container = "mx-auto w-full max-w-[1224px] px-[22px]";
+const btn =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] px-[22px] text-[15px] font-semibold transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]";
+const blueBtn = `${btn} bg-[var(--d-accent)] text-white hover:bg-[#0c4a9e]`;
+const copperBtn = `${btn} bl-fill-copper hover:bg-[#8a4416]`;
+const outlineBtn = `${btn} border-[1.5px] border-[var(--d-line-strong)] text-[var(--d-fg)] hover:border-[var(--d-accent)] hover:text-[var(--d-accent)]`;
+const lightBtn = `${btn} border-[1.5px] border-white/40 text-white hover:bg-white/10`;
+const smallBtn = "min-h-11 gap-1.5 rounded-lg px-4 text-[14px] font-semibold";
+const card = "rounded-2xl border border-[var(--d-line)] bg-[var(--d-card)]";
+const field =
+  "min-h-11 w-full rounded-[10px] border border-[var(--d-line-strong)] bg-[var(--d-field)] px-3.5 text-[15px] text-[var(--d-fg)] placeholder:text-[var(--d-muted)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--d-accent)]";
+const fieldLabel = "mb-1.5 block text-[13px] font-semibold text-[var(--d-body)]";
+const bandTitle =
+  "mt-4 font-display text-[clamp(1.7rem,5cqi,2.6rem)] font-extrabold leading-[1.12] tracking-[-0.02em] text-balance text-[var(--d-fg)]";
+
+function Eyebrow({
+  children,
+  center = false,
+  tone = "light",
+}: {
+  children: React.ReactNode;
+  center?: boolean;
+  tone?: "light" | "dark";
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-3 text-[12.5px] font-bold uppercase tracking-[0.16em] ${
+        tone === "dark" ? "text-[#7fbdf5]" : "text-[var(--d-accent)]"
+      } ${center ? "justify-center" : ""}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`h-0.5 w-[26px] shrink-0 rounded-full bg-[var(--d-accent-2)] ${center ? "invisible" : ""}`}
+      />
+      {children}
+    </span>
+  );
+}
+
+/* The live dot beside "Emergency line open". Its resting state is the plain dot
+   the ping grows out of, so a visitor who asked for no motion sees the same mark. */
+function PulseDot() {
+  return (
+    <span
+      aria-hidden="true"
+      className="bl-pulse relative inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-[#4cc38a]"
+    />
+  );
+}
+
+/* A draggable before/after plate: one number, `--p`, drives the clipped
+   photograph, the white rule and the grip (see `.bl-ba` in globals.css), so the
+   three can never disagree about where the cut lands.
+
+   Each photograph goes into its own absolutely-positioned box rather than taking
+   `absolute inset-0` on `DemoImage` directly, because that component already sets
+   `relative` on its wrapper and two position utilities on one element are settled
+   by stylesheet order, not by the order the classes were written.
+
+   The reference pinned the plate against vertical scrolling while you dragged
+   (`touch-action: none`). Inside a scrollable device frame that would trap the
+   page, so a finger can still scroll away here; the slider answers horizontal
+   drags and the arrow keys answer everyone else. */
+function BaPlate({ pair, sizes }: { pair: BaPair; sizes: string }) {
+  const [pos, setPos] = useState(55);
+  return (
+    <figure className="m-0">
+      <div
+        className="bl-ba aspect-[4/3.4] w-full overflow-hidden rounded-2xl border border-[var(--d-line)]"
+        style={{ "--p": pos / 100 } as React.CSSProperties}
+      >
+        <div className="absolute inset-0">
+          <DemoImage src={pair.after} alt={pair.afterAlt} sizes={sizes} className="h-full w-full" />
+        </div>
+        <div className="bl-ba-before absolute inset-0">
+          <DemoImage
+            src={pair.before}
+            alt={pair.beforeAlt}
+            sizes={sizes}
+            className="h-full w-full"
+          />
+        </div>
+        <span className="absolute left-3 top-3 rounded-md bg-[#0b2135]/85 px-2 py-1 text-[12px] font-bold uppercase tracking-[0.12em] text-white">
+          Before
+        </span>
+        <span className="absolute right-3 top-3 rounded-md bg-[var(--d-accent)] px-2 py-1 text-[12px] font-bold uppercase tracking-[0.12em] text-white">
+          After
+        </span>
+        <span className="bl-ba-line" aria-hidden="true" />
+        <input
+          className="bl-ba-range"
+          type="range"
+          min={0}
+          max={100}
+          step={1}
+          value={pos}
+          onChange={(e) => setPos(Number(e.target.value))}
+          aria-label={pair.slider}
+        />
+        <span className="bl-ba-grip" aria-hidden="true">
+          <ChevronsLeftRight className="h-5 w-5" strokeWidth={2.4} />
+        </span>
+      </div>
+      <figcaption className="mt-3 text-[14px] leading-relaxed text-[var(--d-body)]">
+        {pair.caption}
+      </figcaption>
+    </figure>
+  );
+}
+
+/* The coverage map is drawn, not embedded: a real tile layer would need a network
+   call, a consent notice and a viewport it does not have inside a device frame.
+   The dots, the labels and the pulse all read the same `areas.places` list that
+   feeds the chips and the per-city cards, so a town cannot be on the map and
+   missing from the page.
+
+   Type is set large in the artwork's own units because the 640-unit-wide drawing
+   is scaled to the container: at 390px the SVG renders at 0.59x, and a 24-unit
+   label still lands above 12 real pixels. */
+function AreaMap({ places, aria, uid }: { places: Place[]; aria: string; uid: string }) {
+  const roads = ["M126 6v548", "M470 6v548", "M6 132h628", "M6 430h628"];
+  return (
+    <svg
+      viewBox="0 0 640 560"
+      role="img"
+      aria-label={aria}
+      className="h-auto w-full rounded-2xl border border-[var(--d-line)]"
+      style={{ background: "#eef4fa" }}
+    >
+      <defs>
+        <pattern id={`${uid}-grid`} width="32" height="32" patternUnits="userSpaceOnUse">
+          <path d="M32 0H0v32" fill="none" stroke="#dbe6f1" strokeWidth="1" />
+        </pattern>
+      </defs>
+      <rect width="640" height="560" fill={`url(#${uid}-grid)`} />
+      <ellipse
+        cx="312"
+        cy="272"
+        rx="188"
+        ry="242"
+        style={{ fill: "var(--d-accent)" }}
+        opacity="0.07"
+      />
+      {roads.map((d) => (
+        <path key={d} d={d} fill="none" stroke="#d3e0ee" strokeWidth="2" strokeDasharray="10 12" />
+      ))}
+      <path
+        d="M244 0c16 96-26 146-9 226 13 70 60 102 47 178-9 56-36 92-24 156"
+        fill="none"
+        stroke="#bcd8f0"
+        strokeWidth="11"
+        strokeLinecap="round"
+      />
+      {places.map((p) =>
+        p.hub ? (
+          <circle
+            key={`ring-${p.name}`}
+            className="bl-map-pulse"
+            cx={p.dot.x}
+            cy={p.dot.y}
+            r="30"
+            fill="none"
+            strokeWidth="3"
+            style={{ stroke: "var(--d-accent)" }}
+            opacity="0.5"
+          />
+        ) : null,
+      )}
+      {places.map((p) => (
+        <circle
+          key={`dot-${p.name}`}
+          cx={p.dot.x}
+          cy={p.dot.y}
+          r={p.hub ? 12 : 8}
+          fill="#fff"
+          strokeWidth={p.hub ? 5 : 4}
+          style={{ stroke: "var(--d-accent)" }}
+        />
+      ))}
+      {places.map((p) => (
+        <text
+          key={`label-${p.name}`}
+          x={p.dot.tx}
+          y={p.dot.ty}
+          textAnchor={p.dot.anchor}
+          fontSize={p.hub ? 32 : 24}
+          fontWeight={p.hub ? 800 : 600}
+          fill="#0e1c2b"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {p.name}
+        </text>
+      ))}
+      <g transform="translate(578 54)" aria-hidden="true">
+        <circle r="22" fill="#fff" stroke="#d3e0ee" strokeWidth="2" />
+        <path d="M0-14 5 2 0-2-5 2Z" fill="#c2672e" />
+        <text y="18" textAnchor="middle" fontSize="16" fontWeight="700" fill="#5c6f83">
+          N
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+/* The wordmark is the reference's own: a rounded plate, a W from one rounded
+   stroke, a copper dot. It runs on the page's light header and on the navy
+   footer, which need opposite plate and stroke colours, so `tone` picks between
+   the two pairs the reference ships. */
+function BrandMark({ tone = "light" }: { tone?: "light" | "dark" }) {
+  return (
+    <svg viewBox="0 0 40 40" aria-hidden="true" className="h-11 w-11 shrink-0">
+      <rect width="40" height="40" rx="9" fill={tone === "light" ? "#0b2135" : "#1160c9"} />
+      <path
+        d="M11 8h8a6 6 0 0 1 6 6 6 6 0 0 1-6 6h-3v12h-5z"
+        fill="none"
+        stroke={tone === "light" ? "#4da3ff" : "#ffffff"}
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <circle cx="27" cy="27" r="4" className="fill-[var(--d-accent-2)]" />
+    </svg>
+  );
+}
+
+function Wordmark({ b, tone = "light" }: { b: Blueline["brand"]; tone?: "light" | "dark" }) {
+  return (
+    <span className="font-display leading-[1.04]">
+      <strong
+        className={`block text-[20px] font-extrabold tracking-[-0.015em] ${
+          tone === "light" ? "text-[var(--d-fg)]" : "bl-ink-hi"
+        }`}
+      >
+        {b.lead}
+        <span className={tone === "light" ? "text-[var(--d-accent)]" : "text-[#7fbdf5]"}>
+          {b.accent}
+        </span>
+      </strong>
+      <small
+        className={`mt-0.5 block text-[12.5px] font-semibold uppercase tracking-[0.18em] ${
+          tone === "light" ? "text-[var(--d-accent-text)]" : "text-[#e8a06a]"
+        }`}
+      >
+        {b.sub}
+      </small>
+    </span>
+  );
+}
 
 export default function PlumberDemo({ project, preview }: DemoProps) {
   const anchor = useDemoAnchors();
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  const [callNote, setCallNote] = useState(false);
-  const [job, setJob] = useState("");
-  const [quote, setQuote] = useState<Record<string, string> | null>(null);
-  const [areaQuery, setAreaQuery] = useState("");
-  const [areaAnswer, setAreaAnswer] = useState<string | null>(null);
-  const success = useRef<HTMLHeadingElement>(null);
-
   const c = project.content;
-  const h = c?.home;
-  const phone = c?.phone;
-  const callHref = preview ? undefined : phone?.href;
-  const askCall = () => setCallNote((v) => !v);
+  const b = c?.blueline;
 
-  /* The confirmation is moved to, not just shown: a keyboard or screen-reader
-     visitor who pressed send should land on the answer, not stay on the button
-     they just pressed. An effect runs on the commit that renders it, so a
-     backgrounded tab still gets the focus. */
+  const [callNote, setCallNote] = useState(false);
+  const [legal, setLegal] = useState<null | "privacy" | "terms">(null);
+  const [name, setName] = useState("");
+  const [phoneValue, setPhoneValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [service, setService] = useState("");
+  const [message, setMessage] = useState("");
+  const [problem, setProblem] = useState<string[]>([]);
+  const [sent, setSent] = useState<{ name: string; service: string } | null>(null);
+  const okRef = useRef<HTMLDivElement>(null);
+  const legalRef = useRef<HTMLDivElement>(null);
+
+  /* Focus follows the result, the way it would after a real page changed. Both
+     effects read and move focus only — neither sets state, which the lint rules
+     forbid inside an effect body here. */
   useEffect(() => {
-    if (quote) success.current?.focus();
-  }, [quote]);
+    if (sent) okRef.current?.focus();
+  }, [sent]);
 
-  /* A quick pick writes the job and moves the form into view. It deliberately does
-     not move focus: the select is one control inside a section the visitor needs to
-     see whole, and focusing it would scroll somewhere other than the heading. */
-  const pickJob = (title: string) => {
-    setJob(title);
-    setQuote(null);
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.getElementById(anchor.id("quote"))?.scrollIntoView({
-      behavior: reduced ? "auto" : "smooth",
-      block: "start",
-    });
+  useEffect(() => {
+    if (legal) legalRef.current?.focus();
+  }, [legal]);
+
+  /* This layout IS the BlueLine one-pager: without its copy block, its number, its
+     main ask or its emergency band there is nothing on screen to draw. */
+  if (!c || !b || !c.phone || !c.emergency || !c.hero || !c.ctaPrimary) return null;
+
+  const phone = c.phone;
+  const emergency = c.emergency;
+  const hero = c.hero;
+  const f = b.form;
+  const services = c.services ?? [];
+  const details = b.serviceDetails;
+  const places = b.areas.places;
+  const trust = c.trustChips ?? [];
+  const faqs = c.faqs ?? [];
+  const jobOptions = [...details.map((d) => d.title), f.otherOption];
+  const missingLabels: Record<string, string> = {
+    name: f.name,
+    phone: f.phone,
+    service: f.service,
   };
 
-  const card = "rounded-2xl border border-[var(--d-line)] bg-[var(--d-card)] shadow-[var(--d-shadow)]";
-  const label = "font-mono text-[12px] uppercase tracking-[0.14em]";
-  const field =
-    "min-h-11 w-full rounded-xl border border-[var(--d-line-strong)] bg-[var(--d-field)] px-3 text-[14px] text-[var(--d-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]";
-  const solid =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--d-accent)] px-5 font-display text-[15px] font-extrabold text-[var(--d-on-accent)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-fg)]";
-  const quiet =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-[var(--d-fg)] px-5 font-display text-[15px] font-extrabold text-[var(--d-fg)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]";
+  /* A dialling link is only safe once the visitor is on the concept's own page.
+     Inside a device frame it would tear the visitor off the portfolio, so the very
+     same control becomes a button that answers honestly instead. */
+  const callHref = preview ? undefined : phone.href;
+  const askCall = () => setCallNote(true);
 
-  if (!c || !h) return null;
-
-  const areas = c.areas;
-  const places = areas?.zones.flatMap((z) => z.places) ?? [];
-  const jobs = h.groups.flatMap((g) => g.items.map((i) => i.title));
-  const proc = c.process;
-  const procSteps = proc?.steps ?? [];
-
-  const navItems: DemoNavItem[] = [
-    ["Services", "services"],
-    ["Heating", "heating"],
-    ["Get a quote", "quote"],
-    ["Areas", "areas"],
-    ["FAQ", "faq"],
-  ];
-
-  /* One decision, made once: on the concept's own page every number is a live
-     dial; inside a device frame it becomes a button that answers honestly, because
-     a `tel:` link would pull the visitor off the page they are looking at. */
-  const asCall = (className: string, children: React.ReactNode) => {
-    if (!phone) return null;
-    return callHref ? (
+  const asCall = (className: string, children: React.ReactNode) =>
+    callHref ? (
       <a href={callHref} className={className}>
         {children}
       </a>
@@ -109,874 +395,1052 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
         {children}
       </button>
     );
+
+  const goTo = (section: string) => {
+    const el = document.getElementById(anchor.id(section));
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   };
 
-  const callButton = (children: React.ReactNode, className = "", tone: "accent" | "amber" | "ink" = "accent") =>
-    asCall(
-      `inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-display font-extrabold transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 ${
-        tone === "ink"
-          ? "bg-[var(--d-fg)] text-[var(--d-bg)] focus-visible:outline-[var(--d-accent)]"
-          : tone === "amber"
-            ? "bg-[var(--d-accent-2)] text-[var(--d-fg)] focus-visible:outline-[var(--d-bg)]"
-            : "bg-[var(--d-accent)] text-[var(--d-on-accent)] focus-visible:outline-[var(--d-bg)]"
-      } ${className}`,
-      <>
-        <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
-        {children}
-      </>,
-    );
-
-  const checkArea = () => {
-    const q = areaQuery.trim().toLowerCase();
-    if (!q) {
-      setAreaAnswer(h.areaCheck.blank);
-      return;
-    }
-    const found =
-      places.find((p) => p.toLowerCase() === q) ??
-      places.find((p) => {
-        const n = p.toLowerCase();
-        return n.includes(q) || q.includes(n);
-      });
-    setAreaAnswer(
-      (found ? h.areaCheck.hit : h.areaCheck.miss).replace("{place}", found ?? areaQuery.trim()),
-    );
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const missing = [
+      !name.trim() && "name",
+      !phoneValue.trim() && "phone",
+      !service && "service",
+    ].filter((key): key is string => typeof key === "string");
+    setProblem(missing);
+    if (missing.length > 0) return;
+    setSent({ name: name.trim(), service });
   };
+
+  const reset = () => {
+    setSent(null);
+    setName("");
+    setPhoneValue("");
+    setEmail("");
+    setService("");
+    setMessage("");
+    setProblem([]);
+  };
+
+  /* "Request this service" can only ever name a real option, because the select is
+     built from the same list these buttons take their labels from. It writes the
+     field and scrolls the form into view; it does not claim a booking. */
+  const requestService = (title: string) => {
+    setService(title);
+    setSent(null);
+    setProblem((p) => p.filter((k) => k !== "service"));
+    goTo("contact");
+  };
+
+  const navItems: DemoNavItem[] = [
+    ["Home", "top"],
+    ["Services", "details"],
+    ["About", "about"],
+    ["Service Areas", "areas"],
+    ["Contact", "contact"],
+  ];
+
+  const lead = sent
+    ? f.successLead.replace("{name}", sent.name).replace("{service}", sent.service)
+    : "";
+  const demoLine = sent ? f.successDemo.replace("{phone}", phone.display) : "";
 
   return (
     <DemoVars project={project}>
-      {/* Availability strip — the answer to "will anyone actually pick up". */}
-      <div className="bg-[var(--d-fg)] px-4 py-2 @5xl:px-8">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-center @3xl:justify-between @3xl:text-left">
-          <p className="flex items-center gap-2 text-[12px] font-semibold text-[var(--d-bg)]">
-            <span
-              aria-hidden="true"
-              className="h-2 w-2 shrink-0 rounded-full bg-[var(--d-accent-2)]"
-            />
-            {c.availability}
+      <div id={anchor.id("top")} className="font-sans text-[15.5px] leading-[1.65]">
+        {/* --- Top strip: the coverage line and the number, before anything --- */}
+        <div className="bl-band hidden @4xl:block">
+          <div
+            className={`${container} flex min-h-10 items-center justify-between gap-4 text-[13px]`}
+          >
+            <span className="bl-ink inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4 shrink-0 text-[#4da3ff]" aria-hidden="true" />
+              {b.topbarNote}
+            </span>
+            <span className="bl-ink inline-flex items-center gap-2">
+              <Clock className="h-4 w-4 shrink-0 text-[#4da3ff]" aria-hidden="true" />
+              <span className="hidden @5xl:inline">{c.availability} · </span>
+              {asCall(
+                "inline-flex min-h-11 items-center font-semibold text-[#eaf2f9] underline-offset-4 hover:underline",
+                phone.display,
+              )}
+            </span>
+          </div>
+        </div>
+
+        {/* --- Header --- */}
+        <header className="sticky top-0 z-30 border-b border-[var(--d-line)] bg-[var(--d-bg)]/94 backdrop-blur">
+          <div className={`${container} flex min-h-[78px] items-center justify-between gap-6`}>
+            <span className="flex items-center gap-3">
+              <BrandMark />
+              <Wordmark b={b.brand} />
+            </span>
+            <DemoNav anchor={anchor} items={navItems} className="text-[15px] font-semibold" />
+            <span className="flex items-center gap-3">
+              {asCall(
+                `${blueBtn} shrink-0 gap-2 px-[16px] @5xl:px-5`,
+                <>
+                  <Phone className="h-[17px] w-[17px]" aria-hidden="true" />
+                  <span className="hidden @5xl:inline">{phone.display}</span>
+                  <span className="sr-only">{phone.label}</span>
+                </>,
+              )}
+              <DemoMobileMenu
+                anchor={anchor}
+                items={navItems}
+                action={[c.ctaPrimary, "contact"]}
+              />
+            </span>
+          </div>
+        </header>
+
+        {/* The honest reply to a number that cannot be dialled from a frame. */}
+        {callNote && !callHref && (
+          <p
+            role="status"
+            className={`${container} mt-3 rounded-xl border border-[var(--d-line)] bg-[var(--d-soft)] px-4 py-3 text-[13px] leading-relaxed text-[var(--d-body)]`}
+          >
+            {DEMO_NOTE}
           </p>
-          {phone && callButton(phone.display, "px-3 text-[13px]", "amber")}
-        </div>
-      </div>
+        )}
 
-      <header className="sticky top-0 z-20 border-b border-[var(--d-line)] bg-[var(--d-bg)]/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5 @5xl:px-8">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[10px] bg-[var(--d-fg)] font-display text-[16px] font-extrabold text-[var(--d-bg)]">
-              {c.logoLetter}
-            </span>
-            <span className="min-w-0 leading-none">
-              <span className="block truncate font-display text-[19px] font-extrabold uppercase tracking-tight">
-                {c.navName}
-              </span>
-              <span className={`${label} mt-1 block truncate text-[var(--d-muted)]`}>
-                Plumbing &amp; heating
-              </span>
-            </span>
-          </div>
-
-          <DemoNav
-            anchor={anchor}
-            items={navItems}
-            className="gap-5 font-display font-bold uppercase tracking-wide"
-          />
-
-          <div className="flex shrink-0 items-center gap-2">
-            {phone && (
-              <span className="hidden @3xl:inline-flex">
-                {callButton(phone.display, "px-4 text-[14px]", "ink")}
-              </span>
-            )}
-            {phone && (
-              <span className="inline-flex @3xl:hidden">
-                {callButton(<span className="sr-only">{phone.label}</span>, "w-11 px-0", "ink")}
-              </span>
-            )}
-            <a
-              href={anchor.href("quote")}
-              className={`${solid} hidden text-[14px] @3xl:inline-flex`}
-            >
-              {c.ctaPrimary}
-            </a>
-            <DemoMobileMenu
-              anchor={anchor}
-              items={navItems}
-              action={[c.ctaPrimary ?? "", "quote"]}
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* The honest reply to a number that cannot be dialled from a frame. */}
-      {callNote && (
-        <p
-          role="status"
-          className="border-b border-[var(--d-line)] bg-[var(--d-soft)] px-4 py-2 text-center text-[12px] leading-relaxed text-[var(--d-body)] @5xl:px-8"
-        >
-          {c.emergency?.note ?? "Concept site: this is a fictional business."}
-        </p>
-      )}
-
-      {/* Hero — the ask and the number on the left, the work on the right. */}
-      <section className="border-b border-[var(--d-line)] bg-[var(--d-soft)]">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 pt-10 pb-12 @3xl:pt-14 @3xl:pb-16 @5xl:grid-cols-[1.12fr_0.88fr] @5xl:items-end @5xl:gap-14 @5xl:px-8 @5xl:pt-16 @5xl:pb-20">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <DemoBadge />
-              <span className={`${label} text-[var(--d-muted)]`}>{h.heroKicker}</span>
-            </div>
-
-            <DemoHeading
-              preview={preview}
-              className="mt-5 font-display text-[2.5rem] leading-[0.98] font-extrabold tracking-tight @3xl:text-[3.25rem] @5xl:text-[3.9rem]"
-            >
-              {c.headline}{" "}
-              <span className="text-[var(--d-accent-text)]">{c.headlineAccent}</span>
-            </DemoHeading>
-
-            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-[var(--d-body)] @3xl:text-[16px]">
-              {c.intro}
-            </p>
-
-            {/* The number is the hero's real call to action on a call-first site, so
-                it is set as one instead of hidden inside a button. */}
-            {phone && (
-              <div className="mt-8 border-l-4 border-[var(--d-accent-2)] pl-4">
-                <p className={`${label} text-[var(--d-muted)]`}>Emergency line</p>
-                {asCall(
-                  "mt-1 inline-flex min-h-11 items-center font-display text-[2.15rem] leading-none font-extrabold tracking-tight text-[var(--d-fg)] underline decoration-[var(--d-accent)] decoration-4 underline-offset-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--d-accent)] @5xl:text-[2.7rem]",
-                  phone.display,
+        <main>
+          {/* --- Hero: the ask, the number, the proof --- */}
+          <section className={`${container} demo-reveal py-12 @3xl:py-16 @5xl:py-20`}>
+            <div className="grid items-center gap-10 @5xl:grid-cols-[1.04fr_0.96fr] @5xl:gap-12">
+              <div>
+                <Eyebrow>{b.heroEyebrow}</Eyebrow>
+                <DemoHeading
+                  preview={preview}
+                  className="mt-4 font-display text-[clamp(2.1rem,7.6cqi,4.05rem)] font-extrabold leading-[1.05] tracking-[-0.025em] text-balance text-[var(--d-fg)]"
+                >
+                  {c.headline} <span className="text-[var(--d-accent)]">{c.headlineAccent}</span>
+                </DemoHeading>
+                <p className="mt-5 max-w-[560px] text-[17px] leading-relaxed text-[var(--d-body)]">
+                  {c.intro}
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <button type="button" className={blueBtn} onClick={() => goTo("contact")}>
+                    {c.ctaPrimary}
+                    <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                  </button>
+                  {asCall(
+                    outlineBtn,
+                    <>
+                      <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
+                      {c.ctaSecondary}
+                    </>,
+                  )}
+                </div>
+                <div className="mt-8 border-t border-[var(--d-line)] pt-6">
+                  <p className="text-[12.5px] font-semibold uppercase tracking-[0.14em] text-[var(--d-muted)]">
+                    {b.heroPhoneNote}
+                  </p>
+                  {asCall(
+                    "mt-1 inline-flex min-h-11 items-center font-display text-[clamp(1.6rem,4.4cqi,2.15rem)] font-extrabold tracking-[-0.02em] text-[var(--d-accent-text)] underline decoration-[var(--d-accent)]/40 decoration-2 underline-offset-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--d-accent)]",
+                    phone.display,
+                  )}
+                  <p className="mt-1 text-[14px] text-[var(--d-body)]">{c.availability}</p>
+                </div>
+                {trust.length > 0 && (
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {trust.map((t) => (
+                      <li
+                        key={t}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[var(--d-line)] bg-[var(--d-card)] px-3 py-1.5 text-[13px] font-semibold text-[var(--d-body)]"
+                      >
+                        <Check className="h-4 w-4 shrink-0 text-[var(--d-accent)]" aria-hidden="true" />
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
-            )}
 
-            <div className="mt-8 flex flex-col gap-3 @3xl:flex-row">
-              <a href={anchor.href("quote")} className={`${solid} w-full @3xl:w-auto`}>
-                {c.ctaPrimary}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <a href={anchor.href("services")} className={`${quiet} w-full @3xl:w-auto`}>
-                {c.ctaSecondary}
-              </a>
-            </div>
-
-            {/* Qualitative facts, set as a rule-separated line rather than a row of
-                pills: nothing here is a count, year or rating to invent. */}
-            {c.trustChips && c.trustChips.length > 0 && (
-              <ul className="mt-8 flex flex-col gap-2 border-t border-[var(--d-line)] pt-5 text-[13px] font-semibold text-[var(--d-body)] @3xl:flex-row @3xl:flex-wrap @3xl:gap-x-6">
-                {c.trustChips.map((chip) => (
-                  <li key={chip} className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--d-accent-text)]" aria-hidden="true" />
-                    {chip}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {c.hero && (
-            <figure className="relative mx-auto w-full max-w-md @5xl:max-w-none">
-              <DemoImage
-                src={c.hero.src}
-                alt={c.hero.alt}
-                preload={!preview}
-                sizes="(min-width: 64rem) 34rem, (min-width: 48rem) 46vw, 100vw"
-                className="aspect-[4/5] w-full rounded-[22px] shadow-[var(--d-shadow)] @5xl:aspect-[4/4.4]"
-              />
-              {c.imageSource && (
-                <figcaption className={`mt-3 text-[12px] leading-relaxed text-[var(--d-muted)]`}>
-                  {c.imageSource}
-                </figcaption>
-              )}
-            </figure>
-          )}
-        </div>
-
-        {/* Quick picks — the fastest route from a symptom to a filled form. */}
-        <div className="border-t border-[var(--d-line)] bg-[var(--d-bg)]">
-          <div className="mx-auto max-w-6xl px-4 py-5 @5xl:px-8">
-            <p className={`${label} text-[var(--d-muted)]`}>Already know what is wrong?</p>
-            <div className="mt-3 grid gap-px overflow-hidden rounded-2xl bg-[var(--d-line)] @3xl:grid-cols-3">
-              {h.quickPicks.map((pick) => (
-                <button
-                  key={pick.label}
-                  type="button"
-                  onClick={() => pickJob(pick.job)}
-                  className="group flex min-h-11 flex-col items-start gap-0.5 bg-[var(--d-bg)] px-4 py-4 text-left transition-colors hover:bg-[var(--d-hover)] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--d-accent)] @3xl:px-5"
+              <div className="relative">
+                <div className="relative overflow-hidden rounded-[20px] border border-[var(--d-line)]">
+                  <DemoImage
+                    src={hero.src}
+                    alt={hero.alt}
+                    sizes="(min-width: 1024px) 620px, 92vw"
+                    preload={!preview}
+                    className="aspect-[4/3.3] w-full @5xl:aspect-[4/4.3]"
+                    imgClassName="demo-ken-burns"
+                  />
+                  <span className="absolute left-4 top-4 rounded-lg bg-[#0b2135]/85 px-3 py-1.5 text-[12.5px] font-bold uppercase tracking-[0.12em] text-white">
+                    {b.heroBadge}
+                  </span>
+                </div>
+                <div
+                  className={`${card} mt-4 p-5 shadow-[var(--d-shadow)] @5xl:absolute @5xl:bottom-8 @5xl:-left-8 @5xl:mt-0 @5xl:max-w-[330px]`}
                 >
-                  <span className="font-display text-[17px] font-extrabold tracking-tight">
-                    {pick.label}
-                  </span>
-                  <span className="text-[13px] text-[var(--d-body)]">{pick.detail}</span>
-                  <span className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-[var(--d-accent-text)]">
-                    Start a quote
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </button>
+                  <p className="inline-flex items-center gap-2.5 text-[12.5px] font-bold uppercase tracking-[0.14em] text-[#2e7d5b]">
+                    <PulseDot />
+                    {b.hoursCard.status}
+                  </p>
+                  <p className="mt-2 font-display text-[19px] font-bold leading-snug text-[var(--d-fg)]">
+                    {b.heroStatus.title}
+                  </p>
+                  <p className="mt-1 text-[14px] leading-relaxed text-[var(--d-body)]">
+                    {b.heroStatus.body}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* --- Ticker: the same services, kept moving under the hero --- */}
+          <div
+            className="marquee border-y border-[var(--d-line)] bg-[var(--d-soft)] py-3.5"
+            aria-hidden="true"
+          >
+            <div className="marquee-track">
+              {[...b.ticker, ...b.ticker].map((t, i) => (
+                <span
+                  key={`${t}-${i}`}
+                  className="flex items-center gap-8 whitespace-nowrap pr-8 text-[13px] font-bold uppercase tracking-[0.14em] text-[var(--d-body)]"
+                >
+                  {t}
+                  <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-[var(--d-accent-2)]" />
+                </span>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Emergency band — ink ground, amber rule, one blue action. */}
-      {c.emergency && (
-        <section className="border-y-4 border-[var(--d-accent-2)] bg-[var(--d-fg)] px-4 py-10 @5xl:px-8">
-          <div className="mx-auto flex max-w-6xl flex-col gap-5 @3xl:flex-row @3xl:items-center @3xl:justify-between">
-            <div className="max-w-xl">
-              <h2 className="font-display text-[1.5rem] leading-tight font-extrabold tracking-tight text-[var(--d-bg)] @3xl:text-[1.85rem]">
-                {c.emergency.title}
-              </h2>
-              <p className="mt-2 text-[14px] leading-relaxed text-[var(--d-bg)]">{c.emergency.body}</p>
+          {/* --- Four reasons, each one cell of a single ruled block --- */}
+          <section className={`${container} demo-reveal py-14 @4xl:py-20`}>
+            <div className="grid border-l border-t border-[var(--d-line)] @xl:grid-cols-2 @4xl:grid-cols-4">
+              {b.trust.map((t, i) => {
+                const Icon = TRUST_ICONS[i] ?? ShieldCheck;
+                return (
+                  <div key={t.title} className="border-b border-r border-[var(--d-line)] p-6 @4xl:p-7">
+                    <span
+                      aria-hidden="true"
+                      className="inline-grid h-12 w-12 place-items-center rounded-xl bg-[#0b2135] text-[#4da3ff]"
+                    >
+                      <Icon className="h-6 w-6" />
+                    </span>
+                    {/* No band heading sits above this grid, so the tiles are the
+                        section's own headings — an h3 here would skip a level on the
+                        concept's standalone page. */}
+                    <h2 className="mt-4 font-display text-[19px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
+                      {t.title}
+                    </h2>
+                    <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--d-body)]">{t.body}</p>
+                  </div>
+                );
+              })}
             </div>
-            <div className="shrink-0">
-              {phone && callButton(c.emergency.callLabel, "w-full px-6 text-[15px] @3xl:w-auto")}
-              <p className="mt-2 max-w-[19rem] text-[12px] leading-relaxed text-[var(--d-bg)] @3xl:text-right">
-                {c.emergency.note}
-              </p>
+          </section>
+
+          {/* --- Services, the short version --- */}
+          <section
+            id={anchor.id("services")}
+            className="scroll-mt-[96px] bg-[var(--d-soft)] py-14 @4xl:py-20"
+          >
+            <div className={`${container} demo-reveal`}>
+              <div className="max-w-[680px]">
+                <Eyebrow>{c.servicesEyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{c.servicesTitle}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.servicesIntro}</p>
+              </div>
+              <div className="mt-10 grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
+                {services.map((s, i) => {
+                  const Icon = SERVICE_ICONS[i] ?? Wrench;
+                  return (
+                    <article key={s.title} className={`${card} flex flex-col p-6`}>
+                      <span
+                        aria-hidden="true"
+                        className="inline-grid h-[50px] w-[50px] place-items-center rounded-xl bg-[#0b2135] text-[#4da3ff]"
+                      >
+                        <Icon className="h-6 w-6" />
+                      </span>
+                      <h3 className="mt-4 font-display text-[19px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
+                        {s.title}
+                      </h3>
+                      <p className="mt-2 flex-1 text-[14.5px] leading-relaxed text-[var(--d-body)]">{s.body}</p>
+                      <button
+                        type="button"
+                        onClick={() => goTo(`detail-${i}`)}
+                        className={`${outlineBtn} ${smallBtn} mt-4 self-start`}
+                      >
+                        Details
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </article>
+                  );
+                })}
+              </div>
+              <div className="mt-8">
+                <button type="button" className={blueBtn} onClick={() => goTo("details")}>
+                  {b.viewAll}
+                  <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
 
-      {/* Services — a ledger in three kinds of call, not a grid of equal cards. */}
-      <section
-        id={anchor.id("services")}
-        className="scroll-mt-28 px-4 py-14 @5xl:mx-auto @5xl:max-w-6xl @5xl:px-8 @5xl:py-20"
-      >
-        <div className="max-w-2xl">
-          <p className={`${label} text-[var(--d-accent-text)]`}>{c.servicesEyebrow}</p>
-          <h2 className="mt-3 font-display text-[1.9rem] leading-tight font-extrabold tracking-tight @3xl:text-[2.3rem]">
-            {c.servicesTitle}
-          </h2>
-        </div>
+          {/* --- Why: the ask holds still while the reasons scroll past it --- */}
+          <section className={`${container} demo-reveal py-14 @4xl:py-20`}>
+            <div className="grid gap-10 @4xl:grid-cols-[0.92fr_1.08fr] @4xl:gap-14">
+              <div className="@4xl:sticky @4xl:top-28 @4xl:self-start">
+                <Eyebrow>{b.why.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.why.title}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.why.intro}</p>
+                <button type="button" className={`${blueBtn} mt-6`} onClick={() => goTo("contact")}>
+                  {b.why.link}
+                  <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                </button>
+              </div>
+              <ul className="grid gap-4">
+                {b.why.items.map((w, i) => {
+                  const Icon = WHY_ICONS[i] ?? Check;
+                  return (
+                    <li key={w.title} className={`${card} flex gap-4 p-6`}>
+                      <span
+                        aria-hidden="true"
+                        className="inline-grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--d-soft)] text-[var(--d-accent-text)]"
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span>
+                        <h3 className="font-display text-[18px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
+                          {w.title}
+                        </h3>
+                        <p className="mt-1.5 text-[14.5px] leading-relaxed text-[var(--d-body)]">{w.body}</p>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </section>
 
-        <div className="mt-10 space-y-12 @5xl:space-y-14">
-          {h.groups.map((group, gi) => (
-            <div key={group.name} className="demo-reveal @5xl:grid @5xl:grid-cols-[13rem_1fr] @5xl:gap-10">
-              <div className="@5xl:sticky @5xl:top-[7.5rem] @5xl:self-start">
-                <h3 className="flex items-center gap-2 font-display text-[1.35rem] font-extrabold uppercase tracking-tight">
-                  {gi === 1 ? (
-                    <Flame className="h-5 w-5 shrink-0 text-[var(--d-accent-text)]" aria-hidden="true" />
-                  ) : (
-                    <Droplets className="h-5 w-5 shrink-0 text-[var(--d-accent-text)]" aria-hidden="true" />
+          {/* --- The urgent band: one navy block, one job --- */}
+          <section className="bl-band bl-band-em py-14 @4xl:py-20">
+            <div className={`${container} grid items-center gap-9 @4xl:grid-cols-[1.15fr_0.85fr]`}>
+              <div>
+                <p className="bl-ink-ok mb-5 inline-flex items-center gap-2.5 text-[13.5px] font-semibold">
+                  <PulseDot />
+                  {b.emergencyStatus}
+                </p>
+                <h2 className="bl-ink-hi font-display text-[clamp(1.9rem,5.6cqi,3.2rem)] font-extrabold leading-[1.08] tracking-[-0.02em] text-balance">
+                  {emergency.title}
+                </h2>
+                <p className="mt-4 max-w-[560px] text-[17px] leading-relaxed bl-ink">{emergency.body}</p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  {asCall(
+                    copperBtn,
+                    <>
+                      <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
+                      {emergency.callLabel} {phone.display}
+                    </>,
                   )}
-                  {group.name}
-                </h3>
-                <p className="mt-1 text-[13px] text-[var(--d-muted)]">{group.when}</p>
+                  <button type="button" className={lightBtn} onClick={() => goTo("contact")}>
+                    {c.ctaPrimary}
+                  </button>
+                </div>
+                <p className="bl-ink-lo mt-5 text-[13.5px] leading-relaxed">{emergency.note}</p>
+              </div>
+              <div className="rounded-2xl border border-white/15 bg-white/[0.04] p-6">
+                <h3 className="bl-ink-hi font-display text-[19px] font-bold">{b.hoursCard.title}</h3>
+                <dl className="mt-4 divide-y divide-white/10">
+                  {b.hoursCard.rows.map((r) => (
+                    <div key={r.label} className="flex items-baseline justify-between gap-4 py-3">
+                      <dt className="text-[14px] bl-ink">{r.label}</dt>
+                      <dd className="text-right text-[15px] font-semibold bl-ink-hi">{r.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          {/* --- Before and after, each plate draggable --- */}
+          <section className={`${container} demo-reveal py-14 @4xl:py-20`}>
+            <div className="max-w-[680px]">
+              <Eyebrow>{b.beforeAfter.eyebrow}</Eyebrow>
+              <h2 className={bandTitle}>{b.beforeAfter.title}</h2>
+              <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.beforeAfter.intro}</p>
+            </div>
+            <div className="mt-10 grid gap-6 @4xl:grid-cols-3">
+              {b.beforeAfter.pairs.map((pair) => (
+                <BaPlate key={pair.caption} pair={pair} sizes="(min-width: 1100px) 380px, 92vw" />
+              ))}
+            </div>
+            <p className="mt-6 text-[13.5px] leading-relaxed text-[var(--d-muted)]">{b.beforeAfter.note}</p>
+          </section>
+
+          {/* --- What the fiction says people say --- */}
+          <section className="bg-[var(--d-soft)] py-14 @4xl:py-20">
+            <div className={`${container} demo-reveal`}>
+              <div className="max-w-[680px]">
+                <Eyebrow>{b.reviews.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.reviews.title}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.reviews.intro}</p>
+              </div>
+              <div className="mt-10 grid gap-5 @4xl:grid-cols-3">
+                {b.reviews.items.map((r) => (
+                  <figure key={r.name} className={`${card} m-0 flex flex-col p-6`}>
+                    <span className="flex gap-0.5 text-[15px] leading-none text-[var(--d-accent-2)]" aria-hidden="true">
+                      {"★★★★★"}
+                    </span>
+                    <blockquote className="mt-3 flex-1 text-[15.5px] leading-relaxed text-[var(--d-fg)]">
+                      “{r.quote}”
+                    </blockquote>
+                    <figcaption className="mt-4 flex items-center gap-3 border-t border-[var(--d-line)] pt-4">
+                      <span
+                        aria-hidden="true"
+                        className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#0b2135] font-display text-[13px] font-bold text-white"
+                      >
+                        {r.initials}
+                      </span>
+                      <span>
+                        <span className="block text-[14.5px] font-semibold text-[var(--d-fg)]">{r.name}</span>
+                        <span className="block text-[13px] text-[var(--d-muted)]">{r.place}</span>
+                      </span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+              <p className="mt-6 text-[13.5px] leading-relaxed text-[var(--d-muted)]">{b.reviews.note}</p>
+            </div>
+          </section>
+
+          {/* --- Coverage: a drawn map, then a card per town --- */}
+          <section
+            id={anchor.id("areas")}
+            className="scroll-mt-[96px] py-14 @4xl:py-20"
+          >
+            <div className={`${container} demo-reveal`}>
+              <div className="max-w-[760px]">
+                <Eyebrow>{b.areas.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.areas.title}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.areas.head}</p>
+              </div>
+              <div className="mt-10 grid items-start gap-8 @4xl:grid-cols-[1.02fr_0.98fr] @4xl:gap-12">
+                <div>
+                  <AreaMap places={places} aria={b.areas.mapAria} uid={uid} />
+                  <p className="mt-3 flex flex-wrap items-center gap-2 text-[13px] leading-relaxed text-[var(--d-muted)]">
+                    <span className="rounded-md border border-[var(--d-line)] bg-[var(--d-card)] px-2 py-1 font-mono uppercase tracking-[0.1em]">
+                      {b.areas.mapPlate}
+                    </span>
+                    {b.areas.mapNote}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[16.5px] leading-relaxed text-[var(--d-body)]">{b.areas.intro}</p>
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {places.map((p, i) => (
+                      <li key={p.name}>
+                        <button
+                          type="button"
+                          onClick={() => goTo(`city-${i}`)}
+                          className={`${outlineBtn} ${smallBtn}`}
+                        >
+                          {p.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <button type="button" className={`${blueBtn} mt-6`} onClick={() => goTo("contact")}>
+                    {b.areas.cta}
+                    <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                  </button>
+                  <p className="mt-4 text-[13.5px] leading-relaxed text-[var(--d-muted)]">{b.areas.note}</p>
+                </div>
               </div>
 
-              <ul className="mt-4 border-t border-[var(--d-line)] @5xl:mt-0">
-                {group.items.map((item) => (
-                  <li key={item.title} className="border-b border-[var(--d-line)]">
-                    <div className="flex flex-col gap-4 py-6 @5xl:flex-row @5xl:items-start @5xl:gap-8">
-                      <div className="min-w-0 flex-1">
-                        <p className="flex items-baseline gap-3">
-                          <span className={`${label} shrink-0 text-[var(--d-muted)]`}>
-                            {String(jobs.indexOf(item.title) + 1).padStart(2, "0")}
-                          </span>
-                          <span className="font-display text-[1.2rem] font-extrabold tracking-tight @3xl:text-[1.35rem]">
-                            {item.title}
-                          </span>
+              <h3 className="mt-14 font-display text-[clamp(1.5rem,4.2cqi,2.1rem)] font-extrabold tracking-[-0.02em] text-balance text-[var(--d-fg)]">
+                {b.areas.cardsTitle}
+              </h3>
+              <p className="mt-3 max-w-[680px] text-[16.5px] leading-relaxed text-[var(--d-body)]">
+                {b.areasIntro}
+              </p>
+              <div className="mt-6 grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-4">
+                {places.map((p, i) => (
+                  <article
+                    key={p.name}
+                    id={anchor.id(`city-${i}`)}
+                    className={`${card} scroll-mt-[96px] p-5`}
+                  >
+                    <h4 className="flex items-center gap-2 font-display text-[17px] font-bold text-[var(--d-fg)]">
+                      <MapPin className="h-4 w-4 shrink-0 text-[var(--d-accent)]" aria-hidden="true" />
+                      {p.name}
+                      {p.hub && (
+                        <span className="rounded-full bg-[var(--d-soft)] px-2 py-0.5 text-[12px] font-semibold text-[var(--d-body)]">
+                          Home base
+                        </span>
+                      )}
+                    </h4>
+                    <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--d-body)]">{p.note}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* --- About, and the longer story under it --- */}
+          <section
+            id={anchor.id("about")}
+            className="scroll-mt-[96px] bg-[var(--d-soft)] py-14 @4xl:py-20"
+          >
+            <div
+              className={`${container} demo-reveal grid gap-10 @4xl:grid-cols-[0.95fr_1.05fr] @4xl:gap-14`}
+            >
+              <div>
+                <Eyebrow>{b.about.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.about.title}</h2>
+              </div>
+              <div>
+                <p className="text-[17px] font-semibold leading-relaxed text-[var(--d-fg)]">
+                  {b.about.paras[0]}
+                </p>
+                <p className="mt-4 text-[16px] leading-relaxed text-[var(--d-body)]">{b.about.paras[1]}</p>
+                <p className="mt-4 text-[16px] leading-relaxed text-[var(--d-body)]">{b.about.paras[2]}</p>
+                <ul className="mt-6 space-y-2">
+                  {b.about.list.map((line) => (
+                    <li key={line} className="flex items-start gap-2.5 text-[15.5px] text-[var(--d-fg)]">
+                      <Check className="mt-0.5 h-5 w-5 shrink-0 text-[var(--d-accent)]" aria-hidden="true" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" className={`${outlineBtn} mt-7`} onClick={() => goTo("story")}>
+                  {b.about.cta}
+                  <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section
+            id={anchor.id("story")}
+            className="scroll-mt-[96px] py-14 @4xl:py-20"
+          >
+            <div className={`${container} demo-reveal`}>
+              <div className="grid gap-10 @4xl:grid-cols-[0.95fr_1.05fr] @4xl:gap-14">
+                <div className="relative overflow-hidden rounded-[20px] border border-[var(--d-line)]">
+                  <DemoImage
+                    src="/demos/blueline-plumbing/service-van.webp"
+                    alt="BlueLine Plumbing service van parked at a home"
+                    sizes="(min-width: 1100px) 560px, 92vw"
+                    className="aspect-[4/3] w-full"
+                    imgClassName="demo-ken-burns"
+                  />
+                </div>
+                <div>
+                  <h2 className={bandTitle}>{b.story.title}</h2>
+                  {b.story.paras.map((p) => (
+                    <p key={p} className="mt-4 text-[16px] leading-relaxed text-[var(--d-body)]">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-12">
+                <Eyebrow>{b.values.eyebrow}</Eyebrow>
+                <h3 className="mt-4 font-display text-[clamp(1.5rem,4.2cqi,2.1rem)] font-extrabold tracking-[-0.02em] text-balance text-[var(--d-fg)]">
+                  {b.values.title}
+                </h3>
+                <div className="mt-6 grid gap-5 @4xl:grid-cols-3">
+                  {b.values.items.map((v) => (
+                    <article key={v.no} className={`${card} p-6`}>
+                      <span className="font-display text-[15px] font-extrabold tracking-[0.1em] text-[var(--d-accent-2)]">
+                        {v.no}
+                      </span>
+                      <h4 className="mt-2 font-display text-[19px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
+                        {v.title}
+                      </h4>
+                      <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--d-body)]">{v.body}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-12">
+                <Eyebrow>{b.steps.eyebrow}</Eyebrow>
+                <h3 className="mt-4 font-display text-[clamp(1.5rem,4.2cqi,2.1rem)] font-extrabold tracking-[-0.02em] text-balance text-[var(--d-fg)]">
+                  {b.steps.title}
+                </h3>
+                <ol className="mt-6 grid gap-5 @4xl:grid-cols-3">
+                  {b.steps.items.map((s) => (
+                    <li key={s.no} className={`${card} p-6`}>
+                      <span className="grid h-[52px] w-[52px] place-items-center rounded-full bg-[var(--d-accent)] font-display text-[17px] font-extrabold text-white">
+                        {s.no}
+                      </span>
+                      <h4 className="mt-4 font-display text-[18px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
+                        {s.title}
+                      </h4>
+                      <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--d-body)]">{s.body}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <p className="mt-10 text-[13px] leading-relaxed text-[var(--d-muted)]">{c.imageSource}</p>
+            </div>
+          </section>
+
+          {/* --- The same nine services, this time in full --- */}
+          <section
+            id={anchor.id("details")}
+            className="scroll-mt-[96px] bg-[var(--d-soft)] py-14 @4xl:py-20"
+          >
+            <div className={`${container} demo-reveal`}>
+              <div className="max-w-[680px]">
+                <Eyebrow>{b.detailsHead.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.detailsHead.title}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.detailsHead.intro}</p>
+              </div>
+
+              <div className="mt-10 grid items-start gap-8 @5xl:grid-cols-[330px_1fr] @5xl:gap-10">
+                <aside className="flex flex-col gap-4 @5xl:sticky @5xl:top-28">
+                  <div className={`${card} p-6`}>
+                    <h3 className="font-display text-[18px] font-bold text-[var(--d-fg)]">
+                      {b.helpCard.title}
+                    </h3>
+                    <p className="mt-2 text-[14.5px] leading-relaxed text-[var(--d-body)]">{b.helpCard.body}</p>
+                    <button
+                      type="button"
+                      className={`${blueBtn} ${smallBtn} mt-4 w-full`}
+                      onClick={() => goTo("contact")}
+                    >
+                      {c.ctaPrimary}
+                    </button>
+                  </div>
+                  <div className="bl-band rounded-2xl p-6">
+                    <h3 className="bl-ink-hi font-display text-[18px] font-bold">{b.hoursCard.title}</h3>
+                    <dl className="mt-3 divide-y divide-white/10">
+                      {b.hoursCard.rows.map((r) => (
+                        <div key={r.label} className="flex items-baseline justify-between gap-3 py-2.5">
+                          <dt className="text-[13.5px] bl-ink">{r.label}</dt>
+                          <dd className="text-right text-[14px] font-semibold bl-ink-hi">{r.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <p className="bl-ink-ok mt-3 inline-flex items-center gap-2 text-[13px] font-semibold">
+                      <PulseDot />
+                      {b.hoursCard.status}
+                    </p>
+                  </div>
+                </aside>
+
+                <div className="space-y-6">
+                  {details.map((d, i) => {
+                    const Icon = SERVICE_ICONS[i] ?? Wrench;
+                    return (
+                      <article
+                        key={d.title}
+                        id={anchor.id(`detail-${i}`)}
+                        className={`${card} scroll-mt-[96px] overflow-hidden @3xl:grid @3xl:grid-cols-[0.88fr_1.12fr]`}
+                      >
+                        <DemoImage
+                          src={d.image.src}
+                          alt={d.image.alt}
+                          sizes="(min-width: 1100px) 420px, 92vw"
+                          className="aspect-[4/3] w-full @3xl:aspect-auto @3xl:h-full"
+                        />
+                        <div className="p-6 @4xl:p-8">
+                          <p className="flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.16em] text-[var(--d-accent-2)]">
+                            <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                            {d.kicker}
+                          </p>
+                          <h3 className="mt-3 font-display text-[clamp(1.35rem,3.2cqi,1.85rem)] font-extrabold leading-[1.15] tracking-[-0.015em] text-balance text-[var(--d-fg)]">
+                            {d.title}
+                          </h3>
+                          <p className="mt-3 text-[15.5px] leading-relaxed text-[var(--d-body)]">{d.body}</p>
+                          <ul className="mt-4 space-y-2">
+                            {d.benefits.map((line) => (
+                              <li key={line} className="flex items-start gap-2.5 text-[14.5px] text-[var(--d-body)]">
+                                <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--d-accent)]" aria-hidden="true" />
+                                {line}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-6 flex flex-wrap items-center gap-3">
+                            <button
+                              type="button"
+                              onClick={() => requestService(d.title)}
+                              className={`${blueBtn} ${smallBtn}`}
+                            >
+                              {d.request}
+                            </button>
+                            {asCall(
+                              `${outlineBtn} ${smallBtn}`,
+                              <>
+                                <Phone className="h-4 w-4" aria-hidden="true" />
+                                {d.call} {phone.display}
+                              </>,
+                            )}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* --- Questions, then the last ask --- */}
+          <section id={anchor.id("faq")} className="scroll-mt-[96px] bg-[var(--d-soft)] py-14 @4xl:py-20">
+            <div className={`${container} demo-reveal`}>
+              <div className="mx-auto max-w-[680px] text-center">
+                <Eyebrow center>FAQ</Eyebrow>
+                <h2 className={bandTitle}>{c.faqTitle}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.faqIntro}</p>
+              </div>
+              <div className="mx-auto mt-8 max-w-[820px]">
+                <DemoFaq items={faqs} />
+              </div>
+            </div>
+          </section>
+
+          <section className="bl-band bl-band-final py-16 @4xl:py-24">
+            <div className={`${container} text-center`}>
+              <h2 className="bl-ink-hi mx-auto max-w-[760px] font-display text-[clamp(1.9rem,5.6cqi,3rem)] font-extrabold leading-[1.1] tracking-[-0.02em] text-balance">
+                {c.ctaTitle}
+              </h2>
+              <p className="bl-ink mx-auto mt-4 max-w-[560px] text-[17px] leading-relaxed">{c.ctaBody}</p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                {asCall(
+                  copperBtn,
+                  <>
+                    <Phone className="h-[18px] w-[18px]" aria-hidden="true" />
+                    {emergency.callLabel} {phone.display}
+                  </>,
+                )}
+                <button type="button" className={lightBtn} onClick={() => goTo("contact")}>
+                  {c.ctaPrimary}
+                </button>
+              </div>
+              <p className="bl-ink-lo mt-6 text-[14px]">
+                {b.finalPhone} <span className="bl-ink-hi font-semibold">{phone.display}</span> ·{" "}
+                {c.availability}
+              </p>
+            </div>
+          </section>
+
+          {/* --- Contact: the form reads back what was typed, then says plainly
+              that nothing left the browser --- */}
+          <section
+            id={anchor.id("contact")}
+            className="scroll-mt-[96px] bg-[var(--d-soft)] py-14 @4xl:py-20"
+          >
+            <div className={`${container} demo-reveal`}>
+              <div className="max-w-[680px]">
+                <Eyebrow>{b.contactHead.eyebrow}</Eyebrow>
+                <h2 className={bandTitle}>{b.contactHead.title}</h2>
+                <p className="mt-4 text-[17px] leading-relaxed text-[var(--d-body)]">{b.contactHead.intro}</p>
+              </div>
+
+              <div className="mt-10 grid items-start gap-8 @4xl:grid-cols-[1.12fr_0.88fr] @4xl:gap-10">
+                <div className={`${card} p-6 @4xl:p-8`}>
+                  {sent ? (
+                    <div
+                      ref={okRef}
+                      tabIndex={-1}
+                      className="pop-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="grid h-14 w-14 place-items-center rounded-full bg-[var(--d-accent)] text-white"
+                      >
+                        <Check className="h-7 w-7" />
+                      </span>
+                      <h3 className="mt-4 font-display text-[24px] font-extrabold tracking-[-0.02em] text-[var(--d-fg)]">
+                        {f.successTitle}
+                      </h3>
+                      <p className="mt-3 text-[16px] leading-relaxed text-[var(--d-body)]">{lead}</p>
+                      <p className="mt-3 text-[14.5px] leading-relaxed text-[var(--d-muted)]">{demoLine}</p>
+                      <button type="button" className={`${outlineBtn} mt-6`} onClick={reset}>
+                        {f.reset}
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={submit} noValidate className="space-y-5">
+                      <div>
+                        <label className={fieldLabel} htmlFor={anchor.id("name")}>
+                          {f.name}
+                        </label>
+                        <input
+                          id={anchor.id("name")}
+                          className={field}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder={f.namePlaceholder}
+                          autoComplete="name"
+                          aria-invalid={problem.includes("name") || undefined}
+                        />
+                      </div>
+                      <div className="grid gap-5 @xl:grid-cols-2">
+                        <div>
+                          <label className={fieldLabel} htmlFor={anchor.id("tel")}>
+                            {f.phone}
+                          </label>
+                          <input
+                            id={anchor.id("tel")}
+                            className={field}
+                            type="tel"
+                            inputMode="tel"
+                            value={phoneValue}
+                            onChange={(e) => setPhoneValue(e.target.value)}
+                            placeholder={f.phonePlaceholder}
+                            autoComplete="tel"
+                            aria-invalid={problem.includes("phone") || undefined}
+                          />
+                        </div>
+                        <div>
+                          <label className={fieldLabel} htmlFor={anchor.id("email")}>
+                            {f.email}
+                          </label>
+                          <input
+                            id={anchor.id("email")}
+                            className={field}
+                            type="email"
+                            inputMode="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder={f.emailPlaceholder}
+                            autoComplete="email"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className={fieldLabel} htmlFor={anchor.id("job")}>
+                          {f.service}
+                        </label>
+                        <select
+                          id={anchor.id("job")}
+                          className={field}
+                          value={service}
+                          onChange={(e) => setService(e.target.value)}
+                          aria-invalid={problem.includes("service") || undefined}
+                        >
+                          <option value="">{f.serviceOption}</option>
+                          {jobOptions.map((o) => (
+                            <option key={o} value={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={fieldLabel} htmlFor={anchor.id("message")}>
+                          {f.message}
+                        </label>
+                        <textarea
+                          id={anchor.id("message")}
+                          className={`${field} min-h-[120px] py-3`}
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          placeholder={f.messagePlaceholder}
+                          rows={4}
+                        />
+                      </div>
+                      {problem.length > 0 && (
+                        <p role="alert" className="text-[14px] font-semibold text-[#96302a]">
+                          Please complete: {problem.map((k) => missingLabels[k] ?? k).join(", ")}.
                         </p>
-                        <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[var(--d-body)]">
-                          {item.body}
-                        </p>
-                        <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-1.5 text-[12px] text-[var(--d-muted)]">
-                          {item.tags.map((tag) => (
-                            <li key={tag} className="border-l border-[var(--d-line-strong)] pl-2">
-                              {tag}
+                      )}
+                      <div className="flex flex-wrap items-center gap-4">
+                        <button type="submit" className={blueBtn}>
+                          {f.submit}
+                          <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+                        </button>
+                        <p className="text-[13px] leading-relaxed text-[var(--d-muted)]">{f.fine}</p>
+                      </div>
+                    </form>
+                  )}
+                </div>
+
+                <div className="grid gap-4">
+                  {b.contactCards.map((item, i) => {
+                    const Icon = CONTACT_ICONS[i] ?? Phone;
+                    return (
+                      <div key={item.title} className={item.dark ? "bl-band rounded-2xl p-6" : `${card} p-6`}>
+                        <h3
+                          className={`flex items-center gap-2.5 font-display text-[17px] font-bold ${
+                            item.dark ? "bl-ink-hi" : "text-[var(--d-fg)]"
+                          }`}
+                        >
+                          <Icon
+                            className={`h-5 w-5 shrink-0 ${
+                              item.dark ? "text-[#4da3ff]" : "text-[var(--d-accent)]"
+                            }`}
+                            aria-hidden="true"
+                          />
+                          {item.title}
+                        </h3>
+                        {item.phone &&
+                          asCall(
+                            "mt-2 inline-flex min-h-11 items-center font-display text-[22px] font-extrabold tracking-[-0.02em] text-[var(--d-accent-text)]",
+                            phone.display,
+                          )}
+                        <ul className="mt-2 space-y-1.5">
+                          {item.lines.map((line) => (
+                            <li
+                              key={line}
+                              className={`text-[14.5px] leading-relaxed ${
+                                item.dark ? "bl-ink" : "text-[var(--d-body)]"
+                              }`}
+                            >
+                              {line}
                             </li>
                           ))}
                         </ul>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => pickJob(item.title)}
-                        className="inline-flex min-h-11 shrink-0 items-center gap-1.5 self-start rounded-full border border-[var(--d-line-strong)] px-4 text-[13px] font-bold text-[var(--d-fg)] transition-colors hover:border-[var(--d-accent)] hover:bg-[var(--d-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)] @5xl:self-center"
-                      >
-                        Get a quote
-                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </button>
-                    </div>
+                    );
+                  })}
+                  <p className="text-[13px] leading-relaxed text-[var(--d-muted)]">{b.fictionalNote}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        {/* --- Footer --- */}
+        <footer className="bl-band">
+          <div className={`${container} grid gap-9 py-14 @4xl:grid-cols-[1.3fr_0.7fr_0.9fr_0.9fr]`}>
+            <div>
+              <span className="flex items-center gap-3">
+                <BrandMark tone="dark" />
+                <Wordmark b={b.brand} tone="dark" />
+              </span>
+              <p className="bl-ink mt-4 max-w-[330px] text-[14.5px] leading-relaxed">{b.footer.tag}</p>
+            </div>
+            <div>
+              <h3 className="bl-ink-hi font-display text-[15px] font-bold uppercase tracking-[0.12em]">
+                {b.footer.explore}
+              </h3>
+              <ul className="mt-2 space-y-1">
+                {navItems.map(([text, section]) => (
+                  <li key={section}>
+                    <button
+                      type="button"
+                      onClick={() => goTo(section)}
+                      className="bl-ink inline-flex min-h-11 items-center text-left text-[14.5px] hover:text-white hover:underline hover:underline-offset-4"
+                    >
+                      {text}
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Heating — the one full amber band, so the warm half of the trade reads
-          apart from the cold-water half without a second palette. Every word on
-          this ground is `--d-fg`: the derived body and muted greys were measured
-          against a 12% wash of this colour, not the fill itself. */}
-      <section
-        id={anchor.id("heating")}
-        className="scroll-mt-28 bg-[var(--d-accent-2)] px-4 py-14 @5xl:px-8 @5xl:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl gap-10 @5xl:grid-cols-[1fr_1.05fr] @5xl:items-center">
-          <div>
-            <p className={`${label} text-[var(--d-fg)]`}>{h.heating.eyebrow}</p>
-            <h2 className="mt-3 font-display text-[1.9rem] leading-[1.05] font-extrabold tracking-tight text-[var(--d-fg)] @3xl:text-[2.3rem]">
-              {h.heating.title}
-            </h2>
-            <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-[var(--d-fg)]">
-              {h.heating.body}
-            </p>
-            <dl className="mt-8 space-y-5 border-t border-[var(--d-fg)]/25 pt-6">
-              {h.heating.points.map((point) => (
-                <div key={point.title}>
-                  <dt className="font-display text-[1.05rem] font-extrabold tracking-tight text-[var(--d-fg)]">
-                    {point.title}
-                  </dt>
-                  <dd className="mt-1 max-w-md text-[14px] leading-relaxed text-[var(--d-fg)]">
-                    {point.body}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-8 flex flex-col gap-3 @3xl:flex-row">
-              <button
-                type="button"
-                onClick={() => pickJob("Boilers & heating")}
-                className={`${solid} w-full bg-[var(--d-fg)] text-[var(--d-bg)] focus-visible:outline-[var(--d-bg)] @3xl:w-auto`}
-              >
-                Quote my heating
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <a
-                href={anchor.href("areas")}
-                className={`${quiet} w-full border-[var(--d-fg)] text-[var(--d-fg)] @3xl:w-auto`}
-              >
-                Check we reach you
-              </a>
-            </div>
-          </div>
-
-          <figure>
-            <DemoImage
-              src={h.heating.image.src}
-              alt={h.heating.image.alt}
-              sizes="(min-width: 64rem) 38rem, 100vw"
-              className="aspect-[4/3] w-full rounded-[22px] ring-1 ring-[var(--d-fg)]/20"
-            />
-            <figcaption className="mt-3 text-[12px] leading-relaxed text-[var(--d-fg)]">
-              {h.heating.image.caption}
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      {/* Installs — the bathroom plate, and what a refit actually involves. */}
-      <section
-        id={anchor.id("refits")}
-        className="scroll-mt-28 bg-[var(--d-soft)] px-4 py-14 @5xl:px-8 @5xl:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl gap-10 @5xl:grid-cols-[1.05fr_1fr] @5xl:items-center">
-          <figure className="@5xl:order-2">
-            <DemoImage
-              src={h.installs.image.src}
-              alt={h.installs.image.alt}
-              sizes="(min-width: 64rem) 38rem, 100vw"
-              className="aspect-[4/3] w-full rounded-[22px] shadow-[var(--d-shadow)]"
-            />
-            <figcaption className="mt-3 text-[12px] leading-relaxed text-[var(--d-muted)]">
-              {h.installs.image.caption}
-            </figcaption>
-          </figure>
-
-          <div className="@5xl:order-1">
-            <p className={`${label} text-[var(--d-accent-text)]`}>{h.installs.eyebrow}</p>
-            <h2 className="mt-3 font-display text-[1.9rem] leading-[1.08] font-extrabold tracking-tight @3xl:text-[2.2rem]">
-              {h.installs.title}
-            </h2>
-            <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-[var(--d-body)]">
-              {h.installs.body}
-            </p>
-            <ul className="mt-7 space-y-3">
-              {h.installs.points.map((point) => (
-                <li key={point} className="flex items-start gap-3 text-[14px] leading-relaxed text-[var(--d-fg)]">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--d-accent-text)]" aria-hidden="true" />
-                  {point}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8">
-              <button
-                type="button"
-                onClick={() => pickJob("Bathroom refits")}
-                className={`${quiet} w-full @3xl:w-auto`}
-              >
-                Plan a bathroom
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How a callout works — three steps on a rail that draws itself. */}
-      {proc && (
-        <section
-          id={anchor.id("process")}
-          className="scroll-mt-28 border-y border-[var(--d-line)] px-4 py-14 @5xl:px-8 @5xl:py-20"
-        >
-          <div className="mx-auto max-w-6xl">
-            <div className="grid gap-4 @5xl:grid-cols-[1fr_1.1fr] @5xl:items-end">
-              <div>
-                <p className={`${label} text-[var(--d-accent-text)]`}>{proc.eyebrow}</p>
-                <h2 className="mt-3 font-display text-[1.9rem] leading-tight font-extrabold tracking-tight @3xl:text-[2.2rem]">
-                  {proc.title}
-                </h2>
-              </div>
-              <p className="max-w-lg text-[15px] leading-relaxed text-[var(--d-body)] @5xl:pb-1">
-                {proc.intro}
-              </p>
-            </div>
-
-            {/* Each step but the last carries the segment joining it to the next:
-                down the stacked list on the narrow frames, across to the next
-                marker on the wide ones. The resting state is the finished line, so
-                the scroll-driven draw is decoration, never a dependency. */}
-            <ol className="mt-10 grid gap-8 @3xl:grid-cols-3 @3xl:gap-6">
-              {procSteps.map((step, i) => (
-                <li key={step.no} className="relative flex gap-4 @3xl:block">
-                  {i < procSteps.length - 1 && (
-                    <>
-                      <span
-                        aria-hidden="true"
-                        className="demo-rail-y absolute -bottom-8 left-[27px] top-[60px] w-0.5 origin-top rounded-full bg-[var(--d-accent)]/35 @3xl:hidden"
-                      />
-                      <span
-                        aria-hidden="true"
-                        className="demo-rail-x absolute -right-6 left-[60px] top-[27px] hidden h-0.5 origin-left rounded-full bg-[var(--d-accent)]/35 @3xl:block"
-                      />
-                    </>
-                  )}
-                  <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full border-2 border-[var(--d-accent)] bg-[var(--d-bg)] font-display text-[17px] font-extrabold text-[var(--d-accent-text)]">
-                    {step.no}
-                  </span>
-                  <div className="@3xl:mt-6 @3xl:pr-6">
-                    <h3 className="font-display text-[1.15rem] font-extrabold tracking-tight">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-[14px] leading-relaxed text-[var(--d-body)]">{step.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      )}
-
-      {/* Quote request — the form and the pricing honesty beside it. */}
-      <section
-        id={anchor.id("quote")}
-        className="scroll-mt-28 bg-[var(--d-soft)] px-4 py-14 @5xl:px-8 @5xl:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl gap-10 @5xl:grid-cols-[1.25fr_1fr] @5xl:items-start">
-          <div className={card}>
-            <p className={`${label} px-5 pt-5 text-[var(--d-accent-text)] @3xl:px-8 @3xl:pt-8`}>
-              {h.quote.eyebrow}
-            </p>
-            <h2 className="mt-3 px-5 font-display text-[1.7rem] leading-tight font-extrabold tracking-tight @3xl:px-8 @3xl:text-[2rem]">
-              {h.quote.title}
-            </h2>
-            <p className="mt-2 px-5 text-[14px] leading-relaxed text-[var(--d-body)] @3xl:px-8">
-              {h.quote.intro}
-            </p>
-
-            {quote ? (
-              <div className="mx-5 mt-6 rounded-2xl border border-[var(--d-accent)]/40 bg-[var(--d-bg)] p-5 @3xl:mx-8">
-                <h3
-                  ref={success}
-                  tabIndex={-1}
-                  className="font-display text-[1.25rem] font-extrabold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
-                >
-                  {h.quote.successTitle}
-                </h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-[var(--d-body)]">
-                  {h.quote.successLead}
-                </p>
-                <dl className="mt-4 divide-y divide-[var(--d-line)] border-y border-[var(--d-line)] text-[14px]">
-                  {[
-                    ["Name", quote.name],
-                    ["Number", quote.phone],
-                    ["Area", quote.area],
-                    ["Job", quote.job],
-                    ["How soon", quote.urgency],
-                    ["Notes", quote.details],
-                  ].map(([k, v]) => (
-                    <div key={k} className="flex gap-4 py-2.5">
-                      <dt className={`${label} w-24 shrink-0 self-center text-[var(--d-muted)]`}>{k}</dt>
-                      <dd className="min-w-0 flex-1 break-words text-[var(--d-fg)]">{v || "—"}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="mt-4 text-[12px] leading-relaxed text-[var(--d-muted)]">{h.quote.note}</p>
-                <button
-                  type="button"
-                  onClick={() => setQuote(null)}
-                  className={`${quiet} mt-5 w-full text-[14px] @3xl:w-auto`}
-                >
-                  Edit the request
-                </button>
-              </div>
-            ) : (
-              /* Native validation runs first: this handler only fires once every
-                 required field, the phone pattern and the job choice pass, so the
-                 confirmation can never be shown for an incomplete request. */
-              <form
-                className="mt-6 px-5 pb-6 @3xl:px-8 @3xl:pb-8"
-                onChange={() => setQuote(null)}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const fd = new FormData(e.currentTarget);
-                  setQuote(
-                    Object.fromEntries(
-                      ["name", "phone", "area", "job", "urgency", "details"].map((k) => [
-                        k,
-                        String(fd.get(k) ?? ""),
-                      ]),
-                    ),
-                  );
-                }}
-              >
-                <div className="grid gap-4 @3xl:grid-cols-2">
-                  <div>
-                    <label htmlFor={`${uid}-name`} className="block text-[12px] font-bold">
-                      {h.quote.labels.name}
-                    </label>
-                    <input
-                      id={`${uid}-name`}
-                      name="name"
-                      type="text"
-                      required
-                      autoComplete="name"
-                      placeholder={h.quote.placeholders.name}
-                      className={`${field} mt-1.5`}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`${uid}-phone`} className="block text-[12px] font-bold">
-                      {h.quote.labels.phone}
-                    </label>
-                    <input
-                      id={`${uid}-phone`}
-                      name="phone"
-                      type="tel"
-                      required
-                      autoComplete="tel"
-                      pattern="[\d+\s\(\)\-]{7,}"
-                      title="Digits, spaces and + ( ) - only, at least 7 of them"
-                      placeholder={h.quote.placeholders.phone}
-                      className={`${field} mt-1.5`}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`${uid}-area`} className="block text-[12px] font-bold">
-                      {h.quote.labels.area}
-                    </label>
-                    <input
-                      id={`${uid}-area`}
-                      name="area"
-                      type="text"
-                      required
-                      autoComplete="postal-code"
-                      placeholder={h.quote.placeholders.area}
-                      className={`${field} mt-1.5`}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor={`${uid}-job`} className="block text-[12px] font-bold">
-                      {h.quote.labels.job}
-                    </label>
-                    <select
-                      id={`${uid}-job`}
-                      name="job"
-                      required
-                      value={job}
-                      onChange={(e) => setJob(e.target.value)}
-                      className={`${field} mt-1.5`}
-                    >
-                      <option value="">Choose the job</option>
-                      {jobs.map((title) => (
-                        <option key={title} value={title}>
-                          {title}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <fieldset className="@3xl:col-span-2">
-                    <legend className={`${label} text-[var(--d-muted)]`}>{h.quote.labels.urgency}</legend>
-                    <div className="mt-2.5 grid gap-2 @3xl:grid-cols-4">
-                      {h.quote.urgencies.map((u, i) => (
-                        <div key={u.value}>
-                          <input
-                            id={`${uid}-u${i}`}
-                            type="radio"
-                            name="urgency"
-                            value={u.value}
-                            required
-                            defaultChecked={i === 1}
-                            className="peer sr-only"
-                          />
-                          <label
-                            htmlFor={`${uid}-u${i}`}
-                            className="flex min-h-11 cursor-pointer flex-col justify-center rounded-xl border border-[var(--d-line-strong)] bg-[var(--d-field)] px-3 text-[13px] font-bold peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--d-accent)] peer-checked:border-[var(--d-accent)] peer-checked:bg-[var(--d-accent)]/10 peer-checked:text-[var(--d-accent-text)]"
-                          >
-                            {u.value}
-                            <span className="text-[12px] font-normal text-[var(--d-muted)]">{u.hint}</span>
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </fieldset>
-                  <div className="@3xl:col-span-2">
-                    <label htmlFor={`${uid}-details`} className="block text-[12px] font-bold">
-                      {h.quote.labels.details}
-                    </label>
-                    <textarea
-                      id={`${uid}-details`}
-                      name="details"
-                      rows={3}
-                      placeholder={h.quote.placeholders.details}
-                      className={`${field} mt-1.5 py-2.5`}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-6 flex flex-col gap-4 @3xl:flex-row @3xl:items-center @3xl:justify-between">
-                  <button type="submit" className={`${solid} w-full @3xl:w-auto`}>
-                    {h.quote.submit}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                  <p className="max-w-sm text-[12px] leading-relaxed text-[var(--d-muted)]">
-                    {h.quote.note}
-                  </p>
-                </div>
-              </form>
-            )}
-          </div>
-
-          {/* Pricing honesty, as a numbered sequence rather than four cards. */}
-          {c.quoting && (
             <div>
-              <p className={`${label} text-[var(--d-accent-text)]`}>{c.quoting.eyebrow}</p>
-              <h3 className="mt-3 font-display text-[1.6rem] leading-tight font-extrabold tracking-tight @3xl:text-[1.9rem]">
-                {c.quoting.title}
+              <h3 className="bl-ink-hi font-display text-[15px] font-bold uppercase tracking-[0.12em]">
+                {b.footer.servicesTitle}
               </h3>
-              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-[var(--d-body)]">
-                {c.quoting.intro}
-              </p>
-              <ol className="mt-7 divide-y divide-[var(--d-line)] border-y border-[var(--d-line)]">
-                {c.quoting.steps.map((step, i) => (
-                  <li key={step.title} className="flex gap-4 py-4">
-                    <span className="font-display text-[1.6rem] leading-none font-extrabold text-[var(--d-accent)]">
-                      {i + 1}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block font-display text-[1.05rem] font-extrabold tracking-tight">
-                        {step.title}
-                      </span>
-                      <span className="mt-1 block text-[14px] leading-relaxed text-[var(--d-body)]">
-                        {step.body}
-                      </span>
-                    </span>
+              {/* Five of the nine, each jumping to the detail band that names it, so
+                  no link here can point at a service the page does not explain. */}
+              <ul className="mt-2 space-y-1">
+                {[0, 1, 2, 4, 5].map((i) => details[i]).map((d) => (
+                  <li key={d.title}>
+                    <button
+                      type="button"
+                      onClick={() => goTo(`detail-${details.indexOf(d)}`)}
+                      className="bl-ink inline-flex min-h-11 items-center text-left text-[14.5px] hover:text-white hover:underline hover:underline-offset-4"
+                    >
+                      {d.title}
+                    </button>
                   </li>
                 ))}
-              </ol>
-              <p className="mt-5 max-w-md text-[12px] leading-relaxed text-[var(--d-muted)]">
-                {c.quoting.note}
-              </p>
+              </ul>
             </div>
-          )}
-        </div>
-      </section>
-
-      {/* Service areas — grouped by travel time, with a checker that really checks. */}
-      {areas && (
-        <section
-          id={anchor.id("areas")}
-          className="scroll-mt-28 px-4 py-14 @5xl:mx-auto @5xl:max-w-6xl @5xl:px-8 @5xl:py-20"
-        >
-          <div className="grid gap-10 @5xl:grid-cols-[1fr_1.25fr] @5xl:items-start">
             <div>
-              <p className={`${label} text-[var(--d-accent-text)]`}>{areas.eyebrow}</p>
-              <h2 className="mt-3 font-display text-[1.9rem] leading-tight font-extrabold tracking-tight @3xl:text-[2.2rem]">
-                {areas.title}
-              </h2>
-              <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-[var(--d-body)]">
-                {areas.intro}
-              </p>
-
-              <form
-                className="mt-7 max-w-sm"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  checkArea();
-                }}
-              >
-                <label htmlFor={`${uid}-check`} className="block text-[12px] font-bold">
-                  {h.areaCheck.label}
-                </label>
-                <div className="mt-1.5 flex gap-2">
-                  <input
-                    id={`${uid}-check`}
-                    type="text"
-                    value={areaQuery}
-                    onChange={(e) => {
-                      setAreaQuery(e.target.value);
-                      setAreaAnswer(null);
-                    }}
-                    placeholder={h.areaCheck.placeholder}
-                    className={field}
-                  />
-                  <button type="submit" className={`${solid} shrink-0 px-4 text-[14px]`}>
-                    {h.areaCheck.submit}
-                  </button>
-                </div>
-                <p
-                  role="status"
-                  className={`mt-3 min-h-[1.25rem] text-[13px] leading-relaxed ${
-                    areaAnswer ? "font-semibold text-[var(--d-fg)]" : "text-[var(--d-muted)]"
-                  }`}
-                >
-                  {areaAnswer ?? areas.note}
-                </p>
-              </form>
-              <p className="mt-4 max-w-sm text-[12px] leading-relaxed text-[var(--d-muted)]">
-                {h.areaCheck.note}
-              </p>
-            </div>
-
-            <ul className="divide-y divide-[var(--d-line)] border-y border-[var(--d-line)]">
-              {areas.zones.map((zone) => (
-                <li key={zone.name} className="py-6">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h3 className="font-display text-[1.2rem] font-extrabold uppercase tracking-tight">
-                      {zone.name}
-                    </h3>
-                    <p className={`${label} text-[var(--d-accent-text)]`}>{zone.travel}</p>
-                  </div>
-                  <ul className="mt-3 flex flex-wrap gap-x-2 gap-y-2">
-                    {zone.places.map((place) => (
-                      <li
-                        key={place}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-[var(--d-line-strong)] px-3 py-1.5 text-[13px] font-semibold text-[var(--d-body)]"
-                      >
-                        <MapPin className="h-3.5 w-3.5 shrink-0 text-[var(--d-accent-text)]" aria-hidden="true" />
-                        {place}
-                      </li>
-                    ))}
-                  </ul>
+              <h3 className="bl-ink-hi font-display text-[15px] font-bold uppercase tracking-[0.12em]">
+                {b.footer.contactTitle}
+              </h3>
+              <ul className="mt-2 space-y-1.5">
+                <li className="flex items-center gap-2.5">
+                  <Phone className="h-4 w-4 shrink-0 text-[#4da3ff]" aria-hidden="true" />
+                  {asCall(
+                    "bl-ink-hi inline-flex min-h-11 items-center font-semibold underline-offset-4 hover:underline",
+                    phone.display,
+                  )}
                 </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
-      {/* FAQ — heading in its own column so the accordion never reads as a wall. */}
-      <section
-        id={anchor.id("faq")}
-        className="scroll-mt-28 border-t border-[var(--d-line)] bg-[var(--d-soft)] px-4 py-14 @5xl:px-8 @5xl:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl gap-8 @5xl:grid-cols-[0.8fr_1.2fr] @5xl:items-start">
-          <div>
-            <h2 className="font-display text-[1.9rem] font-extrabold tracking-tight @3xl:text-[2.2rem]">
-              {c.faqTitle}
-            </h2>
-            {phone && (
-              <p className="mt-3 text-[14px] leading-relaxed text-[var(--d-body)]">
-                Not answered?{" "}
-                {callHref ? (
-                  <a
-                    href={callHref}
-                    className="font-bold text-[var(--d-accent-text)] underline decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
-                  >
-                    Ask on the phone
-                  </a>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={askCall}
-                    className="font-bold text-[var(--d-accent-text)] underline decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
-                  >
-                    Ask on the phone
-                  </button>
-                )}
-                .
-              </p>
-            )}
-          </div>
-          <DemoFaq items={c.faqs ?? []} />
-        </div>
-      </section>
-
-      {/* Closing call — blue floor, the number at its largest. */}
-      {/* pb-28 below @3xl clears the sticky action bar, which otherwise floats over
-          the last 65px of the viewport at every scroll position. */}
-      <section
-        id={anchor.id("contact")}
-        className="scroll-mt-28 bg-[var(--d-accent)] px-4 pt-14 pb-28 text-[var(--d-on-accent)] @3xl:pb-14 @5xl:px-8 @5xl:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl gap-10 @5xl:grid-cols-[1.15fr_1fr] @5xl:items-end">
-          <div>
-            <p className={`${label} opacity-90`}>{h.closing.eyebrow}</p>
-            <h2 className="mt-3 font-display text-[2rem] leading-[1.05] font-extrabold tracking-tight @3xl:text-[2.6rem]">
-              {c.ctaTitle}
-            </h2>
-            <p className="mt-3 max-w-md text-[15px] leading-relaxed">{c.ctaBody}</p>
-            <div className="mt-7 flex flex-col gap-3 @3xl:flex-row">
-              {phone &&
-                asCall(
-                  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[var(--d-fg)] px-6 font-display text-[15px] font-extrabold text-[var(--d-bg)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-bg)]",
-                  <>
-                    <Phone className="h-4 w-4" aria-hidden="true" />
-                    {phone.display}
-                  </>,
-                )}
-              <a
-                href={anchor.href("quote")}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-[var(--d-bg)] px-6 font-display text-[15px] font-extrabold text-[var(--d-bg)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-fg)]"
-              >
-                {c.ctaPrimary}
-              </a>
+                <li className="bl-ink flex items-start gap-2.5 text-[14.5px]">
+                  <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#4da3ff]" aria-hidden="true" />
+                  {b.footer.address}
+                </li>
+                <li className="bl-ink flex items-start gap-2.5 text-[14.5px]">
+                  <Clock className="mt-1 h-4 w-4 shrink-0 text-[#4da3ff]" aria-hidden="true" />
+                  {c.availability}
+                </li>
+              </ul>
             </div>
           </div>
 
-          <dl className="grid gap-x-6 gap-y-3 border-t border-current/25 pt-6 @3xl:grid-cols-2 @5xl:border-t-0 @5xl:pt-0">
-            {h.closing.hours.map((hour) => (
-              <div key={hour.day}>
-                <dt className={`${label} opacity-90`}>{hour.day}</dt>
-                <dd className="mt-1 font-display text-[1.05rem] font-extrabold tracking-tight">
-                  {hour.time}
-                </dd>
+          <div className="border-t border-white/10">
+            <div className={`${container} flex flex-wrap items-center justify-between gap-4 py-6 text-[13px]`}>
+              <span className="bl-ink-lo">{b.footer.legal}</span>
+              <span className="flex flex-wrap items-center gap-5">
+                <DemoBadge />
+                {(["privacy", "terms"] as const).map((kind) => (
+                  <button
+                    key={kind}
+                    type="button"
+                    aria-expanded={legal === kind}
+                    aria-controls={`${anchor.id("legal")}-${kind}`}
+                    onClick={() => setLegal((current) => (current === kind ? null : kind))}
+                    className="bl-ink-lo inline-flex min-h-11 items-center underline-offset-4 hover:text-white hover:underline"
+                  >
+                    {b.dialogs[kind].title}
+                  </button>
+                ))}
+                <DemoBackLink />
+              </span>
+            </div>
+            {/* A real <dialog> opens in the browser's top layer and would escape the
+                device frame this concept is previewed inside, so the text is
+                disclosed in place instead. */}
+            {legal && (
+              <div
+                ref={legalRef}
+                id={`${anchor.id("legal")}-${legal}`}
+                tabIndex={-1}
+                className="pop-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]"
+              >
+                <div className={`${container} pb-6`}>
+                  <div className="rounded-2xl border border-white/15 bg-white/[0.04] p-5">
+                    <h3 className="bl-ink-hi font-display text-[16px] font-bold">
+                      {b.dialogs[legal].title}
+                    </h3>
+                    {b.dialogs[legal].paras.map((p) => (
+                      <p key={p} className="bl-ink mt-2 text-[14px] leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))}
-          </dl>
+            )}
+            <div className={`${container} pb-6`}>
+              <p className="bl-ink-lo text-[13px] leading-relaxed">{b.footer.demo}</p>
+            </div>
+          </div>
+        </footer>
+
+        {/* --- Thumb bar: the two asks, reachable from any scroll position until
+            the frame is wide enough for the header --- */}
+        <div className="sticky bottom-0 z-30 grid grid-cols-[1.2fr_1fr] gap-2 border-t border-[var(--d-line)] bg-[var(--d-bg)]/95 p-2.5 backdrop-blur @3xl:hidden">
+          {asCall(
+            `${copperBtn} w-full`,
+            <>
+              <Phone className="h-[17px] w-[17px]" aria-hidden="true" />
+              {phone.display}
+            </>,
+          )}
+          <button type="button" className={`${outlineBtn} w-full`} onClick={() => goTo("contact")}>
+            {c.ctaPrimary}
+          </button>
         </div>
-      </section>
-
-      {/* Thumb bar: dial and request, both reachable from any section. */}
-      <DemoStickyCta
-        label={c.ctaPrimary ?? ""}
-        href={anchor.href("quote")}
-        secondary={
-          phone
-            ? callHref
-              ? { label: "Call now", href: callHref }
-              : { label: "Call now", onClick: askCall }
-            : undefined
-        }
-      />
-
-      <DemoFooter name={project.name} />
+      </div>
     </DemoVars>
   );
 }

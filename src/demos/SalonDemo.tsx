@@ -24,9 +24,10 @@ import {
    is wide, since a semicircle cap on a landscape photograph eats three quarters
    of the picture. Everywhere else the corners are merely soft.
 
-   Deliberately none of the other three concepts. FlowRight is a services page
-   with pills and a hard edge; Ember & Oak is a dark fire-lit menu; Rowanwood is
-   a printed patient leaflet with a numbered board and a hairline index. This one
+   Deliberately none of the other three concepts. BlueLine is a bright one-page
+   trade site with navy bands, a before/after slider and a hard call-first edge;
+   Ember & Oak is a dark fire-lit menu; Rowanwood is a printed patient leaflet
+   with a numbered board and a hairline index. This one
    is a light studio's own price card: a centred wordmark with the nav split
    either side of it, one continuous ruled list instead of a grid of service
    cards, a roster of stylists written as rows rather than portrait tiles, and a

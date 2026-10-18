@@ -20,18 +20,22 @@ const nextConfig: NextConfig = {
      the wrong project root without this. */
   turbopack: { root: path.join(__dirname) },
 
-  /* Two concepts were dropped from the showcase — the renovation studio and the
-     electrician — and one was renamed when the e-commerce site became a beauty
-     salon. Their URLs were published before, so they are permanently redirected
-     rather than left to 404: the renamed pair to its new address, the removed
-     four to the gallery, where the remaining concepts live. A redirect beats a
-     dead end for anyone who bookmarked or linked one, and it keeps a removed
-     concept unreachable through an old route. `permanent: true` is a 308, which
-     keeps the request method and tells a crawler the address has moved for good. */
+  /* Three concepts have left the showcase since these URLs were first published:
+     the renovation studio and the electrician were dropped outright, the
+     e-commerce site was renamed when it became a beauty salon, and the plumbing
+     concept was replaced whole by a different one. Every old address is
+     permanently redirected rather than left to 404 — the renamed and replaced
+     pairs to their new home, the removed four to the gallery, where the remaining
+     concepts live. A redirect beats a dead end for anyone who bookmarked or linked
+     one, and it keeps a removed concept unreachable through an old route.
+     `permanent: true` is a 308, which keeps the request method and tells a crawler
+     the address has moved for good. */
   async redirects() {
     return [
       { source: "/work/maison-lifestyle", destination: "/work/maison-lune", permanent: true },
       { source: "/demos/maison-lifestyle", destination: "/demos/maison-lune", permanent: true },
+      { source: "/work/flowright-plumbing", destination: "/work/blueline-plumbing", permanent: true },
+      { source: "/demos/flowright-plumbing", destination: "/demos/blueline-plumbing", permanent: true },
       { source: "/work/atlas-renovation", destination: "/projects", permanent: true },
       { source: "/demos/atlas-renovation", destination: "/projects", permanent: true },
       { source: "/work/voltwise-electrical", destination: "/projects", permanent: true },

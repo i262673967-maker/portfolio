@@ -331,6 +331,14 @@ body {
   animation: none;
 }
 
+/* BlueLine's two loops hold the same rule. The status dot animates on its
+   pseudo-element, which the list above cannot name, so it needs its own line —
+   inside a frame the dot simply sits at the state the ping begins from. */
+.demo-scroll :is(.bl-pulse)::after,
+.demo-scroll :is(.bl-map-pulse) {
+  animation: none;
+}
+
 /* ---------------------------------------------------------------
    Page-to-page motion, declared in CSS so it costs no JavaScript: a
    cross-document view transition, opted into by every route through this
@@ -487,7 +495,7 @@ body {
       animation-range: entry 0% entry 45%;
     }
 
-    /* FlowRight's "how a callout works" rail draws itself as the steps come into
+    /* BlueLine's "how a service call works" rail draws itself as the steps come into
        view. The resting state is the finished line, so a visitor on an engine
        without scroll-driven animation — or who asked for reduced motion — simply
        sees a drawn connector, which is exactly what the animation ends on. */
@@ -659,6 +667,229 @@ body {
   }
   .demo-lune-lift:hover img {
     transform: scale(1.04);
+  }
+}
+
+/* BlueLine's two navy bands carry a ruled overlay and a warm/cool glow that the
+   derived tokens cannot express: DemoVars measures text against the page's light
+   surfaces, so a band this dark owns its own ink in the markup. The grid is two
+   1px rules at 4.5% white over the navy, and the glow sits behind the copy as a
+   `::before` so the band's own text never lands on top of a moving gradient.
+   `#0b2135` is the concept's own navy, not the portfolio's. */
+.bl-band {
+  position: relative;
+  overflow: hidden;
+  background-color: #0b2135;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.bl-band-em::before,
+.bl-band-final::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bl-band-em::before {
+  background:
+    radial-gradient(700px 400px at 85% 12%, rgba(194, 103, 46, 0.24), transparent 70%),
+    radial-gradient(520px 380px at 6% 95%, rgba(17, 96, 201, 0.28), transparent 70%);
+}
+
+.bl-band-final::before {
+  background: radial-gradient(640px 380px at 50% 0%, rgba(17, 96, 201, 0.3), transparent 70%);
+}
+
+/* Ink for the two navy bands and the footer. `--d-muted` is measured against
+   this concept's LIGHT surfaces only, so it cannot be trusted on navy; each of
+   these four is a literal that clears AA on `#0b2135` — 16.4, 8.4, 5.2 and
+   11.5 to 1 — and is used only inside a band that paints that navy. */
+.bl-ink-hi {
+  color: #fff;
+}
+.bl-ink {
+  color: #a9bcce;
+}
+.bl-ink-lo {
+  color: #93a6b8;
+}
+.bl-ink-ok {
+  color: #9fe8c0;
+}
+
+/* Copper carries urgency here, but white on the concept's bright copper
+   (`--copper` / `#c2672e`) is 3.98:1 — below AA for a button label. The fill
+   therefore uses the same palette's own deeper copper, `#9e4f1b`, which lifts it
+   to 6.5:1. The bright copper stays decorative: dashes, kickers and icon tiles. */
+.bl-fill-copper {
+  background: #9e4f1b;
+  color: #fff;
+}
+
+/* --- BlueLine's three concept effects ---------------------------------------
+   A draggable before/after plate, a status dot that pings, and a drawn map whose
+   coverage pulse expands. The plate is input-driven, so it is not muted inside a
+   device frame — a control the visitor is invited to drag has to answer the drag.
+   The two loops are, and both are silent on `reduce`, where the dot and the ring
+   simply sit at the state the animation ends in. */
+
+/* One number drives the whole plate. `--split` is where the cut lands, and the
+   clipped photograph, the white rule and the grip all read it, so the three can
+   never disagree. The 20px inset on each side is not decoration: a range input's
+   thumb centre travels from half its own width to the same distance from the far
+   edge, so the split is measured on that same track and the grip stays glued to
+   the line instead of drifting up to 20px off at either end. */
+.bl-ba {
+  --split: calc(20px + (100% - 40px) * var(--p, 0.55));
+  position: relative;
+  overflow: hidden;
+}
+
+.bl-ba-before {
+  clip-path: inset(0 calc(100% - var(--split)) 0 0);
+}
+
+.bl-ba-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 2.5px;
+  margin-left: -1.25px;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* The control is a real slider, so it inherits arrow keys, home/end, a value and
+   a label for free. Its own thumb is invisible and the grip drawn on top of it is
+   `pointer-events: none`, which puts the hit area under the pointer and the
+   picture in the layer above without either one moving on its own. */
+.bl-ba-range {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  width: calc(100% - 40px);
+  height: 44px;
+  margin: 0;
+  transform: translateY(-50%);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.bl-ba-range::-webkit-slider-runnable-track {
+  height: 44px;
+  background: transparent;
+}
+
+.bl-ba-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.bl-ba-range::-moz-range-track {
+  height: 44px;
+  background: transparent;
+}
+
+.bl-ba-range::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.bl-ba-grip {
+  position: absolute;
+  top: 50%;
+  left: var(--split);
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  color: var(--d-accent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* With the thumb invisible the focus ring has to be drawn by the grip, so the
+   plate says plainly which control the arrows are moving. */
+.bl-ba-range:focus {
+  outline: none;
+}
+
+.bl-ba-range:focus-visible + .bl-ba-grip {
+  box-shadow:
+    0 0 0 3px var(--d-accent),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* The live dot beside "Emergency line open". Its resting state is the plain dot
+   the ping starts from, so a visitor who asked for no motion sees the same mark. */
+@keyframes bl-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.bl-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(76, 195, 138, 0.5);
+}
+
+/* The drawn map's coverage ring. `transform-box: fill-box` is what makes scaling
+   an SVG circle happen around its own centre rather than the artwork's. */
+@keyframes bl-map-ping {
+  0% {
+    transform: scale(0.35);
+    opacity: 0.9;
+  }
+  80% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.bl-map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bl-pulse::after {
+    animation: bl-ping 2s ease-out infinite;
+  }
+  .bl-map-pulse {
+    animation: bl-map-ping 2.6s ease-out infinite;
   }
 }
 

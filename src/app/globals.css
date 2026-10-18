@@ -314,7 +314,9 @@ body {
    timelines, already sees. The deliberate exception is input-driven motion (a tab
    crossfade, a confirmation, a hovered plate): a frame the visitor is invited to
    tap should answer the tap. On the concept's own routes — /demos/<slug> and the
-   inline embed on /work/<slug> — all of it plays. */
+   inline embed on /work/<slug> — all of it plays. Ember's fire drawings pulse by
+   class rather than by a `demo-*` name, so Tailwind's own utility is in the list
+   too: inside a frame the flame holds still at full height. */
 .demo-scroll
   :is(
     .demo-reveal,
@@ -326,7 +328,8 @@ body {
     .demo-header-lune,
     .demo-header-dental,
     .reveal,
-    .heading-reveal
+    .heading-reveal,
+    .animate-pulse
   ) {
   animation: none;
 }

@@ -396,14 +396,26 @@ export type ServiceDemoContent = {
       caption: string;
     };
     intro: { eyebrow: string; body: string };
-    /* The two blocks service runs in, and why. Written as a schedule rather than
+    /* The blocks service runs in, and why. Written as a schedule rather than
        a gallery because a twenty-two-cover room with one grill is a constraint
        the visitor has to plan around. */
     seatings: {
       eyebrow: string;
       title: string;
       body: string;
-      blocks: { time: string; label: string; note: string }[];
+      /* Each block asks for itself, because "book this seating" is untrue for the
+         Sunday lunch — the reservation grid has no noon slot. `slot` pre-fills the
+         time only where the grid actually offers it; `preset` writes the request
+         into the ledger note instead, so the diner arrives at the form already
+         having said which fire they want. */
+      blocks: {
+        time: string;
+        label: string;
+        note: string;
+        ask: string;
+        slot?: string;
+        preset?: string;
+      }[];
     };
     menu: {
       eyebrow: string;
@@ -1565,7 +1577,7 @@ export const projects: Project[] = [
         },
         seatings: {
           eyebrow: "Service",
-          title: "Two Blocks, Because One Grill Cannot Be In Two Places At Once",
+          title: "Three Ways To Be Seated, Because One Grill Cannot Be In Two Places At Once",
           body:
             "The room is seated in blocks so the fire can keep up with it. Tables are held for the block you book, not for the whole evening, and nobody is rushed out between the two.",
           blocks: [
@@ -1573,16 +1585,22 @@ export const projects: Project[] = [
               time: "18:00",
               label: "First block",
               note: "The fire is fresh. This is the block to take if you want the grill's attention.",
+              ask: "Book The First Block",
+              slot: "18:00",
             },
             {
               time: "21:00",
               label: "Second block",
               note: "Coals by then, which is what the hearth vegetables want anyway.",
+              ask: "Book The Second Block",
+              slot: "21:00",
             },
             {
               time: "12:00",
               label: "Sunday only",
               note: "One continuous lunch to 17:00, shorter card, no second block.",
+              ask: "Ask For Sunday Lunch",
+              preset: "Sunday lunch — the 12:00 seating. No second block that day.",
             },
           ],
         },

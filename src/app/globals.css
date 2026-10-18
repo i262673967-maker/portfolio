@@ -321,7 +321,6 @@ body {
     .demo-rail-x,
     .demo-rail-y,
     .demo-ken-burns,
-    .demo-pulse,
     .demo-lune-parallax,
     .demo-header-fire,
     .demo-header-lune,
@@ -386,7 +385,7 @@ body {
    by just over half a frame to say there is more below it. Mouse-capable devices
    only, and never when the visitor has asked for reduced motion. */
 .demo-peek {
-  transition: transform 900ms var(--motion-ease);
+  transition: transform var(--motion-long) var(--motion-ease);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -523,36 +522,11 @@ body {
   }
 }
 
-/* --- The live-status dot ------------------------------------------------------
-   Declared inside a `prefers-reduced-motion: no-preference` guard rather than
-   relying on the global duration collapse, so a visitor who asked for no motion
-   never gets the keyframes applied at all. The dot is solid and the ring is the
-   whole animation, so the resting state is the finished look everywhere else. */
-
-@media (prefers-reduced-motion: no-preference) {
-  .demo-pulse {
-    animation: demo-pulse 2.2s ease-out infinite;
-  }
-}
-
-@keyframes demo-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in oklab, var(--d-accent) 60%, transparent);
-  }
-  70% {
-    box-shadow: 0 0 0 7px transparent;
-  }
-  100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-}
-
 /* --- Ember & Oak's two concept effects --------------------------------------
-   Same rule as the pulse above: both are applied only under
-   `prefers-reduced-motion: no-preference` instead of relying on the global
-   duration collapse, and each element's resting state is the finished look, so a
-   visitor who asked for no motion, or an engine that never runs this rule, sees
-   the photo and the menu exactly as they end up. */
+   Both are applied only under `prefers-reduced-motion: no-preference` rather
+   than relying on the global duration collapse, and each element's resting state
+   is the finished look, so a visitor who asked for no motion, or an engine that
+   never runs this rule, sees the photo and the menu exactly as they end up. */
 
 /* The signature moment: the hero photograph drifts. It only ever scales UP from
    its natural size, so the unanimated state can never show an edge of the frame
@@ -688,24 +662,31 @@ body {
   }
 }
 
-/* Mobile menu, without an animation library: the panel stays mounted so it
-   closes as smoothly as it opens, and `grid-template-rows: 0fr -> 1fr` animates
-   an unknown height. `visibility` transitions in steps (delayed on the way out)
+/* Mobile menu, without an animation library: the panel stays mounted so it opens
+   and closes from the same node, and its height is NOT animated — the track jumps
+   straight to 1fr and the list fades into that space, so nothing on this panel is
+   a layout animation. `visibility` transitions in steps (delayed on the way out)
    so the closed list leaves the tab order and the accessibility tree without
    vanishing mid-animation, and `inert` says the same thing to anything that
-   ignores visibility. The list staggers in only while the menu is open, so the
-   animation replays on every open instead of running once at page load. */
+   ignores visibility. The items stagger in only while the menu is open, so the
+   slide replays on every open instead of running once at page load. */
 .menu-panel {
   display: grid;
   grid-template-rows: 0fr;
   visibility: hidden;
-  transition: grid-template-rows 0.25s ease-in-out, visibility 0s linear 0.25s;
+  opacity: 0;
+  transition:
+    opacity var(--motion-short) var(--motion-ease),
+    visibility 0s linear var(--motion-short);
 }
 
 body[data-nav-open="true"] .menu-panel {
   grid-template-rows: 1fr;
   visibility: visible;
-  transition: grid-template-rows 0.25s ease-in-out, visibility 0s;
+  opacity: 1;
+  transition:
+    opacity var(--motion-short) var(--motion-ease),
+    visibility 0s;
 }
 
 .menu-panel > div {

@@ -151,7 +151,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
           <p className="flex items-center gap-2 text-[12px] font-semibold text-[var(--d-bg)]">
             <span
               aria-hidden="true"
-              className="demo-pulse h-2 w-2 shrink-0 rounded-full bg-[var(--d-accent-2)]"
+              className="h-2 w-2 shrink-0 rounded-full bg-[var(--d-accent-2)]"
             />
             {c.availability}
           </p>

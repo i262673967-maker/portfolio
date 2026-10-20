@@ -581,10 +581,14 @@ export default function SalonDemo({ project, preview }: DemoProps) {
               </dl>
             </aside>
 
-            {/* The live step panel, keyed so it rises into place on each change. */}
+            {/* The live step panel, keyed so it rises into place on each change.
+                It is deliberately not its own live region: the key replaces the
+                whole panel on every step, and a region that is torn down and
+                rebuilt announces nothing at all. The two facts a screen reader
+                needs already have their own regions — the step line above and
+                the stub beside it — and once sent, focus lands on the receipt. */}
             <div
               key={`${step}-${sent}`}
-              aria-live="polite"
               className={`order-2 @3xl:order-1 ${sent ? "" : "demo-lune-step"}`}
             >
               {sent ? (
@@ -762,9 +766,9 @@ export default function SalonDemo({ project, preview }: DemoProps) {
 
           {/* Step controls sit under both columns, not inside either, so they
               never move when the panel's height changes. Back disappears at the
-              first step rather than sitting there dead, and Continue only
-              advances once the current step has a choice — with a visible hint
-              saying why it will not. */}
+              first step rather than sitting there dead, and Continue is switched
+              off — not merely inert — until the current step has a choice, with
+              a visible hint beside it saying why. */}
           {!sent && (
             <div className="mt-8 flex items-center justify-between gap-3">
               {step > 0 ? (
@@ -785,9 +789,18 @@ export default function SalonDemo({ project, preview }: DemoProps) {
                   </span>
                 )}
                 {!isLast && (
-                  <Btn className={pill} onClick={() => complete[step] && setStep((n) => n + 1)}>
+                  <button
+                    type="button"
+                    disabled={!complete[step]}
+                    onClick={() => setStep((n) => n + 1)}
+                    className={`${pill} inline-flex min-h-11 items-center justify-center rounded-full px-5 text-[12px] font-semibold transition-transform duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)] disabled:cursor-not-allowed ${
+                      complete[step]
+                        ? "bg-[var(--d-accent)] text-[var(--d-on-accent)] hover:-translate-y-0.5"
+                        : "border border-[var(--d-line-strong)] text-[var(--d-muted)]"
+                    }`}
+                  >
                     {s.booking.ui.next}
-                  </Btn>
+                  </button>
                 )}
               </div>
             </div>

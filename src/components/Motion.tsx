@@ -15,9 +15,11 @@ export default function Motion() {
        a modern Chromium this loop has no work to do. */
     const reveals =
       document.documentElement.dataset.motion === "io"
-        ? [...document.querySelectorAll<HTMLElement>(".reveal, .heading-reveal, .demo-reveal")].filter(
-            (el) => !el.closest(".demo-scroll"),
-          )
+        ? [
+            ...document.querySelectorAll<HTMLElement>(
+              ".reveal, .heading-reveal, .demo-reveal, .demo-rail-x, .demo-rail-y",
+            ),
+          ].filter((el) => !el.closest(".demo-scroll"))
         : [];
     const loops = [...document.querySelectorAll<HTMLElement>(".marquee")];
 

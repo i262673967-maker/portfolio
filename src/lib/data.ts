@@ -569,6 +569,10 @@ export type ServiceDemoContent = {
       eyebrow: string;
       title: string;
       lead: string;
+      /* The index is a real table, so its column heads are data rather than
+         markup: below the point where the rows stack, each cell prints its own
+         head again, and the two copies cannot drift apart. */
+      columns: { treatment: string; duration: string; what: string };
       groups: {
         label: string;
         rows: { name: string; time: string; what: string }[];
@@ -592,7 +596,9 @@ export type ServiceDemoContent = {
       lead: string;
       /* A short numbered run so the first appointment is predictable. */
       steps: { no: string; title: string; body: string }[];
+      bringTitle: string;
       bring: { label: string; body: string }[];
+      accessTitle: string;
       access: string[];
     };
     faq: { eyebrow: string; title: string; lead: string; items: { q: string; a: string }[] };
@@ -622,7 +628,18 @@ export type ServiceDemoContent = {
       submit: string;
       /* Beside the submit button: the last question before pressing it. */
       note: string;
-      confirm: { title: string; lead: string; edit: string };
+      /* Printed across the tear-off edge of both the form and its read-out. */
+      tear: string;
+      confirm: {
+        title: string;
+        lead: string;
+        edit: string;
+        refLabel: string;
+        /* The number is what makes a leaflet feel physical, and it is also the
+           one thing on this page that could be misread as a book entry — so it
+           arrives with the sentence that says what it is not. */
+        refNote: string;
+      };
     };
     hours: { day: string; time: string }[];
     address: string[];
@@ -630,6 +647,10 @@ export type ServiceDemoContent = {
     /* Says what the practice is, in the footer's own voice — the line that keeps
        the fiction from reading as a real clinic. */
     positioning: string;
+    /* The leaflet's own colophons: the four heads it rules across the foot of the
+       page and beside the form, and the line that keeps the fiction from reading
+       as a real clinic. */
+    footer: { hours: string; where: string; find: string; onPage: string; concept: string };
   };
 
   /* --- Salon-concept fields ----------------------------------------------------
@@ -1843,15 +1864,15 @@ export const projects: Project[] = [
     industry: "Hair & Beauty",
     category: "Hospitality",
     summary:
-      "A quiet cream studio site built around an arch-shaped price card, a stylist roster that drops you into the booking already filled, and an honest four-step request.",
+      "A quiet cream studio site built around one continuous price list kept in rule and type, a stylist roster that drops you into the booking with that name already chosen, and an honest four-step request.",
     objective:
       "Make a small studio feel calm and premium, and turn a visitor into an appointment without a heavy storefront.",
     strategy:
-      "Restraint, and one shape. A beauty studio sells on atmosphere and trust, so the room's arches carry the layout — an arched hero plate, arched portrait plates, an arched booking stub — while everything a studio usually pads with cards and stock claims is set as ruled type instead: one continuous dotted-leader menu that filters by family, a roster you can book from directly, and a request that stops short of pretending to send.",
+      "Restraint, and one shape used only where it earns its place. A beauty studio sells on atmosphere and trust, so the room's arches carry the plates that stand taller than they are wide — the arch that opens the page and its shorter companion on a wide screen, the stylist monograms, the one upright photograph — while every wide photograph keeps soft corners instead, because a semicircle cap on a landscape shot eats the picture. Everything a studio usually pads with cards and stock claims is set as ruled type: one continuous dotted-leader menu that filters by family, a roster you can book from directly, and a request that stops short of pretending to send.",
     designDirection: ["Soft luxury", "Arch motif", "Didone editorial", "Calm"],
     keySections: ["Hero", "Statement", "Price Card", "Roster", "Booking", "Gallery", "Visit"],
     mobileNotes: [
-      "Nav collapses to a hamburger sheet below the tablet frame",
+      "The header nav is a hamburger sheet on the phone and tablet frames and only splits around the wordmark at the desktop frame",
       "The live appointment stub moves above the choices, so a phone reads its own summary first",
       "A sticky Book bar keeps the appointment reachable with one thumb",
       "Each gallery plate keeps the ratio measured from its file, so no photograph is cropped and no line jumps as it loads",
@@ -1875,7 +1896,7 @@ export const projects: Project[] = [
         "Photography: Tile Merchant Ireland, Franco Debartolo, Mohamed B., Ksenia Pixelesse and iridial — all used under the Unsplash License. This is a fictional studio; the rooms shown are not this studio's.",
 
       salon: {
-        announcement: "Now booking spring appointments",
+        announcement: "Now booking, Tuesday to Saturday",
         hero: {
           src: "/demos/maison-lune/hero.webp",
           alt: "The studio floor: tan styling chairs beneath arched gold mirrors, a wash basin in the foreground, no people.",
@@ -2145,7 +2166,7 @@ export const projects: Project[] = [
           },
           index: {
             src: "/demos/rowanwood-dental/instruments.webp",
-            alt: "Five periodontal probes laid in a row on a white tray — two orange handles, one purple, two black — with their hooked tips pointing the same way.",
+            alt: "Five dental instruments laid on a white tray: two orange-handled and one purple-handled probe with hooked tips, and two black-handled steel instruments, the end one a mouth mirror.",
             caption: "What a check-up is made of",
           },
           visit: {
@@ -2181,6 +2202,11 @@ export const projects: Project[] = [
           title: "The Work, Listed",
           lead:
             "Every row below is an appointment you can ask about. The time is roughly how long the chair is occupied, not how long you spend in the building.",
+          columns: {
+            treatment: "Treatment",
+            duration: "Chair time",
+            what: "What happens",
+          },
           groups: [
             {
               label: "Routine",
@@ -2289,6 +2315,7 @@ export const projects: Project[] = [
               body: "What we found, what it means, and the options where there is more than one — written down with a number against each item before you leave.",
             },
           ],
+          bringTitle: "What to bring",
           bring: [
             {
               label: "Identification",
@@ -2307,6 +2334,7 @@ export const projects: Project[] = [
               body: "Written down is fine. Half of them are worth asking before you sit down.",
             },
           ],
+          accessTitle: "Getting in",
           access: [
             "Step-free entrance from Ashgrove Lane and a lift to the first floor.",
             "Two parking bays outside, one of them accessible.",
@@ -2391,11 +2419,15 @@ export const projects: Project[] = [
           },
           submit: "Request A Visit",
           note: "No time is held until the practice rings you back.",
+          tear: "Tear here",
           confirm: {
             title: "Asked for, not booked",
             lead:
               "This is what the form received. Nothing left this page, so there is no appointment yet and nobody at the practice has been told to expect you.",
             edit: "Change it",
+            refLabel: "Reference number",
+            refNote:
+              "Written down by this page from what you typed. It is not in the practice's book, because nothing was sent.",
           },
         },
         hours: [
@@ -2412,6 +2444,13 @@ export const projects: Project[] = [
         phone: { display: "(555) 555-0164", href: "tel:+15555550164" },
         positioning:
           "General and family dentistry. Two chairs, one plan, and a number before anything starts.",
+        footer: {
+          hours: "Hours",
+          where: "Where",
+          find: "Find us",
+          onPage: "On this page",
+          concept: "Concept project · not a live client",
+        },
       },
     },
   },

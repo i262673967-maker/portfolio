@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useId, useRef, useState } from "react";
 import type { DemoProps } from "./_shared";
 import {
@@ -18,7 +17,12 @@ import {
 } from "./_shared";
 
 /* 06 — Rowanwood Dental: a two-chair general practice, laid out as a printed
-   leaflet rather than a brochure.
+   patient leaflet rather than a website.
+
+   The page IS a leaflet you're holding. A faint fold line down the middle, the
+   treatment index as a printed table with column headers, the request form as a
+   tear-off slip at the bottom with a reference number that appears on submit.
+   Every detail is designed to feel physical, not digital.
 
    The order follows what a patient actually decides on: whether they can be
    seen, what happens in the chair, how the first visit runs, then the request.
@@ -54,9 +58,11 @@ const actionLine =
   "border border-[var(--d-line-strong)] text-[var(--d-fg)] hover:bg-[var(--d-hover)]";
 
 /* Fields on a pale page. Labels are always visible; the boundary is the 3:1
-   token rather than a decorative hairline. */
+   token rather than a decorative hairline. Sixteen pixels is not a size
+   preference: iOS Safari zooms the whole page to fit a smaller box when a field
+   is focused, and that jump is what a phone visitor feels. */
 const field =
-  "w-full rounded-[2px] border border-[var(--d-line-strong)] bg-[var(--d-field)] px-3.5 py-3 text-[15px] text-[var(--d-fg)] [color-scheme:light] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]";
+  "w-full rounded-[2px] border border-[var(--d-line-strong)] bg-[var(--d-field)] px-3.5 py-3 text-[16px] text-[var(--d-fg)] [color-scheme:light] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--d-accent)]";
 
 const chip =
   "inline-flex min-h-11 cursor-pointer select-none items-center rounded-[2px] border border-[var(--d-line-strong)] px-3.5 text-[13px] leading-none transition-colors hover:bg-[var(--d-hover)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--d-accent)]";
@@ -168,20 +174,34 @@ function Head({
   );
 }
 
+/* Generate a deterministic reference number from the form data. No Math.random,
+   so server and client cannot disagree. */
+function generateRef(req: Request): string {
+  const str = `${req.name}-${req.phone}-${req.reason}-${req.day}`;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return `RW-${Math.abs(hash).toString(36).toUpperCase().slice(0, 6)}`;
+}
+
 export default function DentalDemo({ project, preview }: DemoProps) {
   const anchor = useDemoAnchors();
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-
   const c = project.content;
   const d = c?.dental;
 
   const [sent, setSent] = useState<Request | null>(null);
+  const [refNumber, setRefNumber] = useState<string>("");
+
   /* A `tel:` link inside a device frame would pull the visitor off the page they
      were looking at, so the number stops being a link there. */
   const [callNote, setCallNote] = useState(false);
 
   const done = useRef<HTMLHeadingElement>(null);
   const firstInput = useRef<HTMLInputElement>(null);
+
   /* Set by "Change it", read by the commit below it. A ref rather than state
      because it must not re-render anything, and the field it asks for only
      exists on the next commit. */
@@ -247,8 +267,25 @@ export default function DentalDemo({ project, preview }: DemoProps) {
 
   return (
     <DemoVars project={project}>
+      {/* Faint fold line down the middle — like a bi-fold leaflet. `absolute`,
+          not `fixed`: DemoVars is the positioned block, so the crease stops at
+          the concept's own edges. Held at `fixed` it covered the whole host page
+          through the inline embed on /work/<slug>, where nothing transforms the
+          ancestor, and the line ran down the middle of the portfolio's own
+          navbar. The paper grain that sat with it is gone — an feTurbulence
+          filter is rasterised before the first paint, and at 2% it was reading
+          as nothing behind the crease, the perforation and the hairlines. */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-1/2 z-20 hidden w-px -translate-x-1/2 @5xl:block"
+        style={{
+          backgroundImage: `repeating-linear-gradient(to bottom, var(--d-line) 0, var(--d-line) 4px, transparent 4px, transparent 8px)`,
+          opacity: 0.15,
+        }}
+        aria-hidden="true"
+      />
+
       {/* 1 — The board. Four facts, printed across the top of the page, because
-         "can I be seen and can I get in" decides whether anything below matters. */}
+          "can I be seen and can I get in" decides whether anything below matters. */}
       <div className="border-b border-[var(--d-line)] bg-[var(--d-soft)]">
         {/* Hairlines drawn by the grid itself: a 1px gap over a line-coloured
             track, so the rules appear between cells in both axes without any
@@ -306,7 +343,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
             <p className="mt-6 max-w-2xl text-[15px] leading-[1.8] text-[var(--d-body)] @3xl:text-[16px]">
               {d.hero.lede}
             </p>
-
             {/* The three facts a patient weighs, as a printed key rather than as
                 three feature cards. */}
             <dl className="mt-9 grid gap-px bg-[var(--d-line)] @3xl:grid-cols-3">
@@ -317,7 +353,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 </div>
               ))}
             </dl>
-
             <div className="mt-9 flex flex-col gap-3 @3xl:flex-row @3xl:items-center">
               <a href={anchor.href("booking")} className={`${action} ${actionSolid}`}>
                 {d.hero.ctaPrimary}
@@ -328,7 +363,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
             </div>
             <p className="mt-4 text-[13px] text-[var(--d-muted)]">{d.hero.hoursLine}</p>
           </div>
-
           <figure className="@5xl:pt-4">
             <DemoImage
               src={d.hero.src}
@@ -349,7 +383,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
          the hero, because a person in pain must not scroll to find the phone. */}
       <section
         id={anchor.id("urgent")}
-        className="demo-reveal mt-16 border-y border-[var(--d-accent)] bg-[color-mix(in_srgb,var(--d-accent)_7%,var(--d-bg))] px-4 py-12 @3xl:mt-24 @5xl:px-8 @5xl:py-16"
+        className="demo-reveal mt-16 border-y-2 border-[var(--d-accent)] bg-[color-mix(in_srgb,var(--d-accent)_7%,var(--d-bg))] px-4 py-12 @3xl:mt-24 @5xl:px-8 @5xl:py-16"
       >
         <div className="mx-auto grid max-w-7xl gap-8 @5xl:grid-cols-[1fr_1.15fr] @5xl:gap-16">
           <div>
@@ -440,8 +474,8 @@ export default function DentalDemo({ project, preview }: DemoProps) {
       </section>
 
       {/* 6 — The index. The page's centrepiece: what is done, how long it takes,
-         and what happens in the chair. Rules rather than cards, because a list
-         of rows is what a treatment schedule actually is. */}
+         and what happens in the chair. Now a printed table with column headers,
+         hairline rules between rows, and subtle alternating shading. */}
       <section
         id={anchor.id("index")}
         className="demo-reveal border-t border-[var(--d-line)] bg-[var(--d-soft)] px-4 py-16 @5xl:px-8 @5xl:py-24"
@@ -464,25 +498,73 @@ export default function DentalDemo({ project, preview }: DemoProps) {
               {d.index.costNote}
             </p>
           </div>
-
           <div className="min-w-0">
             {d.index.groups.map((g) => (
               <div key={g.label} className="mt-10 first:mt-0">
                 <h3 className={`${label} text-[var(--d-fg)]`}>{g.label}</h3>
-                <ul className="mt-3 list-none p-0">
-                  {g.rows.map((row) => (
-                    <li
-                      key={row.name}
-                      className="grid gap-x-8 gap-y-1.5 border-t border-[var(--d-line)] py-5 @3xl:grid-cols-[minmax(0,15fr)_8fr_22fr]"
-                    >
-                      <span className="font-display text-[1.15rem] leading-snug text-[var(--d-fg)]">{row.name}</span>
-                      <span className="font-mono text-[12px] leading-relaxed text-[var(--d-accent-text)] @3xl:pt-1.5">
-                        {row.time}
-                      </span>
-                      <p className="text-[14px] leading-[1.75] text-[var(--d-body)] @3xl:pt-1">{row.what}</p>
-                    </li>
-                  ))}
-                </ul>
+                {/* A printed index IS a table, so it is one: the column heads are
+                    real <th scope="col"> cells and the treatment names the row's
+                    header, which is how a reader learns which chair-time belongs
+                    to which treatment instead of hearing three columns in a row.
+                    Below the measure where the leaflet is wide enough for
+                    columns, the head row is put away and each cell prints its own
+                    head again — a stacked row has no column left to point at. */}
+                <div className="mt-3 overflow-hidden rounded-[2px] border border-[var(--d-line)]">
+                  <table className="w-full border-collapse text-left @3xl:table-fixed">
+                    <thead className="hidden @3xl:table-header-group">
+                      <tr className="bg-[var(--d-bg)]">
+                        <th
+                          scope="col"
+                          className={`${label} w-[30%] px-4 py-3 text-left font-normal text-[var(--d-muted)]`}
+                        >
+                          {d.index.columns.treatment}
+                        </th>
+                        <th
+                          scope="col"
+                          className={`${label} w-[16%] px-4 py-3 text-left font-normal text-[var(--d-muted)]`}
+                        >
+                          {d.index.columns.duration}
+                        </th>
+                        <th scope="col" className={`${label} px-4 py-3 text-left font-normal text-[var(--d-muted)]`}>
+                          {d.index.columns.what}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="block @3xl:table-row-group">
+                      {g.rows.map((row, i) => (
+                        <tr
+                          key={row.name}
+                          className={`block border-t border-[var(--d-line)] @3xl:table-row ${
+                            i % 2 === 0
+                              ? "bg-[var(--d-bg)]"
+                              : "bg-[color-mix(in_srgb,var(--d-soft)_50%,var(--d-bg))]"
+                          }`}
+                        >
+                          <th
+                            scope="row"
+                            className="block px-4 pt-4 text-left font-display text-[1.15rem] font-normal leading-snug text-[var(--d-fg)] @3xl:table-cell @3xl:py-5 @3xl:align-top"
+                          >
+                            {row.name}
+                          </th>
+                          <td className="block px-4 pt-1.5 @3xl:table-cell @3xl:py-5 @3xl:align-top">
+                            <span className={`block text-[var(--d-muted)] @3xl:hidden ${label}`}>
+                              {d.index.columns.duration}
+                            </span>
+                            <span className="block font-mono text-[12px] leading-relaxed text-[var(--d-accent-text)]">
+                              {row.time}
+                            </span>
+                          </td>
+                          <td className="block px-4 pb-4 pt-1.5 @3xl:table-cell @3xl:py-5 @3xl:align-top">
+                            <span className={`block text-[var(--d-muted)] @3xl:hidden ${label}`}>
+                              {d.index.columns.what}
+                            </span>
+                            <span className="block text-[14px] leading-[1.75] text-[var(--d-body)]">{row.what}</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ))}
           </div>
@@ -528,7 +610,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
         <div className="mx-auto grid max-w-7xl gap-12 @5xl:grid-cols-[1fr_20rem] @5xl:gap-16">
           <div className="min-w-0">
             <Head eyebrow={d.visit.eyebrow} title={d.visit.title} lead={d.visit.lead} />
-
             <ol className="mt-9">
               {d.visit.steps.map((s) => (
                 <li key={s.no} className="grid gap-x-6 border-t border-[var(--d-line)] py-6 @3xl:grid-cols-[4rem_1fr]">
@@ -542,8 +623,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 </li>
               ))}
             </ol>
-
-            <h3 className={`mt-12 ${label} text-[var(--d-muted)]`}>What to bring</h3>
+            <h3 className={`mt-12 ${label} text-[var(--d-muted)]`}>{d.visit.bringTitle}</h3>
             <ul className="mt-3 grid gap-x-8 list-none p-0 @3xl:grid-cols-2">
               {d.visit.bring.map((b) => (
                 <li key={b.label} className="border-t border-[var(--d-line)] py-4">
@@ -553,7 +633,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
               ))}
             </ul>
           </div>
-
           <div>
             <figure>
               <DemoImage
@@ -566,8 +645,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 {d.plates.visit.caption}
               </figcaption>
             </figure>
-
-            <h3 className={`mt-9 ${label} text-[var(--d-muted)]`}>Getting in</h3>
+            <h3 className={`mt-9 ${label} text-[var(--d-muted)]`}>{d.visit.accessTitle}</h3>
             <ul className="mt-3 flex flex-col gap-2.5 list-none p-0">
               {d.visit.access.map((a) => (
                 <li key={a} className="flex items-start gap-3 text-[14px] leading-[1.7] text-[var(--d-body)]">
@@ -588,8 +666,9 @@ export default function DentalDemo({ project, preview }: DemoProps) {
         </div>
       </section>
 
-      {/* 10 — The request. Chips for the choices a front desk asks over the
-         phone, and a read-out that says plainly that no appointment exists yet. */}
+      {/* 10 — The request. Now a tear-off slip with a perforated edge, a
+          reference number on submit, and the honest read-out that says plainly
+          that no appointment exists yet. */}
       <section
         id={anchor.id("booking")}
         className="demo-reveal border-t border-[var(--d-line)] bg-[var(--d-soft)] px-4 pt-16 pb-28 @3xl:pb-16 @5xl:px-8 @5xl:py-24"
@@ -598,10 +677,24 @@ export default function DentalDemo({ project, preview }: DemoProps) {
           <div className="max-w-2xl">
             <Head eyebrow={d.booking.eyebrow} title={d.booking.title} lead={d.booking.body} />
           </div>
-
           <div className="mt-12 @5xl:grid @5xl:grid-cols-[1.3fr_1fr] @5xl:gap-16 @5xl:items-start">
             {sent ? (
-              <div className="demo-menu-fade rounded-[2px] border border-[var(--d-accent)] bg-[var(--d-bg)] px-5 py-8 @3xl:px-8">
+              /* The tear-off slip with reference number */
+              <div className="demo-menu-fade relative rounded-[2px] border-2 border-[var(--d-accent)] bg-[var(--d-bg)] px-5 py-8 @3xl:px-8">
+                {/* Perforated edge at the top */}
+                <div
+                  className="absolute inset-x-0 -top-3 h-3"
+                  style={{
+                    backgroundImage: `repeating-linear-gradient(to right, var(--d-accent) 0, var(--d-accent) 8px, transparent 8px, transparent 16px)`,
+                  }}
+                  aria-hidden="true"
+                />
+                {/* Twelve pixels, not ten: the floor the whole portfolio was set
+                    to, and this tab is the leaflet's signature. */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full bg-[var(--d-accent)] px-3 py-1 text-[12px] font-semibold uppercase tracking-wider text-[var(--d-on-accent)]">
+                  {d.booking.tear}
+                </div>
+
                 <h3
                   ref={done}
                   tabIndex={-1}
@@ -609,6 +702,17 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 >
                   {d.booking.confirm.title}
                 </h3>
+
+                {/* The reference number, and the sentence that keeps it from
+                    being read as a book entry. Mono at 500, not bold: the loaded
+                    mono weight stops there, and a synthetic bold would smear the
+                    characters the visitor is meant to read digit by digit. */}
+                <div className="mt-4 rounded-[2px] border border-[var(--d-accent)] bg-[color-mix(in_srgb,var(--d-accent)_10%,var(--d-bg))] px-4 py-3">
+                  <p className={`${label} text-[var(--d-muted)]`}>{d.booking.confirm.refLabel}</p>
+                  <p className="mt-1 font-mono text-[1.3rem] font-medium text-[var(--d-accent-text)]">{refNumber}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[var(--d-body)]">{d.booking.confirm.refNote}</p>
+                </div>
+
                 <p className="mt-3 max-w-md text-[14px] leading-relaxed text-[var(--d-body)]">
                   {d.booking.confirm.lead}
                 </p>
@@ -632,6 +736,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                        effect above is told to move focus once it does. */
                     editing.current = true;
                     setSent(null);
+                    setRefNumber("");
                   }}
                   className={`${action} ${actionLine} mt-8`}
                 >
@@ -639,13 +744,30 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 </button>
               </div>
             ) : (
+              /* The form as a tear-off slip */
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   setSent(form);
+                  setRefNumber(generateRef(form));
                 }}
-                className="rounded-[2px] border border-[var(--d-line)] bg-[var(--d-bg)] px-5 py-8 @3xl:px-8"
+                className="relative rounded-[2px] border border-[var(--d-line)] bg-[var(--d-bg)] px-5 py-8 @3xl:px-8"
               >
+                {/* Perforated edge at the top */}
+                <div
+                  className="absolute inset-x-0 -top-3 h-3"
+                  style={{
+                    backgroundImage: `repeating-linear-gradient(to right, var(--d-line-strong) 0, var(--d-line-strong) 8px, transparent 8px, transparent 16px)`,
+                  }}
+                  aria-hidden="true"
+                />
+                {/* Same sticker as the read-out gets: a muted 12px label on the
+                    grey fill measured at 1.5:1, so the tab keeps the accent pair
+                    and the perforation below it stays decorative. */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-full bg-[var(--d-accent)] px-3 py-1 text-[12px] font-semibold uppercase tracking-wider text-[var(--d-on-accent)]">
+                  {d.booking.tear}
+                </div>
+
                 <div className="flex flex-col gap-7">
                   <Choices
                     legend={d.booking.legends.reason}
@@ -680,7 +802,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                       onSelect={(v) => set("time", v)}
                     />
                   </div>
-
                   <div className="grid gap-6 border-t border-[var(--d-line)] pt-7 @3xl:grid-cols-2">
                     <Field id={`${uid}-name`} name={d.booking.name}>
                       <input
@@ -720,7 +841,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                       />
                     </Field>
                   </div>
-
                   <Field id={`${uid}-notes`} name={d.booking.notes} hint={d.booking.hints.notes}>
                     <textarea
                       id={`${uid}-notes`}
@@ -732,7 +852,6 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                     />
                   </Field>
                 </div>
-
                 <div className="mt-8 flex flex-col gap-4 @3xl:items-center @3xl:justify-between @3xl:flex-row">
                   <button type="submit" className={`${action} ${actionSolid} w-full @3xl:w-auto`}>
                     {d.booking.submit}
@@ -743,10 +862,9 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                 </div>
               </form>
             )}
-
             {/* The desk's own details, beside the form rather than below it. */}
             <div className="mt-12 @5xl:mt-0">
-              <h3 className={`${label} text-[var(--d-muted)]`}>Hours</h3>
+              <h3 className={`${label} text-[var(--d-muted)]`}>{d.footer.hours}</h3>
               <ul className="mt-3 list-none p-0">
                 {d.hours.map((h) => (
                   <li
@@ -758,8 +876,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                   </li>
                 ))}
               </ul>
-
-              <h3 className={`mt-9 ${label} text-[var(--d-muted)]`}>Where</h3>
+              <h3 className={`mt-9 ${label} text-[var(--d-muted)]`}>{d.footer.where}</h3>
               <address className="mt-3 text-[14px] leading-relaxed not-italic text-[var(--d-body)]">
                 {d.address.map((line) => (
                   <span key={line} className="block">
@@ -792,7 +909,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
             <p className="mt-4 max-w-xs text-[12px] leading-relaxed text-[var(--d-muted)]">{DEMO_NOTE}</p>
           </div>
           <div>
-            <h3 className={`${label} text-[var(--d-muted)]`}>Hours</h3>
+            <h3 className={`${label} text-[var(--d-muted)]`}>{d.footer.hours}</h3>
             <ul className="mt-3 list-none p-0">
               {d.hours.map((h) => (
                 <li key={h.day} className="text-[13px] leading-relaxed text-[var(--d-body)]">
@@ -802,7 +919,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
             </ul>
           </div>
           <div>
-            <h3 className={`${label} text-[var(--d-muted)]`}>Find us</h3>
+            <h3 className={`${label} text-[var(--d-muted)]`}>{d.footer.find}</h3>
             <address className="mt-3 text-[13px] leading-relaxed not-italic text-[var(--d-body)]">
               {d.address.map((line) => (
                 <span key={line} className="block">
@@ -813,7 +930,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
             </address>
           </div>
           <div>
-            <h3 className={`${label} text-[var(--d-muted)]`}>On this page</h3>
+            <h3 className={`${label} text-[var(--d-muted)]`}>{d.footer.onPage}</h3>
             <ul className="mt-3 flex flex-col gap-1.5 list-none p-0">
               {[...navItems, ["In pain today", "urgent"], ["Request a visit", "booking"]].map(([text, section]) => (
                 <li key={section}>
@@ -830,7 +947,7 @@ export default function DentalDemo({ project, preview }: DemoProps) {
         </div>
         <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-5 gap-y-1">
           <p className="font-mono text-[12px] uppercase tracking-[0.1em] text-[var(--d-muted)]">
-            Concept project · not a live client
+            {d.footer.concept}
           </p>
           {/* This concept builds its own footer rather than the shared one, so the
               way back to the project list is placed here too. It only renders on

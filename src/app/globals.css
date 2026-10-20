@@ -467,6 +467,15 @@ body {
     animation: reveal-in var(--reveal-dur, var(--motion-long)) var(--motion-ease) both;
     animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger) + var(--reveal-delay, 0s));
   }
+  /* The rails draw themselves once, in one direction, so an arrival trigger is the
+     whole effect: the same observer that arms a section can arm them, on a clock
+     instead of a scroll position. Their unarmed state stays the finished line. */
+  html[data-motion="io"] .demo-rail-x.is-in {
+    animation: rail-draw-x var(--motion-long) var(--motion-ease) both;
+  }
+  html[data-motion="io"] .demo-rail-y.is-in {
+    animation: rail-draw-y var(--motion-long) var(--motion-ease) both;
+  }
 }
 
 @keyframes underline-in {

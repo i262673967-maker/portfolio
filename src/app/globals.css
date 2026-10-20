@@ -742,6 +742,21 @@ body {
   color: #fff;
 }
 
+/* The same deeper copper for copper-coloured TEXT. `--d-accent-2` is measured
+   against this concept's own palette as a fill; used as ink it is 3.98:1 on
+   white, and a 12.5px kicker or a 15px step number is not large text, so AA
+   wants 4.5. Bright copper stays on rules, dots and tiles. */
+.bl-ink-copper {
+  color: #9e4f1b;
+}
+
+/* `--d-accent-text` is derived for the light page, and the footer band paints
+   navy: the concept blue on `#0b2135` is 2.76:1. This is that blue lifted to a
+   tint that reads on navy (8.56:1) without leaving the palette. */
+.bl-ink-link {
+  color: #8bc0f7;
+}
+
 /* --- BlueLine's three concept effects ---------------------------------------
    A draggable before/after plate, a status dot that pings, and a drawn map whose
    coverage pulse expands. The plate is input-driven, so it is not muted inside a

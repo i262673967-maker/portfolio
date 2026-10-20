@@ -950,7 +950,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                 <div className="mt-6 grid gap-5 @4xl:grid-cols-3">
                   {b.values.items.map((v) => (
                     <article key={v.no} className={`${card} p-6`}>
-                      <span className="font-display text-[15px] font-extrabold tracking-[0.1em] text-[var(--d-accent-2)]">
+                      <span className="bl-ink-copper font-display text-[15px] font-extrabold tracking-[0.1em]">
                         {v.no}
                       </span>
                       <h4 className="mt-2 font-display text-[19px] font-bold tracking-[-0.01em] text-[var(--d-fg)]">
@@ -1046,7 +1046,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                           className="aspect-[4/3] w-full @3xl:aspect-auto @3xl:h-full"
                         />
                         <div className="p-6 @4xl:p-8">
-                          <p className="flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.16em] text-[var(--d-accent-2)]">
+                          <p className="bl-ink-copper flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.16em]">
                             <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                             {d.kicker}
                           </p>
@@ -1393,7 +1393,7 @@ export default function PlumberDemo({ project, preview }: DemoProps) {
                     {b.dialogs[kind].title}
                   </button>
                 ))}
-                <DemoBackLink />
+                <DemoBackLink className="bl-ink-link" />
               </span>
             </div>
             {/* A real <dialog> opens in the browser's top layer and would escape the

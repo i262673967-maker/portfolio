@@ -365,22 +365,45 @@ export type ServiceDemoContent = {
   };
 
   /* --- Restaurant-concept fields ------------------------------------------------
-     The fire-led dining layout is a menu, a room and a booking panel rather than
-     a service brochure, so it reads a course list, photography for a story split
-     and a lightbox gallery, and the hours an address a diner actually needs.
+     A diner reads a restaurant site in the order the evening actually happens:
+     when it is open, what the room is like, what is on the card, how to get a
+     table. So this layout is a board of hours, a fire that is chosen rather than
+     admired, the card as a list you can filter down to what you can eat, two
+     forms that assemble a ticket in front of you and say plainly that nothing
+     left the page, and a visit block whose open or closed line is worked out from
+     the hours printed underneath it instead of asserted.
 
      All OPTIONAL and read only by RestaurantDemo, so the three service concepts
-     and the storefront are untouched. Dishes, prices, the street and the phone
+     and the storefront are untouched. The dishes, the street and the telephone
      are invented for the fiction — the number stays inside the 555-01XX range and
-     the page carries the concept note everywhere it is needed. */
+     the page carries the concept note everywhere it is needed.
+
+     What is deliberately NOT here, and why: no prices, so no figure on this page
+     can be read as a sum a fictional room charges (`noPrices` says why in the
+     concept's own voice); no reviews, star ratings, diner counts or press quotes;
+     no photographs — every `slot` names the picture a real build would put there
+     instead of borrowing somebody else's room; no live availability, so nothing
+     can claim a table is held; and no map service, because a link to a street that
+     does not exist would be a broken promise rather than a placeholder. */
   restaurant?: {
     /* The service board above the header. A fire restaurant decides its evening
        hours before it decides anything else, so the facts a diner needs come
-       before the photograph of the room. */
+       before the drawing of the fire. */
     board: string[];
+    header: {
+      /* Beside the wordmark, so the fiction is on the fold and not only in the
+         colophon. */
+      concept: string;
+      /* The week's shape, printed before any clock has been read. */
+      openLine: string;
+      /* The chip's own lead-in, so a computed line never reads as a fact about
+         the room: it is arithmetic on the hours on this page and the clock in the
+         visitor's own device. */
+      statusLead: string;
+      phoneLabel: string;
+      book: string;
+    };
     hero: {
-      src: string;
-      alt: string;
       /* The headline is set in two parts so the second can carry the italic. */
       headline: string;
       accent: string;
@@ -388,100 +411,144 @@ export type ServiceDemoContent = {
       /* The paragraph that does the deciding: what the place is, and the one
          limitation it does not hide. */
       lede: string;
-      /* The line a deciding diner looks for first: when the room is open. */
       hoursLine: string;
       /* Three facts set as a hairline row under the actions — covers, seatings,
          how often the card changes. */
       facts: { label: string; value: string }[];
-      caption: string;
+      /* The fire itself. The room's three seating blocks, each drawn as the fire
+         at that age, selectable, and each carrying its own ask into the ledger.
+         This is the idea the page is built around, so it sits in the hero rather
+         than in a band of cards further down the page. */
+      fire: {
+        title: string;
+        body: string;
+        blocks: {
+          time: string;
+          label: string;
+          note: string;
+          ask: string;
+          /* Pre-fills the ledger's slot only where the generated grid offers it;
+             a Sunday lunch writes the request into the note instead. */
+          slot?: string;
+          preset?: string;
+        }[];
+        /* Said once per block state, so pressing a chip answers. */
+        live: string;
+        drawn: string;
+      };
+      /* The plate the photograph used to fill: a labelled slot, not a picture. */
+      slot: { kind: string; note: string };
     };
     intro: { eyebrow: string; body: string };
-    /* The blocks service runs in, and why. Written as a schedule rather than
-       a gallery because a twenty-two-cover room with one grill is a constraint
-       the visitor has to plan around. */
-    seatings: {
+    /* The evening told in stages, one at a time, so a diner reads the shape of the
+       meal before reading a card of eighteen dishes. */
+    evening: {
       eyebrow: string;
       title: string;
       body: string;
-      /* Each block asks for itself, because "book this seating" is untrue for the
-         Sunday lunch — the reservation grid has no noon slot. `slot` pre-fills the
-         time only where the grid actually offers it; `preset` writes the request
-         into the ledger note instead, so the diner arrives at the form already
-         having said which fire they want. */
-      blocks: {
-        time: string;
-        label: string;
-        note: string;
-        ask: string;
-        slot?: string;
-        preset?: string;
-      }[];
+      stages: { label: string; line: string; note: string; slot: { kind: string; note: string } }[];
+      prev: string;
+      next: string;
+      dots: string;
+      /* Reads as "Stage 2 of 4" to a screen reader on every change. */
+      of: string;
+      hint: string;
     };
     menu: {
       eyebrow: string;
       title: string;
       lead: string;
-      /* Explains the bare numbers on the card, and states the one thing every
-         printed card leaves unsaid. */
-      priceNote: string;
-      /* Sits under the ledger. No kitchen sharing one fire can promise a dish is
-         free of anything, so the page says so instead of implying it. */
+      /* Why there are no numbers on this card — the honest answer, in the
+         concept's voice, placed where a diner expects a price. */
+      noPrices: string;
+      /* The filters. `key` is what a dish's `marks` are matched against; the
+         first entry is the unfiltered view, and `heat` is the one key that is not
+         a mark of its own — it looks for a dish carrying either heat word. */
+      filters: { key: string; label: string }[];
+      /* Sits under the card: a legend, so a mark is not a mystery. `mark` is one
+         of the keys a dish actually carries, and the glyph printed for it is the
+         component's own business. */
+      legend: { mark: string; means: string }[];
+      countNoun: string;
+      /* No kitchen sharing one fire can promise a dish is free of anything, so the
+         page says so instead of implying the opposite. */
       allergy: string;
-      /* Sits under the ledger: a menu this short cannot promise the dish on the
-         day is the dish on the card. */
+      /* The card is rewritten weekly: a menu this short cannot promise the dish on
+         the day is the dish on the card. */
       note: string;
-      courses: {
+      sections: {
         label: string;
         blurb: string;
-        dishes: { name: string; desc: string; price: string }[];
+        slot: { kind: string; note: string };
+        dishes: {
+          name: string;
+          desc: string;
+          /* Dietary and heat marks. `veg`, `vegan` and `gf` filter on themselves;
+             either heat word is what the `heat` filter looks for. */
+          marks: ("veg" | "vegan" | "gf" | "medium" | "hot")[];
+        }[];
       }[];
     };
-    story: {
+    room: {
       eyebrow: string;
       title: string;
       paras: string[];
-      /* The asymmetric split: one tall plate, one smaller one offset over it. */
-      tall: { src: string; alt: string };
-      small: { src: string; alt: string };
-      caption: string;
+      quote: string;
+      tall: { kind: string; note: string };
+      small: { kind: string; note: string };
     };
-    gallery: {
-      eyebrow: string;
-      title: string;
-      lead: string;
-      /* `ratio` is the file's own measured pixel ratio, held per plate rather
-         than looked up by position: the box then matches the photograph whatever
-         order the list is in, and nothing reflows when the file arrives. */
-      items: { src: string; alt: string; caption: string; ratio: string }[];
-    };
-    events: {
+    /* The long table. A separate form from the reservation, because a group is
+       enquired about rather than taken, and the two answers a host gives are
+       different: one is a table, the other is a conversation. */
+    groups: {
       eyebrow: string;
       title: string;
       body: string;
-      /* Stated as facts a host would confirm on the phone, not as a package. */
+      bands: string[];
+      /* Above the size chips: what a party this page cannot take has to do. */
+      callUs: string;
       points: string[];
-      cta: string;
-      /* Written into the booking note when the room enquiry is pressed, so the
-         form the visitor arrives at already says what they are asking for. */
-      preset: string;
-      src: string;
-      alt: string;
+      fields: { size: string; date: string; name: string; contact: string; notes: string };
+      /* Read beside the ticket. */
+      note: string;
+      /* There is no submit button on this form. A group goes through a
+         conversation, so the ticket assembles itself as the fields change and the
+         page avoids repeating the same "nothing was sent" answer twice. */
+      ticket: { title: string; lead: string; empty: string };
     };
     booking: {
       eyebrow: string;
       title: string;
       body: string;
-      /* The slots offered by the side, not a free clock: a restaurant releases
-         tables in services, and a grid of times says so more honestly than a
-         time picker that will accept 03:47. */
-      times: string[];
       /* Party sizes the form will take. Larger than this goes to the phone, and
          the chips say so instead of a validation error after the fact. */
       parties: number[];
+      callUs: string;
       /* Optional context a reservation book actually records. */
       occasions: string[];
-      hours: { day: string; time: string }[];
+      /* The slots are generated from `week`, not listed: a grid of times that
+         cannot be reconciled with the printed hours is a lie a diner finds out at
+         the door. `stepMinutes` is the gap the book works in and
+         `lastSeatingMinutes` is how long before close the final table sits. */
+      stepMinutes: number;
+      lastSeatingMinutes: number;
+      slotAsk: string;
+      slotNone: string;
+      /* `dow` matches JavaScript's own day number — Monday is 1, Sunday is 0 — so
+         the live status and the slot grid read the same table. `open` and `close`
+         are minutes from midnight; a null `open` is a day the room does not serve.
+         `shown` is the string printed in the table, so the clock and the prose can
+         never disagree by being edited separately. */
+      week: { day: string; dow: number; open: number | null; close: number; shown: string }[];
+      hoursTitle: string;
+      closedWord: string;
+      /* The qualification under the computed status line. */
+      statusNote: string;
       address: string[];
+      access: string;
+      parking: string;
+      /* What the drawn plan stands in for, said out loud. */
+      planNote: string;
       phone: { display: string; href: string };
       /* The submit ask itself — a restaurant books a table, so the button says
          what pressing it does rather than reusing the page's generic CTA. */
@@ -495,14 +562,25 @@ export type ServiceDemoContent = {
          held — the request cannot reach a book from this page. */
       confirm: { title: string; lead: string; edit: string };
     };
+    /* The transparency band: the things a printed card leaves unsaid, including
+       the one that costs the room a sale. */
+    how: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      points: { title: string; text: string }[];
+    };
   };
 
   /* --- Dental-concept fields ---------------------------------------------------
      A practice earns or loses the visit in the same two places every other local
      business does: what it costs, and whether anyone will explain it to you. So
-     this layout is built as a printed patient leaflet — a status board, an index
-     of what happens and how long it takes, and a request form — rather than a
-     brochure of promises.
+     this layout keeps a leaflet's bones — a board of facts, an index of what
+     happens and how long it takes, a tear-off request slip at the foot — and
+     adds the three things a leaflet can never do: it answers back when you point
+     at the part of your mouth that hurts, it talks you through whether what you
+     have can wait until Monday, and it translates the words on your letter from
+     the practice.
 
      All OPTIONAL and read only by DentalDemo, so the other concepts are
      untouched. The practice name, street, hours and number are invented for the
@@ -513,36 +591,97 @@ export type ServiceDemoContent = {
      registrations or years of practice (a qualification attached to an invented
      person is a fabricated credential, and the concept has no real dentist to
      credit); no patient testimonials, star ratings, review counts or
-     before/after claims; no success rates or outcomes; and no price list. The
-     last one is the honest position rather than a dodge — the number depends on
-     what the examination finds, so the page says where the number appears
-     instead of inventing one. */
+     before/after claims — the reviews block below is an empty, labelled slot
+     that says so out loud; no success rates or outcomes; no price list or price
+     range (a number for a practice that does not exist would be an invented
+     price, and a real one depends on what the examination finds); no live
+     scheduler, so nothing on the page can claim a time has been booked; and no
+     photographs, because the pictures this concept would need are of a building
+     that is not there — `slots` labels each one as a placeholder instead. */
   dental?: {
-    /* The board above the header: the four facts that decide whether to call. */
-    board: string[];
+    /* The board above the header: the four facts that decide whether to call,
+       each filed under the small head it answers. */
+    board: { tag: string; text: string }[];
+    header: {
+      /* Beside the practice name, so the fiction is on the fold and not only in
+         the colophon. */
+      concept: string;
+      /* The week's shape rather than a live open/closed light: a chip that
+         claims to know the time is one clock-sync away from lying. */
+      openLine: string;
+      phoneLabel: string;
+      book: string;
+    };
+    /* The hero's own widget: a paced breath. It runs on a timer the visitor can
+       stop, and it stops by itself for anyone whose device asks for less motion. */
+    calm: {
+      label: string;
+      /* The three counts, in seconds, in the order the disc walks them. */
+      phases: { word: string; seconds: number }[];
+      /* The line under the disc, where the pattern is named in words. */
+      pattern: string;
+      pause: string;
+      resume: string;
+      note: string;
+    };
     hero: {
-      src: string;
-      alt: string;
+      eyebrow: string;
       /* Split so the second line can carry the italic accent. */
       headline: string;
       accent: string;
-      eyebrow: string;
       /* The paragraph that does the deciding, including the limitation the
          practice does not hide. */
       lede: string;
-      hoursLine: string;
       facts: { label: string; value: string }[];
       ctaPrimary: string;
       ctaSecondary: string;
       caption: string;
     };
-    /* Three plates below the fold: a wide band for the practice statement, and
-       one in each of the two side rails. Without them the page is a single
-       photograph and a wall of text. */
-    plates: {
-      practice: { src: string; alt: string; caption: string };
-      index: { src: string; alt: string; caption: string };
-      visit: { src: string; alt: string; caption: string };
+    /* Every picture this concept would want is of a building that does not
+       exist, so each one is a labelled slot that says what a real build puts
+       there. Nothing pretends to be a photograph of Rowanwood House. */
+    slots: {
+      kind: string;
+      hero: { note: string; ratio: string };
+      nerves: { note: string; ratio: string };
+      visit: { note: string; ratio: string };
+      map: { note: string; ratio: string };
+    };
+    /* 01 — The planner: point at the part of the mouth, then at the words that
+       sound like yours. The picks are carried into the request slip, so the
+       visitor never types twice what they already answered by tapping. */
+    planner: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      /* Four tappable zones on the drawn diagram. */
+      areasHead: string;
+      areas: { key: string; name: string; hint: string }[];
+      /* The one word drawn inside the diagram, so the chart says which end is
+         which. Lowercase on purpose: it is set in letterspaced caps by the CSS. */
+      chartFront: string;
+      unsure: string;
+      concernHead: string;
+      concerns: {
+        key: string;
+        label: string;
+        /* What a visit for this usually involves, in the plain words the page
+           promises. Held as a list so a phone reads it as steps, not a block. */
+        involves: string[];
+        time: string;
+        /* The reason chip this concern selects in the slip — it has to be one
+           of `booking.reasons`, checked at compile time by the read in DentalDemo. */
+        reason: string;
+      }[];
+      /* Shown before anything is picked, so the panel is never an empty box. */
+      empty: string;
+      /* The sentence that keeps a diagram from reading as a diagnosis. */
+      disclaimer: string;
+      areaNote: string;
+      carry: string;
+      carryBtn: string;
+      clear: string;
+      skip: { text: string; link: string };
     };
     /* The band a person in pain lands on. It sends them to the phone and names
        the one thing this kind of practice is not for. */
@@ -561,9 +700,33 @@ export type ServiceDemoContent = {
       /* …and into the reason chips, which is why it has to be one of them. */
       prefillReason: string;
     };
+    /* The self-check. Three outcomes, and the order the questions are asked in
+       is the order of danger: the first YES that matches decides, so a swollen
+       jaw can never be talked out of the emergency department by a later answer
+       about a chipped tooth. */
+    triage: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      yes: string;
+      no: string;
+      again: string;
+      /* Each question names the outcome a YES points at. */
+      questions: { text: string; out: "emergency" | "today" | "routine" }[];
+      outcomes: {
+        emergency: { title: string; body: string; list: string[]; cta: string };
+        today: { title: string; body: string; list: string[]; cta: string };
+        routine: { title: string; body: string; list: string[]; cta: string };
+      };
+      noneTitle: string;
+      noneBody: string;
+      /* Under the result, always: a page cannot see the tooth. */
+      disclaimer: string;
+      slipLabel: string;
+    };
     /* The examination-first promise, set as the page's opening argument. */
     intro: { eyebrow: string; title: string; body: string; aside: string };
-    /* Two groups of rows, each with what happens and how long it takes. No
+    /* 02 — Two groups of rows, each expandable to what happens in the chair. No
        prices, and the note underneath says why. */
     index: {
       eyebrow: string;
@@ -575,37 +738,97 @@ export type ServiceDemoContent = {
       columns: { treatment: string; duration: string; what: string };
       groups: {
         label: string;
-        rows: { name: string; time: string; what: string }[];
+        rows: {
+          name: string;
+          time: string;
+          what: string;
+          /* The plain-language version, behind the row head. */
+          detail: string[];
+        }[];
       }[];
+      expand: string;
+      collapse: string;
       costNote: string;
+      /* The line under the whole index, and the two ways out of it. */
+      footNote: string;
+      ctaPlanner: string;
+      ctaVisit: string;
+    };
+    /* What a written plan is made of. The one thing this page will not do is put
+       a number against it, so instead it gives the visitor the four questions
+       that make any number they are later handed make sense. */
+    cost: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      partsHead: string;
+      parts: { name: string; body: string }[];
+      driversHead: string;
+      drivers: { name: string; body: string }[];
+      askHead: string;
+      ask: string[];
+      /* Why there is no price list, said once and plainly. */
+      honest: string;
+      cta: string;
     };
     /* The section that wins the nervous patient: four things the practice does,
        each concrete enough to check. */
     nerves: {
       eyebrow: string;
       title: string;
-      body: string;
+      lead: string;
       points: { title: string; body: string }[];
       cta: string;
+      /* The quieter offer beside the main one: a visit that is only a look round. */
+      ctaQuiet: string;
+      quietPrefill: string;
       prefill: string;
     };
-    /* The practical half: what to bring, how long, how to get in. */
+    /* The practical half: how the hour actually runs, what to bring, how to get in. */
     visit: {
       eyebrow: string;
       title: string;
       lead: string;
-      /* A short numbered run so the first appointment is predictable. */
-      steps: { no: string; title: string; body: string }[];
+      /* The chip that says what the hour is booked as. */
+      badge: string;
+      /* Minute marks rather than step numbers: what a patient is really weighing
+         is how long each part takes. */
+      steps: { mark: string; title: string; body: string }[];
       bringTitle: string;
-      bring: { label: string; body: string }[];
+      bring: string[];
       accessTitle: string;
       access: string[];
+      cta: string;
     };
-    faq: { eyebrow: string; title: string; lead: string; items: { q: string; a: string }[] };
+    /* The decoder. The page promises plain language four times, and this is the
+       one place it has to prove it: the words a letter from a practice is made
+       of, said again in the words you would use at the kitchen table. */
+    words: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      prompt: string;
+      terms: { term: string; plain: string; where: string }[];
+      foot: string;
+    };
+    /* Reviews. There is no practice yet, so there is nothing to quote, and the
+       honest move is to show the empty frame and label it. */
+    proof: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      slotLabel: string;
+      headline: string;
+      body: string;
+      foot: string;
+      faqHead: string;
+      items: { q: string; a: string }[];
+      ask: { text: string; link: string };
+    };
     booking: {
       eyebrow: string;
       title: string;
-      body: string;
+      lead: string;
       /* Why the visit, so the form asks for the right thing. */
       reasons: string[];
       /* A grid of days and parts of day, not a time picker: a request cannot
@@ -630,6 +853,18 @@ export type ServiceDemoContent = {
       note: string;
       /* Printed across the tear-off edge of both the form and its read-out. */
       tear: string;
+      /* The two routes for someone who would rather not type at all. */
+      talkHead: string;
+      talkBody: string;
+      backHead: string;
+      backBody: string;
+      /* The live-scheduler link, which this concept has no way to wire up. It
+         stays on the page because a real build would have it, and it says what
+         it is rather than pointing at nothing. */
+      online: { label: string; note: string };
+      /* The line that names whatever the planner left behind, above the reason
+         chips, so a carried pick is visible rather than silently filled in. */
+      carried: string;
       confirm: {
         title: string;
         lead: string;
@@ -1497,44 +1732,49 @@ export const projects: Project[] = [
     industry: "Local Dining",
     category: "Hospitality",
     summary:
-      "A fire-led restaurant site that answers the diner's first questions before it shows the room: when it is open, how it seats, and what is on the card.",
+      "A bright, print-led restaurant concept that answers a diner's practical questions first — when it serves, what the fire is doing at each seating, what is on the card — then names the room it deliberately does not photograph.",
     objective:
-      "Convey the atmosphere of the room, then remove every practical reason not to book a table.",
+      "Convey the atmosphere of a small fire-only room without borrowing a single photograph, and remove every practical reason not to ask for a table.",
     strategy:
-      "Facts first, photograph second. A deciding diner wants the service, the card and the constraints before the mood, so the hours board sits above the fold, the menu is the second section, and the booking form asks what a reservation book actually records — including the honest answer about one shared kitchen.",
-    designDirection: ["Printed card", "Fire ink", "Asymmetric editorial", "Image-led"],
+      "Facts first, mood second, no stock imagery. The hours board opens the page, the fire is something you choose rather than admire, the card filters down to what you can actually eat, and both forms build their answer in front of you while saying plainly that nothing left the page. The open-or-closed line is worked out from the hours printed underneath it and the visitor's own clock, so the one claim the page makes about the room is a claim you can check.",
+    designDirection: ["Printed card", "Fire ink", "Asymmetric editorial", "Named photo slots"],
     keySections: [
       "Service board",
       "Hero",
       "The kitchen",
-      "Seatings",
+      "The evening",
       "The card",
       "The room",
-      "Photographs",
-      "Banquet room",
+      "The long table",
       "Reservations",
+      "Visit",
+      "How we cook",
+      "Before you book",
     ],
     mobileNotes: [
-      "Menu reflows to a single column with prices aligned right so it stays scannable",
-      "Party sizes are chips rather than a number box, so a thumb can set them",
-      "Reserve stays in the sticky header and in the pinned action bar",
-      "Photographs open in a viewer pinned inside the frame, not the browser window",
+      "Call and Find a table stay pinned to the bottom of the phone frame, where a diner actually needs them",
+      "The card's filters are wrapping chips, so a thumb can narrow the whole card down to what you can actually eat",
+      "Every entry is 16px, so focusing a field never zooms the page away from the form",
+      "Seatings are generated from the printed hours, so a phone is never offered a time the room does not serve",
+      "The evening stages turn with buttons and arrow keys, not a swipe a visitor cannot see the end of",
     ],
     conversionNotes: [
-      "Reserve call to action in the header, the hero, the banquet room, and the booking panel",
-      "Hours, address and the walk-in counter policy printed beside the form, where the last doubts live",
-      "The confirmation reads the request back and states plainly that no table is held",
+      "Find a table sits in the header, the hero, each fire block, the room, the reservation itself and the pinned bar — all on one destination",
+      "The live status line answers the first question a diner asks, in the header, before they scroll",
+      "Choosing a seating carries straight into the reservation, so the page finishes the sentence the hero started",
+      "The read-back repeats the request and states plainly that no table is held",
     ],
     accent: "#C8642B",
-    /* Dark ember theme: near-black brown room, warm cream ink, burnt orange fire,
-       and an olive that only ever appears at large sizes because it cannot clear
-       4.5:1 as small text on this background. DemoVars derives every grey and
-       both boundary colours from these four at render time. */
-    palette: { bg: "#16100C", fg: "#F3EBDD", accent: "#C8642B", accent2: "#7C8460" },
+    /* Fire ink on paper: a warm cream room, near-black brown ink, burnt orange and
+       an olive that only ever appears as a fill because it cannot clear 4.5:1 as
+       small text. DemoVars derives every grey, both boundary colours and the
+       button ink from these four at render time, so this concept has no second
+       stylesheet and no dark-mode branch. */
+    palette: { bg: "#F4EBDD", fg: "#241811", accent: "#C8642B", accent2: "#7C8460" },
     content: {
       navName: "Ember & Oak",
       ctaPrimary: "Reserve a Table →",
-      ctaSecondary: "See the Menu",
+      ctaSecondary: "See the Card",
       services: [
         { title: "The Grill", body: "Dry-aged beef and whole fish over oak and beech." },
         { title: "The Hearth", body: "Roots and alliums buried in the ash." },
@@ -1545,24 +1785,29 @@ export const projects: Project[] = [
       faqs: [
         {
           q: "Do you take walk-ins?",
-          a: "A few seats at the counter are held back for people who arrive without a booking. Everything else goes out through the reservation book.",
+          a: "A few seats at the counter are held back for people who arrive without asking. Everything else goes out through the reservation book.",
         },
         {
           q: "Can you cook around an allergy?",
-          a: "Usually, if we know in advance. Add it to the booking note and we will tell you honestly whether the kitchen can do it properly that night.",
+          a: "Usually, if we hear it in advance. Put it in the booking note and the kitchen will tell you honestly whether it can do the job properly that night.",
         },
         {
           q: "Is there a set menu?",
-          a: "No. The card changes with the week, so you choose course by course and nobody is committed to a long dinner they did not ask for.",
+          a: "No. The card changes with the week, so you choose course by course and nobody is locked into a long dinner they did not ask for.",
         },
         {
           q: "Do you take large groups?",
-          a: "The banquet room seats up to fourteen and is enquired about rather than booked online. Use the number on this page.",
+          a: "The long table seats fourteen and is enquired about rather than taken online. The form there builds the enquiry so you can read it back, and the number on this page finishes the conversation.",
+        },
+        {
+          q: "Why are there no prices on the card?",
+          a: "Because the restaurant is invented. Any figure printed here would be a made-up number for a room that does not exist, and a number set beside a dish reads as a price even when it is a sample. A real card would carry real numbers, with no service charge added to the table.",
+        },
+        {
+          q: "Is Ember & Oak a real restaurant?",
+          a: "No. It is a concept website — a design and functionality demonstration for a fictional fire-led kitchen. The photographs are named instead of borrowed, the street and the telephone number are invented, and nothing entered on this page reaches anybody.",
         },
       ],
-
-      imageSource:
-        "Photography: Sebastian Alvarado Rojas, Ruben Mavarez, Vitalii Kyktov, Janay Peters, Sergio Arteaga, Bence Balla-Schottner, Madeline Liu, Anita Austvika and Ivan Benets — all used under the Unsplash License. This is a fictional restaurant; the food shown is not the food on this menu.",
 
       /* The reservation cannot really hold a table, so the status line says what
          pressing the button did in a diner's own words. */
@@ -1576,273 +1821,381 @@ export const projects: Project[] = [
           "Closed Monday and Tuesday",
           "Fire lit at 16:00 · oak and beech",
         ],
+        header: {
+          concept: "Concept site, not a real restaurant",
+          openLine: "Dinner Wed–Sat from 18:00 · Sunday lunch 12:00",
+          /* The chip is arithmetic on the hours printed below and the clock in the
+             visitor's own device, and the lead-in says so. */
+          statusLead: "From the hours below and your own clock:",
+          phoneLabel: "Call the room",
+          book: "Find a table",
+        },
         hero: {
-          src: "/demos/ember-restaurant/hero-fire.webp",
-          alt: "Steaks cooking over an open flame on a barred grill, a tall tongue of fire behind them.",
           headline: "Everything Here",
           accent: "Has Met A Flame.",
           eyebrow: "Ash-fired kitchen · Twenty-two covers",
           lede:
-            "One fire, two seatings, and a card that is rewritten on Monday. The room is small and the grill is at the back of it, so the kitchen is part of the evening rather than something happening elsewhere. If a dish is not working, we will tell you at the table instead of waiting for you to notice.",
+            "One fire, two blocks, and a card rewritten on Monday. The room is small and the grill sits at the back of it, so the kitchen is part of the evening rather than something happening behind a wall. If a dish is not going well, we say so at the table instead of waiting for you to notice.",
           hoursLine: "Dinner Wednesday to Sunday · from 18:00",
           facts: [
             { label: "Covers", value: "22" },
-            { label: "Seatings", value: "18:00 / 21:00" },
+            { label: "Blocks", value: "18:00 / 21:00" },
             { label: "The card", value: "Rewritten Mondays" },
           ],
-          caption: "Oak and beech, burned down since four o'clock",
+          /* The fire is the deciding fact of the evening, so it is something the
+             visitor chooses here rather than a band of cards further down the
+             page. Each block answers with its own drawing. */
+          fire: {
+            title: "Choose The Fire You Will Eat",
+            body:
+              "It is the same grill all evening and not the same fire at six and at nine. Pick a block and the page tells you what the kitchen does best while that one burns.",
+            blocks: [
+              {
+                time: "18:00",
+                label: "First block",
+                note: "Flame, still tall. Take this one if you want the grill's full attention.",
+                ask: "Ask For The First Block",
+                slot: "18:00",
+              },
+              {
+                time: "21:00",
+                label: "Second block",
+                note: "Coals by then, which is what the hearth roots were waiting for.",
+                ask: "Ask For The Second Block",
+                slot: "21:00",
+              },
+              {
+                time: "12:00",
+                label: "Sunday only",
+                note: "One continuous lunch until 17:00. Shorter card, no second block.",
+                ask: "Ask About Sunday Lunch",
+                preset: "Sunday lunch — the 12:00 service. There is no second block that day.",
+              },
+            ],
+            live: "Chosen fire",
+            drawn: "A drawing of the fire at that age. This concept ships no photograph.",
+          },
+          slot: {
+            kind: "Photo slot",
+            note:
+              "The chain, lowered onto the coals, with a tall tongue of fire behind it. A real build would put its own room picture here; this one names it instead of borrowing somebody else's.",
+          },
         },
         intro: {
           eyebrow: "The Kitchen",
-          body: "There is one fire in this building and it does most of the work. Meat and fish go straight onto the bars. Vegetables go into the ash under a foil hood, where they cook slower and taste of somewhere else. Bread arrives still ticking from the heat, and the butter is cultured in-house because it takes four days and we have them.",
-        },
-        seatings: {
-          eyebrow: "Service",
-          title: "Three Ways To Be Seated, Because One Grill Cannot Be In Two Places At Once",
           body:
-            "The room is seated in blocks so the fire can keep up with it. Tables are held for the block you book, not for the whole evening, and nobody is rushed out between the two.",
-          blocks: [
+            "There is one fire in this building and it does almost all the work. Meat and fish go straight onto the bars. Roots and alliums go into the ash under a foil hood, where they cook slower and taste of somewhere else. Bread arrives still ticking from the heat, and the butter is cultured here because it takes four days and we have them.",
+        },
+        /* The evening as four movements, one at a time — the shape of the meal
+           before eighteen names on a card. */
+        evening: {
+          eyebrow: "The Evening",
+          title: "Two Hours, Four Movements",
+          body:
+            "A full dinner in the first block runs to about two hours, and it lands in a rough order. Here is that order, so nothing surprises you when it arrives at the table.",
+          stages: [
             {
-              time: "18:00",
-              label: "First block",
-              note: "The fire is fresh. This is the block to take if you want the grill's attention.",
-              ask: "Book The First Block",
-              slot: "18:00",
+              label: "Bread before six",
+              line:
+                "Sourdough goes over the bars and the butter is made here, so both arrive still ticking while the fire is being built around the room. Nobody orders them; they simply come.",
+              note: "The only part of the evening that happens the same way at every block.",
+              slot: {
+                kind: "Photo slot",
+                note: "Torn sourdough and a dish of cultured butter on a board at the table's edge.",
+              },
             },
             {
-              time: "21:00",
-              label: "Second block",
-              note: "Coals by then, which is what the hearth vegetables want anyway.",
-              ask: "Book The Second Block",
-              slot: "21:00",
+              label: "Small plates",
+              line:
+                "Starters are salted and small, meant to be eaten while the kitchen is still settling. Two between four people is the right ask.",
+              note: "Order as few or as many as you like — nothing here is a set menu holding the grill back.",
+              slot: {
+                kind: "Photo slot",
+                note: "Three small plates laid along a wooden table, no cutlery beside them yet.",
+              },
             },
             {
-              time: "12:00",
-              label: "Sunday only",
-              note: "One continuous lunch to 17:00, shorter card, no second block.",
-              ask: "Ask For Sunday Lunch",
-              preset: "Sunday lunch — the 12:00 seating. No second block that day.",
+              label: "What the fire does",
+              line:
+                "Mains come off the bars and rest beside the flame rather than under a lamp, which is why the age of the fire matters more than the time on your booking.",
+              note: "A whole fish and a ribeye are not the same wait. The kitchen will tell you which is which.",
+              slot: {
+                kind: "Photo slot",
+                note: "Steaks on the bars, embers glowing under them, smoke leaving frame to the right.",
+              },
+            },
+            {
+              label: "Puddings, then the cellar",
+              line:
+                "Dessert is made in the afternoon, so it stops when the afternoon stops. After that the list is short and the cellar card is on the table.",
+              note: "Nobody is rushed out between blocks, and the room does not turn your table over.",
+              slot: {
+                kind: "Photo slot",
+                note: "A glazed pudding in a dark bowl at the far end of a candle-lit table.",
+              },
             },
           ],
+          prev: "Previous stage",
+          next: "Next stage",
+          dots: "Go to stage",
+          of: "of",
+          hint: "Once a stage has focus, the left and right arrow keys turn them.",
         },
         menu: {
           eyebrow: "The Card",
-          title: "This Week",
+          title: "This Week, Without Numbers",
           lead:
-            "The card changes with the week, so this is what is on it right now. Everything is cooked to order — a full dinner in the first block takes about two hours.",
-          priceNote:
-            "The card is printed with numbers only, so it is reproduced that way here. No service charge is added to the table.",
+            "The card changes with the week, so this is what is on it now. Everything is cooked to order, over one fire, in one kitchen.",
+          noPrices:
+            "There are no prices on this card. This is a concept site, and a figure beside a dish reads as a price even when it is a sample — so an invented room gets no invented sums. A real card would be printed with numbers only and would add no service charge to the table.",
+          filters: [
+            { key: "all", label: "Everything" },
+            { key: "veg", label: "Vegetarian" },
+            { key: "vegan", label: "Vegan" },
+            { key: "gf", label: "No gluten" },
+            { key: "heat", label: "With heat" },
+          ],
+          legend: [
+            { mark: "veg", means: "No meat or fish" },
+            { mark: "vegan", means: "Nothing from an animal, in the pan or on the plate" },
+            { mark: "gf", means: "Ordered without gluten — one kitchen, so never a guarantee" },
+            { mark: "medium", means: "Noticeable heat" },
+            { mark: "hot", means: "Properly hot" },
+          ],
+          countNoun: "dishes",
           allergy:
-            "Everything is cooked in one kitchen, over one fire, beside flour and nuts. We cannot promise a dish is free of anything, and we would rather say that than imply the opposite. Tell us when you book and we will be straight with you about what the kitchen can do that night.",
-          note: "The card is rewritten on Monday. If a dish matters to you, say so when you book and we will tell you whether it is still on.",
-          courses: [
+            "Everything is cooked in one kitchen, over one fire, beside flour and nuts. We cannot promise a dish is free of anything, and we would rather say that than imply the opposite. Tell us when you ask for a table and we will be straight with you about what the kitchen can do that night.",
+          note:
+            "The card is rewritten on Monday. If a dish matters to you, say so when you ask for a table and we will tell you whether it is still on.",
+          sections: [
             {
               label: "Starters",
               blurb: "Small, salted, and meant to be eaten while the grill is still settling.",
+              slot: {
+                kind: "Photo slot",
+                note: "A hand-built starter board on the pass, seen from the diner's side of it.",
+              },
               dishes: [
                 {
                   name: "Ember Leeks",
                   desc: "Buried in the ash, hazelnut, aged sheep's cheese",
-                  price: "12",
+                  marks: ["veg"],
                 },
                 {
                   name: "Grilled Sourdough",
                   desc: "Cultured butter, smoked salt, thyme oil",
-                  price: "8",
+                  marks: ["veg"],
                 },
                 {
                   name: "Charred Hispi",
-                  desc: "Brown butter, lemon, toasted caraway",
-                  price: "11",
+                  desc: "Olive oil, lemon, toasted chilli",
+                  marks: ["veg", "vegan", "gf", "medium"],
                 },
                 {
                   name: "Smoked Beetroot",
                   desc: "Goat curd, walnut, honey vinegar",
-                  price: "10",
+                  marks: ["veg", "gf"],
                 },
                 {
                   name: "Cured Trout",
                   desc: "Buttermilk, cucumber, dill oil",
-                  price: "13",
+                  marks: [],
                 },
               ],
             },
             {
               label: "Mains",
-              blurb: "Cooked on the bars, rested by the fire, never under a lamp.",
+              blurb: "Off the bars, rested by the fire, never held under a lamp.",
+              slot: {
+                kind: "Photo slot",
+                note: "The whole fish on its bars, a spoon of brown butter going over it.",
+              },
               dishes: [
                 {
                   name: "Dry-Aged Ribeye",
                   desc: "Bone marrow, watercress, burnt onion",
-                  price: "42",
+                  marks: ["gf"],
                 },
                 {
                   name: "Whole Plaice",
                   desc: "Brown butter, capers, sea herbs",
-                  price: "29",
+                  marks: ["gf"],
                 },
                 {
                   name: "Coal-Roast Chicken",
                   desc: "Morels, tarragon, pan gravy",
-                  price: "26",
+                  marks: ["gf"],
                 },
                 {
                   name: "Aged Pork Chop",
                   desc: "Quince, fennel, mustard greens",
-                  price: "28",
+                  marks: ["gf", "medium"],
                 },
                 {
                   name: "Smoked Haddock",
                   desc: "Crab, cauliflower, brown shrimp butter",
-                  price: "27",
+                  marks: [],
+                },
+                {
+                  name: "Fire-Roast Celeriac",
+                  desc: "Black garlic, hazelnut, buried whole for four hours",
+                  marks: ["veg", "vegan", "gf", "hot"],
                 },
               ],
             },
             {
               label: "Dessert",
-              blurb: "Three puddings and a cheese board, made in the afternoon.",
+              blurb: "Three puddings and a cheese board, all made in the afternoon.",
+              slot: {
+                kind: "Photo slot",
+                note: "A pudding spooned into a warmed bowl at the end of the service.",
+              },
               dishes: [
                 {
                   name: "Burnt Honey Custard",
                   desc: "Oat crumble, crème fraîche",
-                  price: "9",
+                  marks: ["veg"],
                 },
                 {
                   name: "Chocolate and Olive Oil",
                   desc: "Sea salt, bay leaf ice cream",
-                  price: "10",
+                  marks: ["veg", "gf"],
                 },
                 {
                   name: "Baked Pear",
                   desc: "Sourdough ice cream, walnut praline",
-                  price: "9",
+                  marks: ["veg"],
                 },
                 {
                   name: "Cheese, Two",
-                  desc: "Oatcakes, quince from the pot",
-                  price: "12",
+                  desc: "Oatcakes, quince out of the pot",
+                  marks: ["veg"],
                 },
               ],
             },
             {
               label: "Drinks",
-              blurb: "The short list. The cellar card has more and is on the table.",
+              blurb: "The short list. The cellar card is longer and comes to the table.",
+              slot: {
+                kind: "Photo slot",
+                note: "Two glasses on a dark bar top, the bottle label out of frame.",
+              },
               dishes: [
                 {
                   name: "Barrel-Aged Negroni",
                   desc: "Orange peel, bitter wine",
-                  price: "13",
+                  marks: [],
                 },
                 {
                   name: "Smoked Old Fashioned",
                   desc: "Maple, black walnut bitters",
-                  price: "14",
+                  marks: [],
                 },
                 {
                   name: "Wine, By The Glass",
                   desc: "Three whites, three reds, one orange",
-                  price: "9–14",
+                  marks: [],
                 },
                 {
                   name: "Spruce and Honey Soda",
                   desc: "No alcohol, made in the kitchen",
-                  price: "6",
+                  marks: [],
                 },
               ],
             },
           ],
         },
-        story: {
+        room: {
           eyebrow: "The Room",
           title: "Twenty-Two Covers, One Fire",
           paras: [
-            "The room seats twenty-two and the tables are close enough that you can hear the kitchen deciding things. It is not a quiet restaurant and it does not pretend to be.",
-            "Service runs in two blocks so the grill can keep up with the room. The first table is seated at six, the last at nine, and nobody is rushed out in between.",
+            "The tables are close enough that you can hear the kitchen deciding things. It is not a quiet restaurant and it does not pretend to be one.",
+            "Service runs in two blocks so the grill can keep up with the room. The first table is seated at six, the last at nine, and nobody is turned out in between.",
           ],
+          /* The room's own line about itself — not a diner's, not a press quote,
+             and nothing here is a review. */
+          quote:
+            "We have no fryer, no combi oven and no second hob. Everything on your table has been within a metre of that fire.",
           tall: {
-            src: "/demos/ember-restaurant/story-hands.webp",
-            alt: "Two hands passing small plates across a dark wooden table, in black and white.",
+            kind: "Photo slot",
+            note: "Two hands passing small plates over the pass, in low light.",
           },
           small: {
-            src: "/demos/ember-restaurant/story-dessert.webp",
-            alt: "Hands either side of a small dessert in a dark glazed bowl, topped with a yellow flower.",
+            kind: "Photo slot",
+            note: "A pudding in a dark glazed bowl, a flower from the window box on top.",
           },
-          caption: "Plates go over the pass by hand. There is no till at the front.",
         },
-        gallery: {
-          eyebrow: "Photographs",
-          title: "Fire, Tables, Plates",
-          lead:
-            "Five photographs from the room, each licence-checked and credited at the foot of this section. Open one and the arrows or the left and right keys move through the set.",
-          items: [
-            {
-              src: "/demos/ember-restaurant/gal-hearth.webp",
-              alt: "Sausages and a split chicken on a chain-hung grill in front of a hearth fire.",
-              caption: "The chain, lowered onto the coals",
-              ratio: "1100/733",
-            },
-            {
-              src: "/demos/ember-restaurant/gal-grill.webp",
-              alt: "Close view of empty iron grill bars with embers glowing underneath.",
-              caption: "Bars, cleaned and hot",
-              ratio: "1100/700",
-            },
-            {
-              src: "/demos/ember-restaurant/gal-table.webp",
-              alt: "A row of small dishes laid along a wooden table over evergreen branches.",
-              caption: "A long table, laid for nobody yet",
-              ratio: "800/1200",
-            },
-            {
-              src: "/demos/ember-restaurant/gal-autumn.webp",
-              alt: "A glazed purple dessert on a white plate beside an amber cocktail, with pale pumpkins behind.",
-              caption: "Pudding and a digestif",
-              ratio: "1100/750",
-            },
-            {
-              src: "/demos/ember-restaurant/gal-candles.webp",
-              alt: "Empty restaurant tables lit by small battery lamps at night.",
-              caption: "Nine o'clock, second service",
-              ratio: "1000/1000",
-            },
-          ],
-        },
-        events: {
+        groups: {
           eyebrow: "Private Dining",
-          title: "The Banquet Room",
+          title: "The Long Table",
           body:
             "A door closes, the candles come down the table, and fourteen people eat the same menu at the same time. It is cooked the same way as everything else in the building — on the fire, in front of you.",
+          bands: ["6 – 8", "9 – 11", "12 – 14", "15 and up"],
+          callUs:
+            "One table takes fourteen. Anything larger is a conversation on the telephone rather than a form, because the room has to be checked against the fire first.",
           points: [
             "Seats up to fourteen",
-            "One menu, chosen in advance",
+            "One menu, agreed in advance",
             "The grill is fired for your table only",
+            "No booking is made from this page",
           ],
-          cta: "Enquire About The Room",
-          preset: "Banquet room — up to 14, one menu agreed in advance",
-          src: "/demos/ember-restaurant/events-room.webp",
-          alt: "A long dark dining room set for a banquet, with tall candles in glass holders down the centre.",
+          fields: {
+            size: "Party",
+            date: "Preferred date",
+            name: "Your name",
+            contact: "Phone or email",
+            notes: "What the room should know",
+          },
+          note:
+            "Nothing is held here. This ticket is a record of what you would ask for, and it stays in your browser.",
+          ticket: {
+            title: "Enquiry ticket",
+            lead: "Fill it and read it back in the same hand as the reservation. Nothing has been sent and no date is held.",
+            empty: "Change a field and the line appears here, written the way the booking reads itself.",
+          },
         },
         booking: {
           eyebrow: "Reservations",
           title: "Find A Table",
           body:
-            "Parties of two to eight are held here; anything larger goes through the phone so we can check the room will take you. The form asks the questions a reservation book actually records.",
-          times: ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+            "Two to eight are asked for here; anything larger goes through the telephone so the room can check it will take you. The form asks the questions a reservation book actually records.",
           parties: [2, 3, 4, 5, 6, 7, 8],
+          callUs: "A table for nine or more is checked against the room before it is promised. Use the number below.",
           occasions: ["No occasion", "Birthday", "Anniversary", "Business dinner", "Just because"],
-          hours: [
-            { day: "Wednesday – Saturday", time: "18:00 – 23:30" },
-            { day: "Sunday", time: "12:00 – 17:00" },
-            { day: "Monday – Tuesday", time: "Closed" },
+          stepMinutes: 30,
+          lastSeatingMinutes: 90,
+          slotAsk: "Seatings for",
+          /* Covers both empty cases the grid can reach: a day the room does not
+             serve, and a day whose remaining seatings have already gone. */
+          slotNone:
+            "Nothing left to ask for on that day — the room either does not serve then, or its last seating has already gone.",
+          week: [
+            { day: "Monday", dow: 1, open: null, close: 1410, shown: "Closed" },
+            { day: "Tuesday", dow: 2, open: null, close: 1410, shown: "Closed" },
+            { day: "Wednesday", dow: 3, open: 1080, close: 1410, shown: "18:00 – 23:30" },
+            { day: "Thursday", dow: 4, open: 1080, close: 1410, shown: "18:00 – 23:30" },
+            { day: "Friday", dow: 5, open: 1080, close: 1410, shown: "18:00 – 23:30" },
+            { day: "Saturday", dow: 6, open: 1080, close: 1410, shown: "18:00 – 23:30" },
+            { day: "Sunday", dow: 0, open: 720, close: 1020, shown: "12:00 – 17:00" },
           ],
+          hoursTitle: "Service hours",
+          closedWord: "Closed",
+          statusNote:
+            "The room cannot check a clock for you. This line is the hours above set against the time on your own device, in your own timezone.",
           address: ["14 Ashgrove Lane", "Old Foundry Quarter"],
+          access:
+            "Step-free from the pavement as far as two tables; the pass itself is one step up.",
+          parking:
+            "No car park of its own. The nearest bays are a short walk, and this concept cannot confirm what they charge.",
+          planNote:
+            "A drawing of the room, not a map. The street is invented with the rest of it, so there is no pin to drop and no route to promise.",
           phone: { display: "(555) 555-0166", href: "tel:+15555550166" },
           submit: "Find a Table",
-          note: "Tables are held for the block you book, not for the evening. Running late is worth a call.",
+          note: "Tables are held for the block you ask for, not for the whole evening. Running late is worth a call.",
           hints: {
-            date: "Tonight onwards. A day the room has already served cannot be booked.",
-            time: "Dinner slots. Sunday lunch is one continuous service, so it goes through the phone.",
-            party: "Two to eight online. Anything larger is checked against the room first.",
+            date: "Tonight onwards. A day the room has already served cannot be asked for.",
+            time: "Built from the hours above — half-hour steps up to the last seating, nothing outside them.",
+            party: "Two to eight here. Anything larger is checked against the room first.",
             notes: "Allergies, a wheelchair, a pram, a table you would rather not sit beside the grill. Say it here.",
           },
           confirm: {
@@ -1851,6 +2204,30 @@ export const projects: Project[] = [
               "This is what the form received. Nothing left this page, so the table is not held and nobody has been told to expect you.",
             edit: "Change it",
           },
+        },
+        how: {
+          eyebrow: "How We Cook",
+          title: "Four Things A Printed Card Leaves Out",
+          body:
+            "A menu is a promise that only goes one way. These are the honest answers to the questions a card cannot ask.",
+          points: [
+            {
+              title: "One fire",
+              text: "Everything is cooked on the same bars, in the same draught, at the same speed. A dish can be late because another dish is in front of it.",
+            },
+            {
+              title: "One kitchen",
+              text: "Flour, nuts, fish and dairy share a metre of worktop. We can move things around; we cannot promise a plate is free of anything.",
+            },
+            {
+              title: "A card that moves",
+              text: "The menu is rewritten on Monday, so a dish read here last week may already be gone. Say so when you ask for a table.",
+            },
+            {
+              title: "And one thing about this page",
+              text: "Ember & Oak is a concept site. The room, the street and the number are invented, so nothing on it is a reservation, a price or an opening hour you can rely on.",
+            },
+          ],
         },
       },
     },
@@ -2094,33 +2471,48 @@ export const projects: Project[] = [
     industry: "Dental Care",
     category: "Service",
     summary:
-      "A dental practice site that answers cost and fear before it asks for the appointment.",
+      "A dental practice site that lets you point at the problem, tells you whether it can wait, and translates the letter — without a price, a review or a photograph it cannot stand behind.",
     objective:
-      "Make a nervous new patient trust the practice enough to book — without a single review, rating, before/after or credential on the page.",
+      "Make a nervous new patient trust the practice enough to book — without a single review, rating, before/after, credential, price or photograph of a building that does not exist.",
     strategy:
-      "Leaflet, not brochure. The page order follows what a patient actually decides on: whether they can be seen this week, what will happen in the chair, and what it will cost. Everything is stated as process — durations, steps, a written number handed over before treatment — because process is the only trust a practice can show without borrowing somebody else's testimonials.",
-    designDirection: ["Printed leaflet", "Clinical sage", "Hairline index", "Reassuring, not slick"],
+      "A leaflet that answers back. The page order still follows what a patient decides on — can I be seen, what happens in the chair, what will it cost — but where a printed leaflet can only state, this one asks: point at the part of the mouth and the words that fit, and the page tells you what that visit usually involves and how long to allow, then writes your answers into the request slip so nothing is typed twice. A six-question self-check does the same for the more urgent question of whether today is an emergency-department day or a Monday morning one. Trust is still built entirely out of process, because process is the only thing a concept practice can show without borrowing somebody else's testimonials — and every place a real build would need evidence that does not exist yet is left as a labelled empty slot rather than filled with an invention.",
+    designDirection: [
+      "Printed leaflet, interactive",
+      "Clinical sage",
+      "Hairline index",
+      "Drawn diagram, not a stock photo",
+      "Reassuring, not slick",
+    ],
     keySections: [
       "Status board",
-      "Hero",
+      "Hero with a paced-breathing widget",
+      "Smile planner",
       "In pain today",
+      "Can this wait? self-check",
       "The practice",
       "Treatments index",
+      "What a written plan is made of",
       "Nervous patients",
-      "First appointment",
-      "FAQ",
-      "Request a visit",
+      "The first hour",
+      "Nine terms in ordinary English",
+      "Reviews slot and questions",
+      "Request slip",
     ],
     mobileNotes: [
       "The pain band and its call action sit above the treatment index, not below it",
       "Reason, day and part-of-day are chips, so the request form is answered with taps",
       "The number is a button inside a device frame and explains why it cannot dial",
       "A sticky Request bar keeps the form reachable, with the last section padded clear of it",
+      "The mouth diagram is drawn to scale from its own viewBox, so it fills a 320px screen and keeps every region at least 44px of tap area",
+      "The treatment table stacks to one row per card below the leaflet's own measure, and each stacked cell reprints its column head",
+      "The self-check is one question at a time, so the answer is never a wall of six yeses",
     ],
     conversionNotes: [
       "Two routes, split honestly: call for pain, request for everything else",
-      "The no-price stance arrives with a reason and a promise, so it reads as honesty and not evasion",
+      "The no-price stance arrives with a reason and a promise, so it reads as honesty and not evasion — and the cost section replaces the missing figure with the five questions that make any figure make sense",
       "The confirmation reads the request back and says plainly that no appointment exists yet",
+      "The planner is the top of the funnel: an anxious visitor who has tapped a diagram is already half-way through telling somebody what is wrong",
+      "The scheduler link stays on the page and names itself as unwired, so the honest route is the obvious one rather than a dead button",
     ],
     accent: "#2E6F5E",
     /* Cool clinical sage on a pale green-white — the one family of colours a
@@ -2135,53 +2527,186 @@ export const projects: Project[] = [
         "This form is part of a concept website. Nothing was sent and no appointment exists — a real practice would confirm the time by phone.",
       dental: {
         board: [
-          "Monday to Thursday 08:00 – 17:30 · Friday to 17:00",
-          "Saturday morning 09:00 – 13:00 · Closed Sunday",
-          "Two urgent slots held back every afternoon, until 16:00",
-          "Step-free entrance · Rowanwood House, 4 Ashgrove Lane",
+          { tag: "Hours", text: "Mon – Thu 08:00 – 17:30 · Fri to 17:00 · Sat 09:00 – 13:00" },
+          { tag: "Pain", text: "Two slots held back each afternoon, until four o'clock" },
+          { tag: "Getting in", text: "Step-free from the lane, and a lift to the first floor" },
+          { tag: "First", text: "A written plan, handed over, before you agree to anything" },
         ],
+        header: {
+          concept: "Concept practice — nothing here is real",
+          openLine: "Open Monday to Saturday",
+          phoneLabel: "Call Rowanwood",
+          book: "Request a visit",
+        },
+        calm: {
+          label: "Breathe with it",
+          phases: [
+            { word: "In", seconds: 4 },
+            { word: "Hold", seconds: 4 },
+            { word: "Out", seconds: 6 },
+          ],
+          pattern: "Four counts in, four held, six out — the pace a chair-side nurse counts at.",
+          pause: "Pause",
+          resume: "Start again",
+          note: "It keeps running while you read the rest. Nothing on this page expects you to be calm before you book.",
+        },
         hero: {
-          src: "/demos/rowanwood-dental/room.webp",
-          alt: "An empty dental treatment room: a chair under an operating light, an instrument cart beside it, daylight from a window on the far wall, no people.",
-          headline: "An Examination First,",
-          accent: "A Written Number After.",
-          eyebrow: "General & family dentistry · Two chairs",
+          eyebrow: "General & family dentistry · two chairs · Meadowbank",
+          headline: "An hour of looking,",
+          accent: "and a plan you can take home.",
           lede:
-            "A first visit is an examination and a conversation. We look, we tell you what we found, and you leave with a plan in writing with a number against every item on it. Nothing is started while you are still deciding. What we will not do is quote you before the examination, because the honest figure depends on what the examination finds.",
-          hoursLine: "Open Monday to Saturday · Urgent slots until 16:00",
+            "A first appointment is an examination and a conversation, in that order. We say what we found in the words we would use at the kitchen table, write the options down with a figure against each, and let you leave holding the paper. What we will not do is quote you before looking, because the honest figure depends on what the looking finds.",
           facts: [
-            { label: "First visit", value: "60 minutes" },
-            { label: "The room", value: "Two chairs" },
-            { label: "The plan", value: "Written, before anything starts" },
+            { label: "The first visit", value: "Sixty minutes" },
+            { label: "Who does it", value: "One dentist, start to finish" },
+            { label: "What you leave with", value: "Paper, and time to read it" },
           ],
           ctaPrimary: "Request a visit",
-          ctaSecondary: "In pain today?",
-          caption: "Room two, laid out for the first appointment of the day",
+          ctaSecondary: "I'm in pain today",
+          caption: "The appointment that works is the one nobody in it is late for.",
         },
-        plates: {
-          practice: {
-            src: "/demos/rowanwood-dental/practice-room.webp",
-            alt: "An empty treatment room: a blue-upholstered dental chair with its instrument arm and delivery unit, a practising stool beside it, a window with blinds behind, and a yellow and blue abstract painting on the wall. No people.",
-            caption: "Room one, between appointments",
+        slots: {
+          kind: "Image slot",
+          hero: {
+            note: "Room two laid out for the first appointment of the day: chair, operating light, instrument trolley, daylight in the far window. Nobody in it.",
+            ratio: "4 / 5",
           },
-          index: {
-            src: "/demos/rowanwood-dental/instruments.webp",
-            alt: "Five dental instruments laid on a white tray: two orange-handled and one purple-handled probe with hooked tips, and two black-handled steel instruments, the end one a mouth mirror.",
-            caption: "What a check-up is made of",
+          nerves: {
+            note: "The quiet end of the waiting room — a low armchair, a lamp on a side table, a plant by the window, afternoon light. Nobody in it.",
+            ratio: "4 / 3",
           },
           visit: {
-            src: "/demos/rowanwood-dental/waiting.webp",
-            alt: "An empty waiting area: teal sofas along two walls, a low table with magazines, a plant in the corner, a window looking into a treatment room, and a slatted reception desk on the right. No people.",
-            caption: "The waiting room, before the first patient",
+            note: "The front desk seen from the corridor, with both treatment-room doors behind it and no patient in the building.",
+            ratio: "4 / 3",
+          },
+          map: {
+            note: "A street map centred on Rowanwood House, 4 Ashgrove Lane, with the two bays marked. Replaced by the live embed in a real build.",
+            ratio: "16 / 9",
           },
         },
+        planner: {
+          eyebrow: "01 — Point at it",
+          title: "Where is it, and what does it feel like?",
+          lead:
+            "Tap the part of the mouth, then the words that sound like yours. The page tells you what that usually means for the appointment — how long to allow, and what happens in the chair — before you have to say any of it out loud at a reception desk.",
+          areasHead: "Which part of the mouth?",
+          areas: [
+            { key: "front", name: "Front teeth", hint: "The ones other people can see." },
+            { key: "back", name: "Back teeth", hint: "The flat chewing ones, deep in." },
+            { key: "gums", name: "Gums & jaw", hint: "The soft parts, and the hinge." },
+            { key: "whole", name: "All of it", hint: "You cannot point at one thing." },
+          ],
+          chartFront: "front",
+          unsure:
+            "Cannot tell which? Start on All of it — sorting that out is what the examination is for.",
+          concernHead: "What does it feel like?",
+          concerns: [
+            {
+              key: "pain",
+              label: "Pain or an ache",
+              involves: [
+                "Which tooth it is, and what put it there, said out loud before anything is picked up.",
+                "Numbing and the work on the same visit where it is straightforward.",
+                "Where it is not, you hear why, and what the second appointment is for.",
+              ],
+              time: "30 – 45 min, sometimes two visits",
+              reason: "Pain or swelling",
+            },
+            {
+              key: "broken",
+              label: "Chipped, cracked or worn flat",
+              involves: [
+                "A piece gone from an edge, or a surface worn down over years.",
+                "Rebuilt in tooth colour in this chair while there is enough sound edge left to hold it.",
+                "A cap over the tooth when there is not — and we say which one you are on before starting.",
+              ],
+              time: "30 – 60 min",
+              reason: "Something broke or fell out",
+            },
+            {
+              key: "loose",
+              label: "A tooth out of its socket, or loose",
+              involves: [
+                "A tooth that has come clean out is an hour-old problem, not a tomorrow one.",
+                "Hold it by the crown, keep it in milk, do not scrub the root, and get to a chair.",
+                "One that only wobbles is looked at the same day wherever the day allows it.",
+              ],
+              time: "30 – 45 min, plus getting here",
+              reason: "Something broke or fell out",
+            },
+            {
+              key: "dull",
+              label: "Stained, dull, or breath that won't shift",
+              involves: [
+                "Colour sitting on the surface comes off with a scale and a polish.",
+                "Colour inside the tooth is a different conversation, and you are told which one you are having.",
+                "Half of what fixes persistent breath happens at home, and we show you which half.",
+              ],
+              time: "40 min",
+              reason: "Clean and polish",
+            },
+            {
+              key: "gumbs",
+              label: "Bleeding or sore gums",
+              involves: [
+                "Gums that bleed when you brush are usually inflamed, not brushed too hard.",
+                "How far below the gum line that has gone decides what it needs, and we look before we say.",
+                "Taken deeper than a clean reaches is two longer visits rather than one short one.",
+              ],
+              time: "40 – 60 min, often across two visits",
+              reason: "A question about my teeth",
+            },
+            {
+              key: "missing",
+              label: "A gap where a tooth was",
+              involves: [
+                "Three ways to close a gap — a bridge, an implant, or a plate — and they are not interchangeable.",
+                "Which one fits depends on the teeth either side of it, which is only visible on the day.",
+                "Nothing is chosen on this visit. You leave with all three written down.",
+              ],
+              time: "60 min to plan, then separate visits to do",
+              reason: "Replacement teeth",
+            },
+            {
+              key: "checkup",
+              label: "Nothing — it's just due",
+              involves: [
+                "Teeth, gums, jaw, and the soft tissue under the tongue looked at.",
+                "Photographs or X-rays only where what we find calls for one.",
+                "What has changed since last time said at the chair, where you can ask about it.",
+              ],
+              time: "25 – 30 min",
+              reason: "Check-up",
+            },
+            {
+              key: "dread",
+              label: "I dread sitting in that chair",
+              involves: [
+                "Say it at the desk and the appointment is built differently around it, at no different price.",
+                "The first visit can be a look round with no instruments in the room at all.",
+                "A hand raised stops the work, without a discussion about it afterwards.",
+              ],
+              time: "60 min, unhurried",
+              reason: "A question about my teeth",
+            },
+          ],
+          empty:
+            "Pick one or more of these and this panel fills in with what the visit usually involves, and how long to allow for it.",
+          disclaimer:
+            "A drawing is not a diagnosis. Nobody on this page can tell you what you have until somebody looks at you — including this one.",
+          areaNote: "The area changes which of these is most likely, not what we end up doing.",
+          carry: "Whatever you tap here is written into the slip at the bottom of the page.",
+          carryBtn: "Put my answers in the slip",
+          clear: "Start over",
+          skip: { text: "Would rather not be guided?", link: "Go straight to the slip" },
+        },
         urgent: {
-          eyebrow: "Pain",
-          title: "In Pain Today?",
+          eyebrow: "Pain, today",
+          title: "Two chairs, two slots, until four o'clock.",
           body:
-            "Ring the practice rather than filling the form in. Two slots every afternoon are held back for pain and swelling, and the line is answered by whoever is at the front desk — not a call centre. Say when it started and where it is. That is enough to book one.",
+            "Ring rather than fill anything in. The line is picked up by whoever is standing at the front desk, not a call centre, and the two afternoon slots are held back for exactly this. Say when it started and where it is — that is the whole of what we need in order to book one.",
           hospital:
-            "A knocked-out tooth, a swelling in the face or jaw, difficulty swallowing, an injury you cannot see the shape of, or bleeding that will not stop: that is an emergency department, not a dental practice, and we would rather you went there now.",
+            "A tooth that has come clean out of the mouth, swelling in the face or jaw, trouble swallowing or breathing, an injury you cannot see the shape of, or bleeding that is still going after twenty minutes of pressure on a clean cloth: that is an emergency department, and we would much rather you went now than waited for us.",
           phoneLabel: "Call the practice",
           phoneNote: "This number belongs to a concept website and does not connect.",
           writeInstead: "Write instead of calling",
@@ -2189,23 +2714,99 @@ export const projects: Project[] = [
           /* Must match one of booking.reasons exactly — see DentalDemo. */
           prefillReason: "Pain or swelling",
         },
+        triage: {
+          eyebrow: "Can this wait?",
+          title: "Six questions, then something you can act on.",
+          lead:
+            "Work down them and be blunt with yourself. The first yes is the one that decides, because they are asked in the order of danger rather than the order of how common they are.",
+          yes: "Yes",
+          no: "No",
+          again: "Start again",
+          questions: [
+            {
+              text: "Is your face or jaw swollen, or is swallowing or breathing harder than it was this morning?",
+              out: "emergency",
+            },
+            {
+              text: "Did a tooth come clean out of your mouth, or did your jaw or teeth take a knock?",
+              out: "emergency",
+            },
+            {
+              text: "Is there bleeding that has not stopped after twenty minutes of firm pressure on a clean cloth?",
+              out: "emergency",
+            },
+            {
+              text: "Is the pain stopping you sleep, or untouched by ordinary painkillers?",
+              out: "today",
+            },
+            {
+              text: "Do you have a fever with it, a taste that will not go away, or a tooth that hurts to bite down on?",
+              out: "today",
+            },
+            {
+              text: "Has a filling or crown come off, or a tooth chipped, with no real pain behind it?",
+              out: "routine",
+            },
+          ],
+          outcomes: {
+            emergency: {
+              title: "This one is not ours to treat",
+              body:
+                "A two-chair practice cannot help with this, and waiting makes it worse rather than no worse. Go now and tell us the next day — we will fit you in then.",
+              list: [
+                "Emergency department, or ring for an ambulance if breathing or swallowing is getting harder.",
+                "A tooth that came out whole: in milk, root unscrubbed, seen within the hour.",
+                "Take the tooth, the packaging of everything you take, and somebody who can speak for you.",
+              ],
+              cta: "Go in now. Tell us tomorrow and the chair is yours.",
+            },
+            today: {
+              title: "Ring before four today",
+              body:
+                "That is what one of the two held afternoon slots exists for. It is not a favour and it does not need an apology.",
+              list: [
+                "Say when it started and where it is. That is enough to book the slot.",
+                "If both have gone, the desk says so and points you somewhere that can take it on today.",
+                "Take something for it before you come. Nothing you swallow hides what we need to see.",
+              ],
+              cta: "Call the practice",
+            },
+            routine: {
+              title: "This can wait for an appointment",
+              body:
+                "Not an emergency, and not nothing. Book it rather than watch it — a chip and a crack look identical from where you are sitting, and only one of them can wait.",
+              list: [
+                "Keep it clean, and chew on the other side until the visit.",
+                "If it starts waking you up, or the jaw swells, it moves up the list the same day.",
+                "Bring the piece if you still have it. It says how it came off.",
+              ],
+              cta: "Fill in the slip",
+            },
+          },
+          noneTitle: "No yes at all — which is useful",
+          noneBody:
+            "Then this is an appointment rather than a race. If you have been putting one of those off, the slip is at the bottom of this page and takes about a minute to fill in.",
+          disclaimer:
+            "This is a page reading your words, not a clinician reading your mouth. If you are not sure which answer you are on, take the more urgent one and ring.",
+          slipLabel: "Say so in the slip",
+        },
         intro: {
           eyebrow: "The practice",
-          title: "Two Chairs, One Plan",
+          title: "Two chairs, one dentist, no rotating cast.",
           body:
-            "Rowanwood is a small general practice. One dentist takes a patient from the first appointment to the last, so nobody re-explains their history at every visit, and the room is quiet enough to hear what is being explained. Most of the work is the ordinary kind — checks, cleanings, fillings, and the crowns that come after them.",
+            "Rowanwood is a small general practice. The dentist who looks at your tooth in March is the one who finishes it in May, so nobody has to re-explain their own history at every visit, and the room is quiet enough to hear what is being explained. Most of the work here is the ordinary kind — checks, cleanings, fillings, and the crowns that come after them.",
           aside:
             "We are not a hospital and we do not keep every case. When something needs a specialist, we say so, write the referral, and tell you who to ring.",
         },
         index: {
-          eyebrow: "What happens",
-          title: "The Work, Listed",
+          eyebrow: "02 — What happens",
+          title: "The work, and how long it takes.",
           lead:
-            "Every row below is an appointment you can ask about. The time is roughly how long the chair is occupied, not how long you spend in the building.",
+            "Open any row for the plain-language version of it. The time is roughly how long the chair is occupied, not how long you spend in the building.",
           columns: {
             treatment: "Treatment",
             duration: "Chair time",
-            what: "What happens",
+            what: "In one line",
           },
           groups: [
             {
@@ -2214,22 +2815,42 @@ export const projects: Project[] = [
                 {
                   name: "New-patient examination",
                   time: "60 min",
-                  what: "A full look, a conversation about what bothers you, and X-rays only if the examination calls for them. No treatment is started on this visit.",
+                  what: "A full look, a conversation about what bothers you, and nothing treated.",
+                  detail: [
+                    "Sixty minutes of looking and talking. X-rays only where what we find calls for one.",
+                    "You leave with a plan in writing and a figure against every line on it.",
+                    "A second appointment is booked only if you ask for one.",
+                  ],
                 },
                 {
                   name: "Check-up",
                   time: "25 min",
-                  what: "Teeth, gums, jaw and the soft tissues looked at, then what has changed since last time explained at the chair rather than at the door.",
+                  what: "Teeth, gums, jaw and soft tissue, then what has changed since last time.",
+                  detail: [
+                    "Said at the chair rather than at the door, so you can ask about it there and then.",
+                    "Photographs of the teeth only with your say-so.",
+                    "Two minutes at the end on the one thing worth changing at home.",
+                  ],
                 },
                 {
                   name: "Clean and polish",
                   time: "40 min",
-                  what: "Scale, polish, and the two minutes of instruction that actually make the difference at home.",
+                  what: "Tartar off the surface, stains off, and the reason they came back.",
+                  detail: [
+                    "Scaling above the gum line. Below it is a different appointment, and you are told which you need.",
+                    "Numbing only if you ask for it — most people do not need it for this.",
+                    "The polish is what stops stains clinging back within a fortnight.",
+                  ],
                 },
                 {
                   name: "A child's first visit",
                   time: "30 min",
-                  what: "A look round, a count of teeth, and the chair tilted for practice if the child wants it. Treatment waits for a second visit.",
+                  what: "A look round, a count of teeth, and the chair tilted for practice.",
+                  detail: [
+                    "Deliberately no treatment on the first visit.",
+                    "A child who will not open their mouth today is not persuaded to.",
+                    "The parent stays in the room for the whole thing.",
+                  ],
                 },
               ],
             },
@@ -2239,51 +2860,140 @@ export const projects: Project[] = [
                 {
                   name: "Filling",
                   time: "45 min",
-                  what: "Numb, out, filled. Which tooth, and what caused it, is said before anything is picked up.",
+                  what: "Numb, out, filled, in a colour that matches.",
+                  detail: [
+                    "Which tooth, and what caused it, said before anything is picked up.",
+                    "A large one may take two visits so the tooth can settle underneath it.",
+                    "You can drive yourself home; nothing here puts you to sleep.",
+                  ],
                 },
                 {
                   name: "Crown",
                   time: "2 visits · 60 + 45 min",
-                  what: "Prepared and worn as a temporary from the first visit, cemented at the second once the lab has sent the real one back.",
+                  what: "A cap that holds a weakened tooth together.",
+                  detail: [
+                    "Prepared at the first visit, worn as a temporary while the lab makes the real one.",
+                    "The colour chosen with you in daylight, not under a chair light.",
+                    "If the tooth turns out to need root treatment first, you hear that before the second visit is booked.",
+                  ],
                 },
                 {
                   name: "Root treatment",
                   time: "60 – 90 min",
-                  what: "Done to save a tooth that would otherwise come out. Some need a second appointment to finish.",
+                  what: "Done to keep a tooth that would otherwise come out.",
+                  detail: [
+                    "Some need a second appointment to finish; the desk says which before you book.",
+                    "For most people it is no more painful than a filling, and the numbness lasts longer afterwards.",
+                    "A crown usually follows it, because a treated tooth is a brittle one.",
+                  ],
                 },
                 {
                   name: "Extraction",
                   time: "30 – 45 min",
-                  what: "Straightforward ones in this chair. Anything surgical — a lower wisdom tooth, a root that has broken down — goes to a referral instead.",
+                  what: "Only when keeping the tooth is the worse option.",
+                  detail: [
+                    "Straightforward ones in this chair.",
+                    "A lower wisdom tooth, or a root that has broken down, goes to a referral instead.",
+                    "You hear what to do for the next forty-eight hours before you stand up.",
+                  ],
                 },
                 {
                   name: "Denture and bridge repairs",
                   time: "30 min",
-                  what: "Re-fitted, re-lined or sent away. A same-day repair is not always possible, and the desk tells you which it is when you ring.",
+                  what: "Re-fitted, re-lined, or sent away.",
+                  detail: [
+                    "Same-day is possible more often than people expect, and not always possible.",
+                    "The desk tells you which it is when you ring, so you are not travelling for nothing.",
+                    "A plate that has snapped twice is usually the fit rather than the plate.",
+                  ],
                 },
               ],
             },
           ],
+          expand: "Open this row",
+          collapse: "Close this row",
           costNote:
-            "There is no price list on this page, on purpose. The number depends on what the examination finds, so it is written down and handed over at the end of it — before anything is started, and before anything is charged.",
+            "There is no price list on this page, on purpose. The figure depends on what the examination finds, so it is written down and handed over at the end of it — before anything is started, and before anything is charged.",
+          footNote: "Not sure which row you are on? That is exactly what the examination is for.",
+          ctaPlanner: "Go back to the planner",
+          ctaVisit: "Ask about the first visit",
+        },
+        cost: {
+          eyebrow: "Money, without the numbers",
+          title: "What a written plan is made of.",
+          lead:
+            "Every practice hands you a figure. Fewer explain what the figure is standing on. This is the shape of one, and the five questions that make any number you are later handed make sense.",
+          partsHead: "The five lines on the paper",
+          parts: [
+            {
+              name: "The examination",
+              body: "The looking and the writing, before any work. Its own appointment and its own line, and the only one of the five you can be quoted in advance.",
+            },
+            {
+              name: "The materials",
+              body: "What goes into the tooth, and what the lab charges to make the cap or the plate. A crown made down the road and one made across it are not the same figure.",
+            },
+            {
+              name: "The chair time",
+              body: "How long somebody is with you. This is why a large filling and a small one cost differently under the same name.",
+            },
+            {
+              name: "The pictures",
+              body: "X-rays and photographs, taken where they change what is done and not taken where they do not. Each one is a line you can ask about.",
+            },
+            {
+              name: "The follow-up",
+              body: "A review after the work is part of the plan rather than something added on afterwards. If it is not on your paper, ask for it.",
+            },
+          ],
+          driversHead: "Four things that move a number",
+          drivers: [
+            {
+              name: "How much tooth is left",
+              body: "A small hole and a tooth broken below the gum line are different jobs with the same name on the letter.",
+            },
+            {
+              name: "Whether the gum is involved",
+              body: "Work on the tooth is one thing. Work on what holds the tooth in the jaw is another, and usually longer.",
+            },
+            {
+              name: "One visit or two",
+              body: "Anything a lab makes is two appointments with a temporary in between, and both of them are inside the figure.",
+            },
+            {
+              name: "When you come in",
+              body: "A crack caught this month is a filling. The same crack in six months is a root treatment and a crown. Waiting is not free, it is only unbilled.",
+            },
+          ],
+          askHead: "Ask these when you get the figure",
+          ask: [
+            "What is included in that number, and what would be charged again?",
+            "How long does the quote stand for?",
+            "If you find more once you are in there, do you stop and ask me?",
+            "Can it be paid in parts, and what does that do to the total?",
+            "What does it cost me — in teeth, not money — to leave this alone for a year?",
+          ],
+          honest:
+            "There is no price list here for a second reason besides the one above: this practice is a concept website, and a figure against a treatment that nobody performs would simply be an invented one. A real build puts the practice's own published fees in this section, in the same shape.",
+          cta: "Ask for the plan in writing",
         },
         nerves: {
-          eyebrow: "Nervous patients",
-          title: "Say So When You Book",
-          body:
-            "It is the single most useful thing to tell the front desk, and it changes how the appointment is built. It is offered rather than assumed — plenty of people would rather not talk about it, and that is fine too.",
+          eyebrow: "03 — If you dread it",
+          title: "Say it at the desk. It changes the appointment, not the price.",
+          lead:
+            "This is the part the practice cares about most. Four things that can be checked in the room rather than believed in a brochure.",
           points: [
             {
               title: "The quietest slot in the day",
-              body: "Booked away from the corridor and the children's hour, with enough time in it that nobody is hurried out of the chair.",
+              body: "Booked away from the corridor and the school run, with enough time in it that nobody is hurried out of the chair.",
             },
             {
               title: "A hand up stops everything",
-              body: "Agreed before anything is picked up, honoured without a discussion about it afterwards, and repeated as often as you need.",
+              body: "Agreed before anything is picked up, honoured without a discussion about it afterwards, and used as often as you need it.",
             },
             {
               title: "Each step, before it happens",
-              body: "What is about to happen and what it will feel like. Ask us to skip the descriptions and we will do that too.",
+              body: "What is about to happen and what it will feel like. Ask us to skip the descriptions and we will do that instead.",
             },
             {
               title: "A first visit can be a look round",
@@ -2291,93 +3001,160 @@ export const projects: Project[] = [
             },
           ],
           cta: "Tell us when you book",
+          ctaQuiet: "Book a look-round visit only",
+          quietPrefill:
+            "I would like a look-round visit first — no instruments and no examination, just to see the room.",
           prefill:
             "I get anxious in the chair — please book the quietest slot you have and go slowly.",
         },
         visit: {
-          eyebrow: "Before you come",
-          title: "The First Appointment",
-          lead: "Sixty minutes, and most of it is looking and talking.",
+          eyebrow: "04 — The first hour",
+          title: "Sixty minutes, and most of it is looking and talking.",
+          lead:
+            "The first appointment is booked as an hour rather than a ten-minute slot, so there is room in it for the questions you have not thought of yet.",
+          badge: "60 minutes · nothing treated on this visit",
           steps: [
             {
-              no: "01",
+              mark: "0 – 10 min",
               title: "You arrive",
-              body: "Front desk, a form on a tablet or a clipboard, and a short wait — the day is booked in sixty-minute blocks rather than packed in tens.",
+              body: "Front desk, a form on a tablet or a clipboard, and a short wait. The day is booked in hours rather than packed in tens.",
             },
             {
-              no: "02",
-              title: "The examination",
-              body: "Teeth, gums, jaw and soft tissues, with X-rays only if what we find calls for them. Anything you ask gets answered at the chair.",
+              mark: "10 – 35 min",
+              title: "The looking",
+              body: "Teeth, gums, jaw and the soft tissue under the tongue, with X-rays only where what we find calls for them. Anything you ask gets answered at the chair.",
             },
             {
-              no: "03",
-              title: "The plan",
-              body: "What we found, what it means, and the options where there is more than one — written down with a number against each item before you leave.",
+              mark: "35 – 50 min",
+              title: "The conversation",
+              body: "What we found, what it means, and the options where there is more than one — including doing nothing for now, and what that would cost you later.",
+            },
+            {
+              mark: "50 – 60 min",
+              title: "The paper",
+              body: "The plan written down with a figure against each line, and time to read it here or take it away. Nothing starts while you are still deciding.",
             },
           ],
           bringTitle: "What to bring",
           bring: [
-            {
-              label: "Identification",
-              body: "Photo ID for the file. Nothing else is needed in order to be seen.",
-            },
-            {
-              label: "What you take",
-              body: "Medicines, inhalers and supplements included. It changes what is safe to do in the chair.",
-            },
-            {
-              label: "Old X-rays",
-              body: "From another practice, on a disc or a printout. They save taking the same picture twice.",
-            },
-            {
-              label: "Your questions",
-              body: "Written down is fine. Half of them are worth asking before you sit down.",
-            },
+            "Photo ID if you have it with you. Nobody is turned away for not having it.",
+            "Everything you take, including inhalers and anything bought over the counter. It changes what is safe in the chair.",
+            "X-rays another practice took, on a disc or a printout, so we are not taking the same picture twice.",
+            "The questions you have been putting off. Written down is fine, and half of them are worth asking before you sit.",
           ],
           accessTitle: "Getting in",
           access: [
             "Step-free entrance from Ashgrove Lane and a lift to the first floor.",
-            "Two parking bays outside, one of them accessible.",
+            "Two bays outside, one of them accessible, and a dropped kerb at the corner.",
             "A carer or a family member can sit in on any appointment.",
             "Under sixteen, a parent stays in the room for the whole visit.",
           ],
+          cta: "Ask for the 60-minute visit",
         },
-        faq: {
-          eyebrow: "Questions",
-          title: "Asked At The Desk",
-          lead: "The questions the front desk answers most often, in the words it answers them in.",
+        words: {
+          eyebrow: "The words on the letter",
+          title: "Nine terms, said again in ordinary English.",
+          lead:
+            "A letter from a dental practice is written in a shorthand its readers were never taught. This is the same nine words the desk hears most, without the Greek in them.",
+          prompt: "Tap a word.",
+          terms: [
+            {
+              term: "Scale and polish",
+              plain: "Tartar taken off the outside of the teeth, then the surface smoothed so stains stop clinging to it.",
+              where: "On a hygiene appointment.",
+            },
+            {
+              term: "Scaling below the gum",
+              plain: "The same job done further down the root, where a brush cannot reach. Usually two longer visits, with numbing.",
+              where: "When the gums have started to come away from the teeth.",
+            },
+            {
+              term: "Composite",
+              plain: "Tooth-coloured filling material, built in layers and set hard with a light.",
+              where: "Nearly every filling quoted these days.",
+            },
+            {
+              term: "Crown",
+              plain: "A cap made to fit over a tooth that is too weakened to hold a filling.",
+              where: "After root treatment, or on a tooth broken at the gum line.",
+            },
+            {
+              term: "Root treatment",
+              plain: "The nerve taken out from inside a tooth so that the tooth itself can stay in your mouth.",
+              where: "When an ache has gone into the tooth rather than sitting under a filling.",
+            },
+            {
+              term: "Radiograph",
+              plain: "An X-ray. A small one inside the mouth for a single tooth, a larger one for the whole jaw.",
+              where: "Only where the picture changes what is done.",
+            },
+            {
+              term: "Occlusion",
+              plain: "How the top and bottom teeth meet when you close. An uneven one is why a new filling sometimes feels too high.",
+              where: "Checked at every visit, and after any new work.",
+            },
+            {
+              term: "Periodontal",
+              plain: "Anything to do with the gum and the bone holding the tooth, rather than the tooth itself.",
+              where: "On a referral letter — and it means the tooth is not the problem.",
+            },
+            {
+              term: "Fissure sealant",
+              plain: "A thin painted coating in the grooves of a back tooth, so the grooves cannot hold food.",
+              where: "Offered to children mostly, and painless to have done.",
+            },
+          ],
+          foot:
+            "A word we have not translated? Put it in the notes box on the slip and the desk answers it in the same plain way.",
+        },
+        proof: {
+          eyebrow: "05 — Proof",
+          title: "What people say, and what this page refuses to make up.",
+          lead:
+            "There is no practice yet, so there is nobody to quote. Here is the frame the reviews go in, and the questions the desk answers most often.",
+          slotLabel: "Reviews slot",
+          headline: "Verified reviews would sit inside this frame.",
+          body:
+            "Built for a real practice, this box is fed by reviews the practice did not choose and cannot edit. Until then it stays empty on purpose. An invented quote, a rating out of five, or a before-and-after pair would be the only evidence on this page, and every one of them would be false.",
+          foot: "No testimonials, no star ratings, no case photographs, no credentials anywhere on this page.",
+          faqHead: "Asked at the desk",
           items: [
             {
               q: "Do I need to be registered to be seen?",
-              a: "No. A new patient books the same sixty-minute examination as anyone else, and registration is offered after it if the practice turns out to be the right fit.",
+              a: "No. A new patient books the same sixty-minute examination as anyone else, and registration is offered after it if the practice turns out to suit you.",
             },
             {
               q: "How soon can I get in?",
-              a: "Routine appointments are usually booked two to three weeks out. Pain is different: two slots each afternoon are held for it, and ringing before 16:00 usually means being seen the same day.",
+              a: "Routine appointments usually run two to three weeks ahead. Pain is different: two slots each afternoon are held for it, and ringing before four normally means being seen the same day.",
             },
             {
               q: "Will I be told off about my teeth?",
-              a: "No. A lecture is not treatment. The state of your mouth at a first visit is information for us, not a verdict on you.",
+              a: "No. A lecture is not treatment. What your mouth looks like on the day you finally come in is information for us, not a verdict on you.",
             },
             {
-              q: "Do you take insurance?",
-              a: "No plans are handled here. You get the written number at the end of the examination and pay after treatment — and if you would rather claim it back from an insurer, the paperwork supports that.",
+              q: "Do you deal with my insurer?",
+              a: "No plans are handled at this desk. You get the written figure at the end of the examination and pay after the work — and if you would rather claim it back, the paperwork supports that.",
             },
             {
-              q: "My tooth hurts only when I bite. Is that an emergency?",
-              a: "Usually not that night. Take something simple for the pain and ring in the morning. If your face or jaw starts to swell, or swallowing becomes difficult, stop reading and call immediately.",
+              q: "My tooth only hurts when I bite on it. Is that an emergency?",
+              a: "Usually not that night. Take something simple and ring in the morning. If your face or jaw starts to swell, or swallowing becomes difficult, stop reading this and go now.",
             },
             {
-              q: "Can I bring the children?",
+              q: "Can the children come with me?",
               a: "Yes. The first visit is deliberately short, a parent stays in the room for anyone under sixteen, and a child who will not open their mouth today is not forced to.",
             },
+            {
+              q: "Is this practice on the health service?",
+              a: "This is a concept website, so it is on nothing at all. A real build replaces this answer with the practice's own — which is the only honest way for you to find it out, and the reason the question is here.",
+            },
           ],
+          ask: { text: "Something we have not answered?", link: "Put it in the slip" },
         },
         booking: {
-          eyebrow: "Appointments",
-          title: "Request A Visit",
-          body:
-            "The form goes to the front desk, which rings you back to fix an actual time. It is the slower route, and the right one for anything that is not pain.",
+          eyebrow: "06 — The slip",
+          title: "Leave us the note. The desk will ring you back.",
+          lead:
+            "The slip goes to the front desk, which rings to fix an actual time. It is the slower route, and the right one for anything that is not pain.",
           reasons: [
             "Check-up",
             "Pain or swelling",
@@ -2396,7 +3173,7 @@ export const projects: Project[] = [
             "Saturday morning",
           ],
           times: ["Morning", "Afternoon", "Late Thursday", "No preference"],
-          patientTypes: ["New patient", "Existing patient"],
+          patientTypes: ["New patient", "Already on our books"],
           legends: {
             reason: "What is the visit for?",
             patient: "Are you already on our books?",
@@ -2415,19 +3192,33 @@ export const projects: Project[] = [
             phone:
               "The number the desk calls back on. Digits, spaces or brackets are all fine.",
             notes:
-              "Anxiety, a wheelchair, a carer coming with you, a tooth already treated, an old X-ray to bring.",
+              "Anxiety, a wheelchair, a carer coming with you, a tooth already treated, an old X-ray to bring, a word from the letter you could not parse.",
           },
-          submit: "Request A Visit",
-          note: "No time is held until the practice rings you back.",
+          submit: "Send the slip",
+          note: "No time is held until somebody at the desk rings you.",
           tear: "Tear here",
+          talkHead: "Rather talk to a person?",
+          talkBody:
+            "The number is answered by whoever is standing at the front desk, Monday to Thursday until half past five. If nobody can pick up, leave a message and the call comes back the same working day.",
+          backHead: "Hate the phone?",
+          backBody:
+            "Write 'please call me back' in the notes box and pick a part of the day. The desk rings you instead of the other way round — which is the same appointment, arrived at quietly.",
+          online: {
+            label: "Pick a time yourself",
+            note: "A real build puts the practice's live scheduler behind this. Nothing is wired up in a concept website, so a time chosen here would be a time that never existed. The slip and the phone are the only two routes on this page, and both of them say so.",
+          },
+          carried: "From the planner above",
           confirm: {
             title: "Asked for, not booked",
             lead:
-              "This is what the form received. Nothing left this page, so there is no appointment yet and nobody at the practice has been told to expect you.",
+              "This is what the slip received. Nothing left this page, so there is no appointment and nobody at the practice is expecting you.",
             edit: "Change it",
-            refLabel: "Reference number",
+            refLabel: "Reference",
+            /* The number is what makes a leaflet feel physical, and it is also the
+               one thing on this page that could be misread as a book entry — so it
+               arrives with the sentence that says what it is not. */
             refNote:
-              "Written down by this page from what you typed. It is not in the practice's book, because nothing was sent.",
+              "Made up by this page out of what you typed. It is not in the practice's book, because nothing was sent.",
           },
         },
         hours: [
@@ -2443,7 +3234,7 @@ export const projects: Project[] = [
         ],
         phone: { display: "(555) 555-0164", href: "tel:+15555550164" },
         positioning:
-          "General and family dentistry. Two chairs, one plan, and a number before anything starts.",
+          "General and family dentistry. Two chairs, one dentist, and a figure before anything starts.",
         footer: {
           hours: "Hours",
           where: "Where",

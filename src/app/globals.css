@@ -329,8 +329,16 @@ body {
     .demo-header-dental,
     .reveal,
     .heading-reveal,
-    .animate-pulse
+    .animate-pulse,
+    .er-glow
   ) {
+  animation: none;
+}
+
+/* Ember's steam animates on its child wisps, which the list above cannot name, so
+   it gets its own line — inside a frame the slot carries no steam, which is what a
+   visitor on `reduce` already sees. */
+.demo-scroll .er-steam span {
   animation: none;
 }
 
@@ -542,16 +550,18 @@ body {
   }
 }
 
-/* --- Ember & Oak's two concept effects --------------------------------------
-   Both are applied only under `prefers-reduced-motion: no-preference` rather
-   than relying on the global duration collapse, and each element's resting state
-   is the finished look, so a visitor who asked for no motion, or an engine that
-   never runs this rule, sees the photo and the menu exactly as they end up. */
+/* --- Ember & Oak's concept effects, and BlueLine's hero drift ----------------
+   Each is applied only under `prefers-reduced-motion: no-preference` rather than
+   relying on the global duration collapse, and each element's resting state is
+   what a visitor who asked for no motion should see, so an engine that never runs
+   this rule gets a finished page rather than a half-faded one. */
 
-/* The signature moment: the hero photograph drifts. It only ever scales UP from
-   its natural size, so the unanimated state can never show an edge of the frame
-   the way a zoom-out-from-below-1 would, and the pan stays inside the overzoom.
-   12s per leg, easing in and back out, so it reads as a room rather than a loop. */
+/* The signature moment: a hero photograph drifts. It only ever scales UP from its
+   natural size, so the unanimated state can never show an edge of the frame the
+   way a zoom-out-from-below-1 would, and the pan stays inside the overzoom. 12s
+   per leg, easing in and back out, so it reads as a room rather than a loop.
+   Ember's hero no longer carries a photograph — it names its slots instead — so
+   this effect now belongs to BlueLine's two hero plates alone. */
 @keyframes ember-ken-burns {
   from {
     transform: scale(1.04) translate3d(-0.6%, -0.4%, 0);
@@ -561,10 +571,10 @@ body {
   }
 }
 
-/* The menu ledger fades in when its tab changes. Only opacity animates, and the
-   outgoing list is removed rather than stacked, so a screen reader gets one
-   panel per change instead of two — and a visitor on `reduce` gets an instant,
-   fully legible swap. */
+/* The ledger fades in when what it shows changes — a course tab, a menu filter, an
+   evening stage, a ticket's contents. Only opacity animates, and the outgoing list
+   is removed rather than stacked, so a screen reader gets one panel per change
+   instead of two — and a visitor on `reduce` gets an instant, fully legible swap. */
 @keyframes ember-menu-in {
   from {
     opacity: 0;
@@ -572,6 +582,103 @@ body {
   to {
     opacity: 1;
   }
+}
+
+/* The steam over the hearth slot: three wisps that rise, lean and thin out, each on
+   its own clock so they never march together. The drawing is the only thing here
+   that is not a claim about the room, and the resting state is no steam at all, so
+   a visitor on `reduce` — or a device frame, which holds every ambient loop off —
+   sees the named slot plainly instead of three faint vertical lines. */
+@keyframes ember-steam {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14%, 0) scaleY(0.7);
+  }
+  20% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--er-drift, 8px), -64%, 0) scaleY(1.3);
+  }
+}
+
+/* The glow behind whichever fire is selected. It breathes rather than pulses: the
+   flame drawings themselves hold still, so the heat has to come from the wash
+   under them, and `alternate` over 3.4s keeps it out of step with any other loop
+   on the page. At rest it sits at its own starting state, so with the animation
+   off the chosen block still reads as the chosen block.
+   It never grows past its own box. A halo that reaches outside the block is a
+   horizontal scrollbar on a phone: measured at 320px, a -14% inset plus
+   `scale(1.06)` put the wash 5px past both edges of the viewport and widened the
+   whole page to 325px, so the breathing is all opacity and `scale(1)` at most. */
+@keyframes ember-glow {
+  from {
+    opacity: 0.34;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0.62;
+    transform: scale(1);
+  }
+}
+
+/* The geometry both loops above animate lives outside the media query, so the
+   elements exist and the layer cannot reflow the slot whichever way the preference
+   falls. `pointer-events: none` because it is decoration laid over a named plate,
+   and `overflow: hidden` because a wisp that has left the frame is a stray line on
+   somebody else's section. A wisp rests at opacity 0: no motion means no steam,
+   which is the honest reading, rather than three faint bars that look like a
+   rendering fault. The glow rests at its own starting opacity, so the chosen block
+   still reads as chosen with the animation off. */
+.er-steam {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.er-steam span {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 2px;
+  height: 30%;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--d-accent) 34%, transparent),
+    transparent
+  );
+  filter: blur(1px);
+}
+
+.er-steam span:nth-child(2) {
+  left: 41%;
+  --er-drift: -11px;
+  --er-time: 6.6s;
+  --er-delay: 1.4s;
+}
+
+.er-steam span:nth-child(3) {
+  left: 59%;
+  --er-drift: 13px;
+  --er-time: 5.9s;
+  --er-delay: 2.7s;
+}
+
+.er-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 50% 62%,
+    color-mix(in srgb, var(--d-accent) 42%, transparent),
+    transparent 64%
+  );
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -583,16 +690,25 @@ body {
     animation: ember-menu-in 350ms ease-out both;
   }
 
+  .er-steam span {
+    animation: ember-steam var(--er-time, 5.4s) linear infinite;
+    animation-delay: var(--er-delay, 0s);
+  }
+
+  .er-glow {
+    animation: ember-glow 3.4s ease-in-out infinite alternate;
+  }
+
   /* Ember & Oak's top bar: quiet over the hero, solid once the page has moved.
-     It is driven from the header's own nearest scroll container, so it behaves
-     the same inside a device frame and on the concept's full-page route. The
-     plate never goes fully transparent: at 0 it keeps 88% of the page colour.
-     The photograph behind it cannot be measured, so the worst case is assumed —
-     a pure-white pixel — and 88% still leaves the bar's cream wordmark at 11.5:1
-     and its body-colour nav links at 6.2:1 against that. The hamburger's three
-     bars are ink, not the hairline, so the control is identifiable without the
-     border carrying the contrast. Without support, or on `reduce`, the header
-     keeps its resting solid style. */
+     It is driven from the header's own nearest scroll container, so it behaves the
+     same inside a device frame and on the concept's full-page route. The plate
+     never goes fully transparent: at 0 it keeps 88% of the page colour, and on this
+     palette the page colour is the cream the whole room is printed on, so the
+     worst case behind the bar is the board band's 4% ink wash — a difference of
+     about one part in a hundred, against ink that clears 13:1 on either. The
+     hamburger's three bars are ink, not the hairline, so the control is
+     identifiable without the border carrying the contrast. Without support, or on
+     `reduce`, the header keeps its resting solid style. */
   @keyframes ember-header {
     from {
       background-color: color-mix(in oklab, var(--d-bg) 88%, transparent);
@@ -1016,6 +1132,282 @@ footer[id] {
    through it. Driven by body[data-nav-open], set by the Navbar. */
 body[data-nav-open="true"] .sticky-cta {
   display: none;
+}
+
+/* --- Rowanwood's own motion --------------------------------------------------
+   Everything here is named `dw-` and applied only under
+   `prefers-reduced-motion: no-preference`, on the same terms as Ember's two
+   effects above: the resting state of each one is the finished look, so a
+   visitor who asked for less motion, an engine that never runs the rule, and a
+   bundle that never arrives all see the same fully legible page. Nothing here
+   holds text back from first paint.
+
+   The one ambient loop is the breathing disc, which is also the only thing on
+   this page that runs by itself. Everything else answers a press: a folded row,
+   a tapped region of the diagram, a torn slip. */
+
+/* The disc. Four counts in, four held, six out, so one cycle is fourteen seconds
+   and the keyframe stops sit at 28.57% and 57.14% — the same fractions the copy
+   names. Transform and opacity only, so the loop costs the compositor and not the
+   layout thread, and the ring is a second element rather than an animated
+   box-shadow for the same reason. */
+@keyframes dw-breath {
+  0% {
+    transform: scale(0.6);
+    animation-timing-function: ease-in-out;
+  }
+  28.57% {
+    transform: scale(1);
+    animation-timing-function: linear;
+  }
+  57.14% {
+    transform: scale(1);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: scale(0.6);
+  }
+}
+
+/* The halo behind it, on its own count so the two never visibly disagree: the
+   same fourteen seconds, the same stops, a wider travel and a shallower fade. */
+@keyframes dw-halo {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.18;
+  }
+  28.57% {
+    transform: scale(1.16);
+    opacity: 0.42;
+  }
+  57.14% {
+    transform: scale(1.16);
+    opacity: 0.42;
+  }
+  100% {
+    transform: scale(0.72);
+    opacity: 0.18;
+  }
+}
+
+/* The three words, each visible only across its own third of the cycle. Three
+   separate keyframe sets rather than one with delays, because a delayed
+   animation shows its fill state during the delay — which would light all three
+   up at once for the first four seconds. */
+@keyframes dw-word-in {
+  0%,
+  28.57% {
+    opacity: 1;
+  }
+  28.58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dw-word-hold {
+  0%,
+  28.56% {
+    opacity: 0;
+  }
+  28.57%,
+  57.14% {
+    opacity: 1;
+  }
+  57.15%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dw-word-out {
+  0%,
+  57.13% {
+    opacity: 0;
+  }
+  57.14%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Base state, outside any media query: the first word shown, the other two
+   hidden, the static pattern line hidden. That is what a visitor on `reduce`
+   keeps — a disc at rest and the pace written out in the line below it — and it
+   is also the state before the rule below has had a chance to run. */
+.dw-word-2,
+.dw-word-3 {
+  opacity: 0;
+}
+
+.dw-static {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dw-disc {
+    animation: dw-breath 14s linear infinite;
+  }
+  .dw-halo {
+    animation: dw-halo 14s linear infinite;
+  }
+  .dw-word-1 {
+    animation: dw-word-in 14s linear infinite;
+  }
+  .dw-word-2 {
+    animation: dw-word-hold 14s linear infinite;
+  }
+  .dw-word-3 {
+    animation: dw-word-out 14s linear infinite;
+  }
+}
+
+/* Pause freezes all five animations together. They share one start (the moment
+   the concept mounted) and one duration, so they cannot drift apart while
+   stopped, and the disc resumes exactly where the word is. */
+.dw-calm[data-dw-paused="true"] :is(.dw-disc, .dw-halo, .dw-word-1, .dw-word-2, .dw-word-3) {
+  animation-play-state: paused;
+}
+
+/* On `reduce` there is nothing to watch and nothing to stop, so the disc carries
+   the pace in words and the toggle is taken out rather than left inert. A
+   control that cannot change anything is a worse lie than a missing one. */
+@media (prefers-reduced-motion: reduce) {
+  .dw-words {
+    display: none;
+  }
+  .dw-static {
+    display: block;
+  }
+  .dw-calm-toggle {
+    display: none;
+  }
+}
+
+/* Inside a device frame the disc is ambient, so it holds still — and with it go
+   the toggle and the word cycle, for the reason above. */
+.demo-scroll :is(.dw-disc, .dw-halo, .dw-word-1, .dw-word-2, .dw-word-3) {
+  animation: none;
+}
+.demo-scroll .dw-words {
+  display: none;
+}
+.demo-scroll .dw-static {
+  display: block;
+}
+.demo-scroll .dw-calm-toggle {
+  display: none;
+}
+
+/* A folded panel that animates its own height. `0fr` to `1fr` on a single-row
+   grid is the only way to transition to an unknown height without measuring it
+   in JavaScript, and the inner cell has to be the one that clips. The panel
+   stays in the document for the animation, so when it is shut it is `inert` —
+   which takes its links out of the tab order and out of the accessibility tree
+   in one attribute. Transitions are already collapsed to nothing by the global
+   reduced-motion rule at the foot of this file. */
+.dw-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--motion-mid) var(--motion-ease);
+}
+
+.dw-fold > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dw-fold[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+/* The diagram. Each region is drawn twice — a line the visitor reads, and a
+   solid highlight over the top of it — and only the highlight's opacity and the
+   group's transform change, so a tap costs two composited properties and no
+   repaint of the drawing underneath. */
+.dw-region {
+  cursor: pointer;
+  transition: transform var(--motion-tap) var(--motion-ease);
+  transform-origin: center;
+}
+
+.dw-region .dw-lit {
+  opacity: 0;
+  transition: opacity var(--motion-tap) var(--motion-ease);
+}
+
+.dw-region[data-on="true"] {
+  transform: translateY(-3px);
+}
+
+.dw-region[data-on="true"] .dw-lit {
+  opacity: 1;
+}
+
+/* The whole diagram dims one step when a region is chosen, so the answer is the
+   brightest thing on the drawing rather than a colour difference of two shades
+   on a page of sage. */
+.dw-mouth[data-dw-picked="true"] .dw-region:not([data-on="true"]) {
+  opacity: 0.45;
+  transition: opacity var(--motion-mid) var(--motion-ease);
+}
+
+/* The slip tears once, when the read-out appears. It is an arrival rather than a
+   loop, so it is `both` and never repeats; inside a frame it is muted with the
+   rest of the ambient set, and the perforation simply sits where it ends up. */
+@keyframes dw-tear {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10px);
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dw-tear {
+    animation: dw-tear 520ms var(--motion-ease) both;
+  }
+}
+
+.demo-scroll .dw-tear {
+  animation: none;
+}
+
+/* --- Rowanwood's dark band -----------------------------------------------------
+   The one place on this concept that inverts. `DemoVars` measures its derived
+   ink tokens against the light surfaces only, because that is what the page
+   paints text on, so a band of the palette's own near-black has to carry its own
+   literals — the same reason BlueLine's navy footer does.
+
+   Measured against #10201A: the cream #F4F6F3 is 15.6:1, the grey-sage #A9BDB5
+   is 8.6:1, and the lifted sage #7FBFAE is 8.0:1. The palette's own #2E6F5E is
+   2.9:1 here, which is why the accent appears on this band as a light tint of
+   itself and never as the fill colour behind text. */
+.dw-band {
+  background-color: #10201a;
+  color: #f4f6f3;
+}
+
+.dw-ink-hi {
+  color: #f4f6f3;
+}
+
+.dw-ink-lo {
+  color: #a9bdb5;
+}
+
+.dw-ink-accent {
+  color: #7fbfae;
+}
+
+/* A fill of the lifted sage, inked with the band's own background: 8.0:1 either
+   way up, and the only button on the dark band that can carry a label. */
+.dw-fill-mint {
+  background: #7fbfae;
+  color: #10201a;
 }
 
 @media (prefers-reduced-motion: reduce) {

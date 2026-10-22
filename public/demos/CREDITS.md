@@ -1,6 +1,9 @@
 # Demo imagery credits
 
-Photographs used inside the concept demos, and the one concept that uses none.
+Photographs used inside the concept demos. Two concepts use no stock photograph at
+all: Rowanwood Dental and Ember & Oak, both of which now label their image slots
+instead of borrowing somebody else's room. A third, BlueLine Plumbing, has plates
+that are generated artwork rather than photographs.
 
 Everything listed under a concept heading below is a licensed stock photograph,
 not a project we built. Each concept website already carries an on-screen
@@ -61,21 +64,32 @@ A third former Atlas shot (a white-cabinet kitchen by Franco Debartolo) was **no
 reused: a framed photograph of a person sits on the counter, which is the same test
 that retired Maison Lune's framed-faces shot.
 
-## Ember & Oak — /demos/ember-restaurant
+## Ember & Oak — retired, files still on disk
 
-Files in `demos/ember-restaurant/`:
+**This concept ships no photograph.** The rebuilt card names the picture each of
+its eleven slots would carry in a real build — the chain over the coals, the
+steaks on the bars, the long table — instead of showing a room it has never had.
+No page references the files below, so none of them is published anywhere; their
+credits stay listed because the files themselves are still on disk.
 
-| File | Slot | Subject | Photographer | Unsplash page |
+Files in `demos/ember-restaurant/` (unreferenced):
+
+| File | Former slot | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
 | `hero-fire.webp` | Hero | Steaks over an open flame on a grill | Sebastian Alvarado Rojas (@sebastuan4) | https://unsplash.com/photos/steaks-cooking-over-open-flames-on-a-grill-ttOZWD1X2oo |
-| `story-hands.webp` | Story, tall | Two hands passing plates across a dark table (black and white) | Ruben Mavarez (@justalifein) | https://unsplash.com/photos/hands-exchange-plates-of-food-at-a-dark-table-SwqHFi3jyO0 |
-| `story-dessert.webp` | Story, offset small | Hands presenting a small dessert in a dark bowl | Vitalii Kyktov (@i_am_vitality) | https://unsplash.com/photos/hands-presenting-a-small-dessert-in-a-dark-bowl-tyK666ULizE |
+| `story-hands.webp` | The room, tall | Two hands passing plates across a dark table (black and white) | Ruben Mavarez (@justalifein) | https://unsplash.com/photos/hands-exchange-plates-of-food-at-a-dark-table-SwqHFi3jyO0 |
+| `story-dessert.webp` | The room, offset small | Hands presenting a small dessert in a dark bowl | Vitalii Kyktov (@i_am_vitality) | https://unsplash.com/photos/hands-presenting-a-small-dessert-in-a-dark-bowl-tyK666ULizE |
 | `events-room.webp` | Private dining | Long candlelit banquet table in a dark room | Janay Peters (@jpetersbydesign) | https://unsplash.com/photos/a-dark-elegant-dining-room-with-long-table-OGtDgKzMwJU |
 | `gal-hearth.webp` | Gallery | Sausages and chicken on a chain-hung grill over a hearth fire | Sergio Arteaga (@saarteaga) | https://unsplash.com/photos/a-fire-burning-in-a-fireplace-with-lots-of-food-kTyHN_GSZ1U |
 | `gal-grill.webp` | Gallery | Embers glowing beneath empty grill bars | Bence Balla-Schottner (@ballaschottner) | https://unsplash.com/photos/a-close-up-of-a-grill-with-flames-in-the-background-BNkR_VsO5Y8 |
 | `gal-table.webp` | Gallery | Small dishes laid along a wooden table with evergreen | Madeline Liu (@madeline_sd) | https://unsplash.com/photos/gourmet-appetizers-arranged-on-a-rustic-wooden-table-CJ6tbD-NqTQ |
 | `gal-autumn.webp` | Gallery | Plated dessert beside a cocktail, pumpkins behind | Anita Austvika (@anitaaustvika) | https://unsplash.com/photos/dessert-with-pumpkins-and-flowers-on-table-emhi_SM4vpA |
 | `gal-candles.webp` | Gallery | Empty tables lit by small table lamps at night | Ivan Benets (@dorrotay) | https://unsplash.com/photos/a-dimly-lit-table-and-chairs-in-a-dark-room-6-zEmwjWDCQ |
+
+Dropping them is not a judgement on the photographs. It is the same decision the
+restaurant itself makes on the page: a fictional room cannot be illustrated with
+nine real kitchens, and crediting nine photographers for a place that does not
+exist implies a room somebody once cooked in.
 
 ### Ember & Oak — shots considered and rejected
 
@@ -145,9 +159,15 @@ Files in `demos/maison-lune/`:
 
 ## Rowanwood Dental — /demos/rowanwood-dental
 
-Files in `demos/rowanwood-dental/`:
+**This concept ships no photograph.** The rebuilt leaflet draws its own mouth
+diagram and replaces the four picture slots with four labelled image-slot cards
+that say what a real build would put there. No page references the files below,
+so none of them is published anywhere; their credits stay listed because the
+files themselves are still on disk.
 
-| File | Slot | Subject | Photographer | Unsplash page |
+Files in `demos/rowanwood-dental/` (unreferenced):
+
+| File | Former slot | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
 | `room.webp` | Hero, tall | Empty treatment room: grey-and-white chair seen from behind, operating light on an arm, delivery unit, window with a blind | Katarzyna Zygnerska | https://unsplash.com/photos/a-white-dental-chair-in-a-room-with-a-window-44jaETSVX2I |
 | `practice-room.webp` | The practice, wide band | Empty room: blue-upholstered chair and practising stool, a yellow and blue abstract painting on the wall | Ozkan Guner | https://unsplash.com/photos/a-dentist-chair-in-a-room-with-a-painting-on-the-wall-aFqSRokmw2E |
@@ -156,7 +176,10 @@ Files in `demos/rowanwood-dental/`:
 
 `instruments.webp` is filed on Unsplash under the auto-generated title "orange and
 black audio jack". It is a set of dental probing instruments — confirmed by looking
-at the downloaded frame, which is the standard applied to every plate here.
+at the downloaded frame, which is the standard applied to every plate here. It also
+carried a legible brand name on the tray packaging, which is the defect that helped
+end its use: a fictional practice cannot be photographed standing over somebody
+else's product. Dropping the photographs closes it.
 
 ### Rowanwood Dental — shots considered and rejected
 
@@ -174,17 +197,19 @@ at the downloaded frame, which is the standard applied to every plate here.
   FlowRight hero showed hands and the back of a head only, so nobody in it could be
   identified, and its bathroom and warm-room plates contain no people at all. BlueLine's
   generated plates are the exception and are handled in its own section. Ember & Oak's two
-  story photographs show hands only — `story-hands.webp` is cropped to forearms
+  retired story photographs show hands only — `story-hands.webp` is cropped to forearms
   and a table, `story-dessert.webp` to hands and a bowl with a strand of hair at
-  the very edge — so no guest or staff member can be recognised.
-- Ember & Oak's gallery and hero contain no people at all.
+  the very edge — and its hero and gallery plates contain no people at all, so no
+  guest or staff member could ever have been recognised there.
 - Maison Lune's hero, `stations.webp`, `corner.webp`, `tools.webp`, `towels.webp`
   and `marble.webp` contain no people at all. Its one person-led photograph,
   `braid.webp`, is a close crop of the back of a client's head — braids, an ear and
   a strand of neck hair — so no face is shown and nobody can be identified.
-- Rowanwood Dental's four plates contain no people at all — two empty rooms, a tray
-  of instruments and an empty waiting area — so no patient, dentist or receptionist
-  is depicted anywhere on that concept, and none is named either.
+- Rowanwood Dental and Ember & Oak no longer draw on any of their former plates.
+  When they did ship they contained no people at all — two empty dental rooms, a
+  tray of instruments, an empty waiting area, a grill, a long table and five food
+  plates — so no patient, dentist, receptionist, cook or diner was ever depicted on
+  either concept, and nobody is named there either.
 - A before/after drag slider was **dropped from the stock-photo demos** and never
   came back on one: no genuine licence-verifiable pair of the same space was
   available, and a "before" was not to be faked from a real photograph with a

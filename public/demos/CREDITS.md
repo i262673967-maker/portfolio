@@ -1,9 +1,10 @@
 # Demo imagery credits
 
-Photographs used inside the concept demos. Two concepts use no stock photograph at
-all: Rowanwood Dental and Ember & Oak, both of which now label their image slots
-instead of borrowing somebody else's room. A third, BlueLine Plumbing, has plates
-that are generated artwork rather than photographs.
+Photographs used inside the concept demos. Marigold Kitchen carries nine licensed
+stock photographs, carried over from the retired Ember & Oak card. Rowanwood Dental
+carries three of the four licensed frames on disk — its fourth is held back because
+a manufacturer's brand is molded into the picture (see its section). A third,
+BlueLine Plumbing, has plates that are generated artwork rather than photographs.
 
 Everything listed under a concept heading below is a licensed stock photograph,
 not a project we built. Each concept website already carries an on-screen
@@ -64,32 +65,47 @@ A third former Atlas shot (a white-cabinet kitchen by Franco Debartolo) was **no
 reused: a framed photograph of a person sits on the counter, which is the same test
 that retired Maison Lune's framed-faces shot.
 
-## Ember & Oak — retired, files still on disk
+## Marigold Kitchen — /demos/marigold-kitchen
 
-**This concept ships no photograph.** The rebuilt card names the picture each of
-its eleven slots would carry in a real build — the chain over the coals, the
-steaks on the bars, the long table — instead of showing a room it has never had.
-No page references the files below, so none of them is published anywhere; their
-credits stay listed because the files themselves are still on disk.
+**This concept ships nine photographs**, carried over from the retired Ember & Oak
+card. No new downloads: the same licensed shots, under the same Unsplash License,
+each given a Marigold Kitchen slot. They are published from
+`demos/marigold-kitchen/`; the identical files still also sit unreferenced in
+`demos/ember-restaurant/`, **temporarily duplicated** until Task 7 deletes the
+retired folder once nothing points at it.
 
-Files in `demos/ember-restaurant/` (unreferenced):
+Files in `demos/marigold-kitchen/` (9), all used under the **Unsplash License**
+(https://unsplash.com/license) — "Free to use under the Unsplash License."
 
-| File | Former slot | Subject | Photographer | Unsplash page |
+| File | Marigold Kitchen slot | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
 | `hero-fire.webp` | Hero | Steaks over an open flame on a grill | Sebastian Alvarado Rojas (@sebastuan4) | https://unsplash.com/photos/steaks-cooking-over-open-flames-on-a-grill-ttOZWD1X2oo |
-| `story-hands.webp` | The room, tall | Two hands passing plates across a dark table (black and white) | Ruben Mavarez (@justalifein) | https://unsplash.com/photos/hands-exchange-plates-of-food-at-a-dark-table-SwqHFi3jyO0 |
-| `story-dessert.webp` | The room, offset small | Hands presenting a small dessert in a dark bowl | Vitalii Kyktov (@i_am_vitality) | https://unsplash.com/photos/hands-presenting-a-small-dessert-in-a-dark-bowl-tyK666ULizE |
-| `events-room.webp` | Private dining | Long candlelit banquet table in a dark room | Janay Peters (@jpetersbydesign) | https://unsplash.com/photos/a-dark-elegant-dining-room-with-long-table-OGtDgKzMwJU |
-| `gal-hearth.webp` | Gallery | Sausages and chicken on a chain-hung grill over a hearth fire | Sergio Arteaga (@saarteaga) | https://unsplash.com/photos/a-fire-burning-in-a-fireplace-with-lots-of-food-kTyHN_GSZ1U |
-| `gal-grill.webp` | Gallery | Embers glowing beneath empty grill bars | Bence Balla-Schottner (@ballaschottner) | https://unsplash.com/photos/a-close-up-of-a-grill-with-flames-in-the-background-BNkR_VsO5Y8 |
-| `gal-table.webp` | Gallery | Small dishes laid along a wooden table with evergreen | Madeline Liu (@madeline_sd) | https://unsplash.com/photos/gourmet-appetizers-arranged-on-a-rustic-wooden-table-CJ6tbD-NqTQ |
-| `gal-autumn.webp` | Gallery | Plated dessert beside a cocktail, pumpkins behind | Anita Austvika (@anitaaustvika) | https://unsplash.com/photos/dessert-with-pumpkins-and-flowers-on-table-emhi_SM4vpA |
-| `gal-candles.webp` | Gallery | Empty tables lit by small table lamps at night | Ivan Benets (@dorrotay) | https://unsplash.com/photos/a-dimly-lit-table-and-chairs-in-a-dark-room-6-zEmwjWDCQ |
+| `story-hands.webp` | Story, tall | Two hands passing plates across a dark table (black and white) | Ruben Mavarez (@justalifein) | https://unsplash.com/photos/hands-exchange-plates-of-food-at-a-dark-table-SwqHFi3jyO0 |
+| `story-dessert.webp` | Story, small | Hands presenting a small dessert in a dark bowl | Vitalii Kyktov (@i_am_vitality) | https://unsplash.com/photos/hands-presenting-a-small-dessert-in-a-dark-bowl-tyK666ULizE |
+| `events-room.webp` | Group & private dining | Long candlelit banquet table in a dark room | Janay Peters (@jpetersbydesign) | https://unsplash.com/photos/a-dark-elegant-dining-room-with-long-table-OGtDgKzMwJU |
+| `gal-table.webp` | Tasting journey · Chaat, and gallery atmosphere | Small dishes laid along a wooden table with evergreen | Madeline Liu (@madeline_sd) | https://unsplash.com/photos/gourmet-appetizers-arranged-on-a-rustic-wooden-table-CJ6tbD-NqTQ |
+| `gal-grill.webp` | Tasting journey · From the grill, and gallery atmosphere | Embers glowing beneath empty grill bars | Bence Balla-Schottner (@ballaschottner) | https://unsplash.com/photos/a-close-up-of-a-grill-with-flames-in-the-background-BNkR_VsO5Y8 |
+| `gal-hearth.webp` | Tasting journey · Curry, and gallery atmosphere | Sausages and chicken on a chain-hung grill over a hearth fire | Sergio Arteaga (@saarteaga) | https://unsplash.com/photos/a-fire-burning-in-a-fireplace-with-lots-of-food-kTyHN_GSZ1U |
+| `gal-autumn.webp` | Tasting journey · Dessert, and gallery atmosphere | Plated dessert beside a cocktail, pumpkins behind | Anita Austvika (@anitaaustvika) | https://unsplash.com/photos/dessert-with-pumpkins-and-flowers-on-table-emhi_SM4vpA |
+| `gal-candles.webp` | Tasting journey aside | Empty tables lit by small table lamps at night | Ivan Benets (@dorrotay) | https://unsplash.com/photos/a-dimly-lit-table-and-chairs-in-a-dark-room-6-zEmwjWDCQ |
 
-Dropping them is not a judgement on the photographs. It is the same decision the
-restaurant itself makes on the page: a fictional room cannot be illustrated with
-nine real kitchens, and crediting nine photographers for a place that does not
-exist implies a room somebody once cooked in.
+The 24-dish menu is typographic: the source draws no photograph on a dish card, so
+none of these files is repeated there. The five `gal-*` shots stand for the
+source's gradient "photo slot" placeholders across the tasting journey and the
+atmosphere band, exactly as the image ruling assigns them.
+
+## Ember & Oak — retired, files still on disk
+
+The restaurant concept before Marigold Kitchen. Its rebuilt card named the picture
+each of its eleven slots would carry in a real build — the chain over the coals, the
+steaks on the bars, the long table — instead of showing a room it never had, so no
+photograph shipped. Those nine licensed photographs now live under **Marigold
+Kitchen** above and are published from `demos/marigold-kitchen/`. The copies in
+`demos/ember-restaurant/` are a **temporary duplicate**, kept unreferenced on disk
+until Task 7 removes the retired folder; until then only `marigold-kitchen/` is
+published.
+
+The shot list below records what Ember & Oak considered and turned down.
 
 ### Ember & Oak — shots considered and rejected
 
@@ -159,27 +175,49 @@ Files in `demos/maison-lune/`:
 
 ## Rowanwood Dental — /demos/rowanwood-dental
 
-**This concept ships no photograph.** The rebuilt leaflet draws its own mouth
-diagram and replaces the four picture slots with four labelled image-slot cards
-that say what a real build would put there. No page references the files below,
-so none of them is published anywhere; their credits stay listed because the
-files themselves are still on disk.
+**This concept ships three photographs.** Owner ruling A (Ruling 16, 2026-10-23) chose
+the four files already on disk over the CC BY-SA-heavy Commons set that Task 5 staged,
+so Rowanwood uses the already-credited Unsplash frames and takes on no new licence
+obligation. The rebuild (plan Task 6) puts three of them on the page; the fourth stays
+on disk unreferenced for the reason recorded under the second table, and the mouth
+diagram, the drawn plates and the monogram identities stay drawn — only these three
+placements are photographs. Every one of them is labelled in its own `figcaption` as
+concept stock, because no Rowanwood House was photographed: there is no such building.
 
-Files in `demos/rowanwood-dental/` (unreferenced):
+Files in `demos/rowanwood-dental/` that the page now references (3), all used under
+the **Unsplash License** (https://unsplash.com/license) — "Free to use under the
+Unsplash License."
 
-| File | Former slot | Subject | Photographer | Unsplash page |
+| File | Placement | Subject | Photographer | Unsplash page |
 | --- | --- | --- | --- | --- |
-| `room.webp` | Hero, tall | Empty treatment room: grey-and-white chair seen from behind, operating light on an arm, delivery unit, window with a blind | Katarzyna Zygnerska | https://unsplash.com/photos/a-white-dental-chair-in-a-room-with-a-window-44jaETSVX2I |
-| `practice-room.webp` | The practice, wide band | Empty room: blue-upholstered chair and practising stool, a yellow and blue abstract painting on the wall | Ozkan Guner | https://unsplash.com/photos/a-dentist-chair-in-a-room-with-a-painting-on-the-wall-aFqSRokmw2E |
-| `instruments.webp` | Treatment index rail | Five periodontal probes in a row on a white tray — orange, purple and black handles | Caroline LM | https://unsplash.com/photos/orange-and-black-audio-jack-hxXO3xKQHSg |
-| `waiting.webp` | First-appointment rail | Empty waiting area: teal sofas, a window into a treatment room, slatted reception desk | Benyamin Bohlouli | https://unsplash.com/photos/blue-couch-beside-green-potted-plant-B_sK_xgzwVA |
+| `room.webp` | Photographic hero, and the "New-patient examination" card in the image-led services band | Empty treatment room: grey-and-white chair seen from behind, operating light on an arm, delivery unit, window with a blind | Katarzyna Zygnerska | https://unsplash.com/photos/a-white-dental-chair-in-a-room-with-a-window-44jaETSVX2I |
+| `waiting.webp` | "Check-up" card in the image-led services band | Empty waiting area: teal sofas, a window into a treatment room, slatted reception desk | Benyamin Bohlouli | https://unsplash.com/photos/blue-couch-beside-green-potted-plant-B_sK_xgzwVA |
+| `practice-room.webp` | "Clean and polish" card in the image-led services band | Empty room: blue-upholstered chair and practising stool, a yellow and blue abstract painting on the wall | Ozkan Guner | https://unsplash.com/photos/a-dentist-chair-in-a-room-with-a-painting-on-the-wall-aFqSRokmw2E |
+
+All three were re-opened and read frame by frame before being placed: bright, faceless,
+no legible third-party mark, so none of them puts an identifiable person on a fictional
+practice's page (constraint 6) and none carries a brand.
+
+### Deliberately unreferenced (1)
+
+| File | Subject | Photographer | Unsplash page |
+| --- | --- | --- | --- |
+| `instruments.webp` | Five periodontal probes in a row on a white tray — orange, purple and black handles | Caroline LM | https://unsplash.com/photos/orange-and-black-audio-jack-hxXO3xKQHSg |
 
 `instruments.webp` is filed on Unsplash under the auto-generated title "orange and
 black audio jack". It is a set of dental probing instruments — confirmed by looking
-at the downloaded frame, which is the standard applied to every plate here. It also
-carried a legible brand name on the tray packaging, which is the defect that helped
-end its use: a fictional practice cannot be photographed standing over somebody
-else's product. Dropping the photographs closes it.
+at the downloaded frame, which is the standard applied to every plate here.
+
+**Ruling 17 (the brand-text guard) — why it stays off the page:** the frame carries
+legible **"DEPPFLEX"** manufacturer text, and it is not on the tray packaging but
+*molded into all four instrument handles dead-centre*. Measured before deciding, not
+assumed from the filename: three candidate crops were exported and each was read back,
+and the only crop that clears the text leaves an empty tray — there is no crop that
+keeps the instruments and drops the brand. A fictional practice cannot be photographed
+standing over somebody else's product, so the concept ships on three honest photos
+rather than one brand placard. If a fourth image is ever wanted, the text has to be
+removed by retouching, not cropping. `scratch/dental-flow.cjs` asserts the file name
+appears nowhere in the page's markup, image attributes or stylesheets.
 
 ### Rowanwood Dental — shots considered and rejected
 

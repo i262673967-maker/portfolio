@@ -327,6 +327,7 @@ body {
     .demo-header-fire,
     .demo-header-lune,
     .demo-header-dental,
+    .marigold-pin,
     .reveal,
     .heading-reveal,
     .animate-pulse,
@@ -347,6 +348,19 @@ body {
    inside a frame the dot simply sits at the state the ping begins from. */
 .demo-scroll :is(.bl-pulse)::after,
 .demo-scroll :is(.bl-map-pulse) {
+  animation: none;
+}
+
+/* Marigold's loops that the list above cannot name: the live dot pings on its
+   own pseudo-element, the plate turns on the `<svg>` inside its well rather than
+   on the well, and the header plate fades on its `::before` scrim — so the square
+   never rotates and never grows past its column, and the header holds its solid
+   resting plate. Inside a frame all three hold the finished thing — a steady dot,
+   a straight plate, a legible bar — which is also what a visitor on `reduce`
+   sees. */
+.demo-scroll :is(.marigold-status-dot)::after,
+.demo-scroll .marigold-plate > svg,
+.demo-scroll .marigold-header::before {
   animation: none;
 }
 
@@ -717,6 +731,51 @@ body {
     to {
       background-color: color-mix(in oklab, var(--d-bg) 97%, transparent);
       border-bottom-color: var(--d-line);
+    }
+  }
+
+  /* Marigold's top plate, owned by the concept and drawn with one property.
+     Constraint 8 asks for transform/opacity only, so this does NOT interpolate
+     `background-color`/`border-bottom-color` the way the Ember plate above it
+     does — that is why the header here no longer carries `.demo-header-fire`,
+     and why the keyframe is new rather than edited in place (the Ember rule is
+     shared with the Lune and Dental headers, and renaming it is Task 7's).
+     What the visitor gets is the same reading — the bar firms up against
+     whatever scrolls under it — from an absolutely-positioned scrim of the page
+     colour, faded on `opacity` alone from 0 to 1 across the first 5rem.
+     `z-index: -1` inside the sticky header is what puts it over the header's own
+     background and UNDER its content: a stacking context paints negative children
+     after the element's background and before its descendants' backgrounds and
+     text, so the wordmark, the chip and both buttons are never behind the scrim.
+     The resting value is 0, so an engine without scroll timelines, a device frame
+     and a visitor on `reduce` all get exactly what the component ships: the
+     header's own solid cream plate and its own static hairline, fully legible.
+     The hairline stops being part of the animation — it now holds the colour the
+     reduced-motion page has always shown rather than interpolating to it. */
+  @keyframes marigold-header-plate {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .marigold-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--d-bg);
+    opacity: 0;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .marigold-header::before {
+      animation: marigold-header-plate 1ms linear both;
+      animation-timeline: scroll(nearest block);
+      animation-range: 0 5rem;
     }
   }
 
@@ -1418,6 +1477,202 @@ body[data-nav-open="true"] .sticky-cta {
   /* Same weight as the arming rule above, so it wins if a page was already
      flagged before the visitor switched their motion preference. */
   html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal).is-in {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Marigold Kitchen's own motion.
+
+   Three loops, all of them transform/opacity only, all of them applied only
+   under `prefers-reduced-motion: no-preference`, and every one of them resting
+   on the finished thing: a steady dot at the state the ping begins from, a
+   plate sitting straight, a pin planted in the map at full opacity. A visitor
+   who asked for no motion, an engine without scroll timelines, a page whose
+   bundle never arrives and a device frame all see the same finished page — the
+   frame case is handled by the `.demo-scroll :is(...)` list above.
+
+   The names 4a introduced and are NOT animated are listed at the foot of this
+   section with the reason. Restraint there is the point: a chilli mark whose
+   height animates is a spice level being invented, and a gold specials band
+   that shimmers is a claim dressed as decoration.
+   --------------------------------------------------------------- */
+
+/* The root. `marigold-shell` carries no animation; what it owns is the three
+   distances the loops below read, kept here so a single edit retunes the concept
+   instead of three. The `@container` box that `@3xl`/`@5xl` variants resolve
+   against is set by `DemoVars` in `src/demos/_shared.tsx`, so the shell must NOT
+   declare its own `container-type` — a second inline-size container would re-aim
+   every `@`-variant at this div and the sticky stage would never stand. */
+.marigold-shell {
+  --mk-ping: 3.6s;
+  --mk-turn: -12deg;
+  --mk-settle: 4.6s;
+}
+
+/* The live dot in the header chip. It pings only while the room is open, which is
+   what the component's `data-open` attribute is for — the dot's colour is the
+   state (accent when open, the palette's own muted ink when not), and the ring is
+   the emphasis on top of it. `inset: -2px` with `scale(1.6)` puts the widest point
+   of the ring 5.6px outside an 8px dot, well inside the pill's 12px padding, so
+   nothing about this loop can reach the page's scroll width. */
+@keyframes marigold-live-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.marigold-status,
+.marigold-status-dot {
+  position: relative;
+}
+
+.marigold-status[data-open="false"] .marigold-status-dot {
+  background: var(--d-muted);
+}
+
+.marigold-status[data-open="true"] .marigold-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--d-accent);
+}
+
+/* The pin in the drawn map card. A gentle settle, not a permanent bounce: 4.6s of
+   which the first 68% is simply the pin sitting where it was put, so the loop
+   reads as a place being marked rather than a toy. `transform-box: fill-box` with
+   the origin at the tip is what makes it shrink into its own point instead of
+   sliding sideways across the artwork. It only ever scales DOWN, so it can never
+   grow past the map card. */
+@keyframes marigold-pin-settle {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78% {
+    opacity: 0.7;
+    transform: scale(0.93);
+  }
+  88% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.marigold-pin {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* The plate on the desktop stage turns the last few degrees into place as the
+   section arrives, and ends at `none` — so the resting, unsupported, muted and
+   reduced states are all a plate drawn straight. It happens to the `<svg>`, not
+   to the well: a rotated square is wider than the square it started as, and a
+   240px box turning 12 degrees was 277px of overflow waiting to widen an 834px
+   device. The well clips at its own edge, the circle inside it has 16px of slack
+   in the 240-unit viewBox, and a circle is rotationally symmetric, so the clip is
+   a belt-and-braces guarantee rather than something a visitor can see. */
+@keyframes marigold-plate-turn {
+  from {
+    transform: rotate(var(--mk-turn));
+  }
+  to {
+    transform: none;
+  }
+}
+
+.marigold-plate {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marigold-status[data-open="true"] .marigold-status-dot::after {
+    animation: marigold-live-ping var(--mk-ping) var(--motion-ease) infinite;
+  }
+
+  .marigold-pin {
+    animation: marigold-pin-settle var(--mk-settle) var(--motion-ease) infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    .marigold-plate > svg {
+      animation: marigold-plate-turn var(--motion-long) var(--motion-ease) both;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+/* Two hover answers, both transform-only, both behind `hover: hover` because a
+   phone has no hover state and must not be left holding a lifted card. The
+   journey card lifts by the host's own `--motion-lift`; the chilli marks grow a
+   little taller where they stand, which is input-driven motion and so belongs to
+   the same class as the menu crossfade — a control the visitor is invited to
+   touch should answer, including inside a device frame. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .marigold-course-card {
+    transition: transform var(--motion-tap) var(--motion-ease);
+  }
+  .marigold-course-card:hover {
+    transform: translateY(calc(var(--motion-lift) * -1));
+  }
+
+  .marigold-flame {
+    transform-origin: 50% 100%;
+    transition: transform var(--motion-tap) var(--motion-ease);
+  }
+  [data-menu-item]:hover .marigold-flame {
+    transform: scaleY(1.12);
+  }
+}
+
+/* The course pager dots. `aria-current="step"` is the state the component already
+   carries; this is the resting difference that makes it legible as the current
+   step. It is a static transform, not a keyframe, so there is nothing to mute —
+   the dot is a full-size circle in every state. */
+.marigold-dot[aria-current="step"] {
+  transform: scale(1.08);
+}
+
+/* Not animated, deliberately, and recorded here so the list of names 4a handed
+   over is answered in full:
+   `marigold-header`   — NO LONGER in this list: it animates on its own
+                         `marigold-header-plate` opacity scrim in the header
+                         section above (it no longer borrows `.demo-header-fire`,
+                         which interpolates colours — constraint 8). Renaming the
+                         shared Ember-named class the other two headers still use
+                         stays Task 7's.
+   `marigold-shell`    — typography/container host, no motion.
+   `marigold-status`   — the pill itself is static; only its dot pings.
+   `marigold-hero`     — the photograph inside already drifts on `.demo-ken-burns`;
+                         a second transform on the frame would fight it.
+   `marigold-stage`    — its effect is `position: sticky` against a section taller
+                         than the viewport; that is the mechanism the harness
+                         measures, and animation would only make it harder to hit.
+   `marigold-spice`    — a dietary mark; its presence IS the information.
+   `marigold-specials` — gold band fill; a shimmer would need `background-size`
+                         or `box-shadow`, both out of bounds by constraint 8.
+   `marigold-status-card`, `marigold-map`, `marigold-bar` — resting surfaces; the
+                         bar's `sticky bottom-0` is released inside an embed by
+                         `.demo-embed .sticky.bottom-0` above.
+   `plate-course`      — driven by the component's own inline `opacity` attribute
+                         plus a Tailwind `transition-opacity`, so it is correct at
+                         rest with no CSS from here at all. */
+
+@media (prefers-reduced-motion: reduce) {
+  .marigold-pin,
+  .marigold-plate > svg,
+  .marigold-header::before,
+  .marigold-status[data-open="true"] .marigold-status-dot::after {
     animation: none;
   }
 }

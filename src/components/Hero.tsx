@@ -114,7 +114,7 @@ export default function Hero() {
                   <div className="hidden items-start justify-center gap-4 sm:flex sm:gap-6">
                     <div className="w-[42%]">
                       <DeviceMockup device="tablet" chrome={false} hoverPeek>
-                        <LazyDemo idle demo="salon" project={byDemo("salon")} />
+                        <LazyDemo idle demo="dental" project={byDemo("dental")} />
                       </DeviceMockup>
                     </div>
                     <div className="w-[24%]">

@@ -602,7 +602,7 @@ export function DemoFaq({ items }: { items: { q: string; a: string }[] }) {
    more: a strip above the concept's header cost a quarter of a phone screen.
    It still needs a way back, and the only place that adds no height at the top
    is the concept's own footer. The link is handed down through context rather
-   than a prop because the four demos each close their own page, and a prop
+   than a prop because the three demos each close their own page, and a prop
    would have to be threaded through all of them.
 
    Nothing provides this inside a device frame, so the preview of a concept

@@ -48,7 +48,13 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
           would read it. Its menu and forms are live, and a request entered here is
           never sent anywhere.
         </p>
-        <div className="demo-embed relative mt-8">
+        {/* Edge-to-edge on a phone: the column padding would hand the concept 280px
+            of a 320px viewport, and a phone layout authored for 320 does not fit in
+            that — BlueLine's header row needed 283px of the 236px left after its own
+            padding, so the case-study page grew to 325px and scrolled sideways. The
+            negative margins cancel `container-shell`'s 1.25rem under 768px and are
+            dropped above it, where the concept is wide enough to keep the margin. */}
+        <div className="demo-embed relative -mx-5 mt-8 md:mx-0">
           <LazyDemo eager demo={project.demo} project={project} />
         </div>
       </div>
@@ -69,7 +75,10 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
 
       {/* Details */}
       <div className="container-shell mt-16 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-        <div>
+        {/* min-w-0: a grid item defaults to min-width:auto, which means it can never
+            shrink below the widest thing inside it. At 320px the palette strip below
+            was that thing, and the page grew to 370px and scrolled sideways. */}
+        <div className="min-w-0">
           <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">Design objective</h2>
           <p className="mt-3 text-[15px] leading-relaxed text-ink-muted">{project.objective}</p>
 
@@ -99,17 +108,21 @@ export default function CaseStudy({ project, prev, next }: { project: Project; p
 
           <h2 className="mt-10 font-display text-2xl font-semibold tracking-tight text-ink">Design details</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border-2 border-line bg-card p-5">
+            <div className="min-w-0 rounded-xl border-2 border-line bg-card p-5">
               <span className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">Direction</span>
               <ul className="mt-2 space-y-1.5 text-[14px] text-ink">
                 {project.designDirection.map((d) => <li key={d} className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-brand" />{d}</li>)}
               </ul>
             </div>
-            <div className="rounded-xl border-2 border-line bg-card p-5">
+            <div className="min-w-0 rounded-xl border-2 border-line bg-card p-5">
               <span className="font-mono text-[12px] uppercase tracking-widest text-ink-muted">Palette</span>
-              <div className="mt-3 flex gap-2">
+              {/* Two columns on a phone, not one row per colour. The strip used to be
+                  a single `flex gap-2` across all four or five palette keys, and a
+                  mono 12px word like "BACKGROUND" is ~70px wide and cannot break, so
+                  five of them asked for more than the 320px page had. */}
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 {Object.entries(project.palette).map(([k, v]) => (
-                  <div key={k} className="flex-1">
+                  <div key={k} className="min-w-0">
                     <div className="h-10 rounded-lg border-2 border-line" style={{ background: v }} />
                     <span className="mt-1 block font-mono text-[12px] uppercase text-ink-muted">
                       {PALETTE_ROLE[k] ?? k}

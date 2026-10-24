@@ -149,7 +149,7 @@ export const sampleAudit = {
   ],
 };
 
-export type DemoKey = "plumber" | "restaurant" | "salon" | "dental";
+export type DemoKey = "plumber" | "restaurant" | "dental";
 
 /* Content for the concept-site layouts.
    Each fictional business gets its own copy, palette and structure emphasis so
@@ -158,7 +158,7 @@ export type DemoKey = "plumber" | "restaurant" | "salon" | "dental";
    The base fields below are OPTIONAL. Every demo owns its own layout
    component, so each concept reads only the fields it actually renders; a
    project carries nothing its demo cannot draw. `navName` is the one field all
-   four read (their headers and footers). */
+   three read (their headers and footers). */
 export type ServiceDemoContent = {
   navName: string;
   headline?: string;
@@ -201,8 +201,8 @@ export type ServiceDemoContent = {
 
   /* --- Plumbing-concept fields -----------------------------------------------
      The call-first plumbing layout is built around a phone number, an hours
-     strip, a hero chip row and an urgent band. All OPTIONAL, so the restaurant,
-     salon and dental concepts read none of it.
+     strip, a hero chip row and an urgent band. All OPTIONAL, so the restaurant
+     and dental concepts read none of it.
 
      `phone` is the fictional business's number, never the studio's: the site's
      own contact rules (see the studio config at the top of this file) still hold
@@ -222,7 +222,7 @@ export type ServiceDemoContent = {
      embedded on, so the five views become anchored bands of one scrolling page
      and every word they draw lives here.
 
-     Read only by PlumberDemo, so the other three concepts are untouched. Fields
+     Read only by PlumberDemo, so the other two concepts are untouched. Fields
      the shared base already covers — hero photo, services grid, FAQ pairs,
      closing call — are not repeated here.
 
@@ -366,30 +366,53 @@ export type ServiceDemoContent = {
 
   /* --- Restaurant-concept fields ------------------------------------------------
      A diner reads a restaurant site in the order the evening actually happens:
-     when it is open, what the room is like, what is on the card, how to get a
-     table. So this layout is a board of hours, a fire that is chosen rather than
-     admired, the card as a list you can filter down to what you can eat, two
-     forms that assemble a ticket in front of you and say plainly that nothing
-     left the page, and a visit block whose open or closed line is worked out from
-     the hours printed underneath it instead of asserted.
+     when it is open, what the meal does course by course, what is on the card,
+     how to get a table. So this layout is a board of hours, a tasting journey
+     pinned against the page's own scroll, the card as a list you can filter down
+     to what you can eat, two forms that assemble a ticket in front of you and
+     say plainly that nothing left the page, and a visit block whose open or
+     closed line is worked out from the hours printed underneath it and Chicago
+     local time instead of asserted.
 
-     All OPTIONAL and read only by RestaurantDemo, so the three service concepts
-     and the storefront are untouched. The dishes, the street and the telephone
+     All OPTIONAL and read only by RestaurantDemo, so the plumbing and dental
+     concepts are untouched. The dishes, the street and the telephone
      are invented for the fiction — the number stays inside the 555-01XX range and
      the page carries the concept note everywhere it is needed.
 
-     What is deliberately NOT here, and why: no prices, so no figure on this page
-     can be read as a sum a fictional room charges (`noPrices` says why in the
-     concept's own voice); no reviews, star ratings, diner counts or press quotes;
-     no photographs — every `slot` names the picture a real build would put there
-     instead of borrowing somebody else's room; no live availability, so nothing
-     can claim a table is held; and no map service, because a link to a street that
-     does not exist would be a broken promise rather than a placeholder. */
+     What is deliberately NOT here, and why: no reviews, star ratings, diner
+     counts or press quotes; no live availability, so nothing can claim a table
+     is held; and no map service, because a link to a street that does not exist
+     would be a broken promise rather than a placeholder — the visit block draws
+     its own labelled map card instead. What IS here, honestly framed: prices are
+     printed as bare illustrative numbers, and `noPrices` says so where a diner
+     expects the sum to mean something; the photographs are licensed plates that
+     stand for a mood, not for this fictional room's actual dining space. */
   restaurant?: {
-    /* The service board above the header. A fire restaurant decides its evening
-       hours before it decides anything else, so the facts a diner needs come
-       before the drawing of the fire. */
+    /* The service board above the header. A dinner service decides its hours
+       before it decides anything else, so the facts a diner needs come first. */
     board: string[];
+    /* Machine-readable only: the JSON-LD `servesCuisine`. It is not printed, so
+       it gets its own field rather than being scraped back out of `board`. */
+    cuisine: string;
+    /* The short link labels the header, the phone sheet and the footer all draw
+       from one list, so a band can never be named differently in two places.
+       Only the bands a visitor is meant to jump to appear here. */
+    nav: {
+      journey: string;
+      menu: string;
+      story: string;
+      groups: string;
+      visit: string;
+    };
+    /* The computed open/closed line, in the concept's own words. `{time}` and
+       `{day}` are filled from the printed hours, so the claim on the page is
+       arithmetic on the table underneath it and nothing else. */
+    status: {
+      open: string;
+      opensToday: string;
+      opensTomorrow: string;
+      opensDay: string;
+    };
     header: {
       /* Beside the wordmark, so the fiction is on the fold and not only in the
          colophon. */
@@ -397,14 +420,15 @@ export type ServiceDemoContent = {
       /* The week's shape, printed before any clock has been read. */
       openLine: string;
       /* The chip's own lead-in, so a computed line never reads as a fact about
-         the room: it is arithmetic on the hours on this page and the clock in the
-         visitor's own device. */
+         the room: it is arithmetic on the hours printed on this page, read in
+         the kitchen's own time zone rather than the visitor's device clock. */
       statusLead: string;
       phoneLabel: string;
       book: string;
     };
     hero: {
-      /* The headline is set in two parts so the second can carry the italic. */
+      /* The headline is set in two parts so the second can carry the accent —
+         the source sets it upright and coloured, not italic. */
       headline: string;
       accent: string;
       eyebrow: string;
@@ -413,12 +437,13 @@ export type ServiceDemoContent = {
       lede: string;
       hoursLine: string;
       /* Three facts set as a hairline row under the actions — covers, seatings,
-         how often the card changes. */
+         how often the card changes. The Marigold source has no such row, so it
+         carries none and the layout prints nothing for it. */
       facts: { label: string; value: string }[];
-      /* The fire itself. The room's three seating blocks, each drawn as the fire
-         at that age, selectable, and each carrying its own ask into the ledger.
-         This is the idea the page is built around, so it sits in the hero rather
-         than in a band of cards further down the page. */
+      /* The fire itself — the retired Ember layout's chooser band, kept as data
+         the Marigold layout does NOT render. It names the two services from the
+         printed hours; nothing on the page reads it. It stays until the
+         retirement pass prunes it, so the type and the data never drift. */
       fire: {
         title: string;
         body: string;
@@ -436,37 +461,65 @@ export type ServiceDemoContent = {
         live: string;
         drawn: string;
       };
-      /* The plate the photograph used to fill: a labelled slot, not a picture. */
-      slot: { kind: string; note: string };
+      /* The plate the photograph used to fill: a labelled slot, not a picture.
+         A concept that ships a real licensed photograph (Marigold Kitchen) also
+         names it through the optional `src`/`alt`; the layout decides whether it
+         draws the label or the image. */
+      slot: { kind: string; note: string; src?: string; alt?: string };
     };
+    /* The slim band that introduces the journey: an eyebrow and the one line that
+       tells a diner what the four courses are for. */
     intro: { eyebrow: string; body: string };
     /* The evening told in stages, one at a time, so a diner reads the shape of the
-       meal before reading a card of eighteen dishes. */
+       meal before reading a card of twenty-four dishes. */
     evening: {
       eyebrow: string;
       title: string;
       body: string;
-      stages: { label: string; line: string; note: string; slot: { kind: string; note: string } }[];
+      stages: {
+        label: string;
+        line: string;
+        note: string;
+        slot: { kind: string; note: string; src?: string; alt?: string };
+      }[];
       prev: string;
       next: string;
       dots: string;
       /* Reads as "Stage 2 of 4" to a screen reader on every change. */
       of: string;
       hint: string;
+      /* Marigold: the standing caption under the desktop plate drawing, which
+         the source keeps fixed while the courses change. */
+      plateLabel?: string;
+      /* Marigold: the desktop journey's third column — an atmosphere
+         photograph and the jump into the full card. */
+      aside?: { image: { src: string; alt: string }; cta: string };
     };
     menu: {
       eyebrow: string;
       title: string;
       lead: string;
-      /* Why there are no numbers on this card — the honest answer, in the
-         concept's voice, placed where a diner expects a price. */
+      /* Marigold prints numbers, so this field carries the honesty instead of
+         the absence: the figures are illustrative for a fictional room, said in
+         the concept's voice and placed where a diner reads the prices. */
       noPrices: string;
-      /* The filters. `key` is what a dish's `marks` are matched against; the
-         first entry is the unfiltered view, and `heat` is the one key that is not
-         a mark of its own — it looks for a dish carrying either heat word. */
+      /* The filters, in the source's own vocabulary. `key` is what the layout
+         matches dishes against: `all` is the unfiltered view, `vegetarian`,
+         `vegan` and `gf` match a dish's diet marks, and `spicy` is the one key
+         that is not a mark — it reads the `spice` ladder, so mild (1) counts.
+         The labels are the source's button words, the odd one included. */
       filters: { key: string; label: string }[];
-      /* Sits under the card: a legend, so a mark is not a mystery. `mark` is one
-         of the keys a dish actually carries, and the glyph printed for it is the
+      /* The filter row's own accessible name, so the group is labelled by the
+         concept rather than by the component. */
+      filtersLabel: string;
+      /* The card's diet markers, exactly as `menu.note` spells them out. The
+         long word a screen reader gets is the filter's own label, so nothing is
+         spelled twice. */
+      marks: { veg: string; vegan: string; gf: string };
+      /* The retired Ember card's legend. The Marigold layout prints the source's
+         one-line marker key (`note`) instead, so nothing renders this list any
+         more; it stays until the retirement pass prunes it. `mark` was one of
+         the keys a dish carried, and the glyph printed for it was the
          component's own business. */
       legend: { mark: string; means: string }[];
       countNoun: string;
@@ -476,16 +529,28 @@ export type ServiceDemoContent = {
       /* The card is rewritten weekly: a menu this short cannot promise the dish on
          the day is the dish on the card. */
       note: string;
+      /* The word the flame marks are read with, indexed by `spice`: nothing at 0,
+         then the source's own three-step ladder. A printed card spells the level
+         out beside the flames, so these are visible copy and live here. */
+      spiceWords: [string, string, string, string];
       sections: {
         label: string;
         blurb: string;
-        slot: { kind: string; note: string };
+        slot: { kind: string; note: string; src?: string; alt?: string };
         dishes: {
           name: string;
           desc: string;
-          /* Dietary and heat marks. `veg`, `vegan` and `gf` filter on themselves;
-             either heat word is what the `heat` filter looks for. */
-          marks: ("veg" | "vegan" | "gf" | "medium" | "hot")[];
+          /* Diet marks only. The retired card's transitional heat words
+             (`medium`/`hot`) are gone: the source's spicy filter reads the full
+             `spice` ladder, so the marks no longer need to duplicate it. */
+          marks: ("veg" | "vegan" | "gf")[];
+          /* Marigold ships an illustrative price beside each dish — a bare
+             number, as the source prints it, with no currency glyph. */
+          price?: number;
+          /* The source's spice level, 0 (no flame) to 3 (hot). The spicy filter
+             is `spice >= 1` so a mild dish is caught with the medium and hot
+             ones, and the flame marks the card prints are read from this. */
+          spice?: 0 | 1 | 2 | 3;
         }[];
       }[];
     };
@@ -494,8 +559,16 @@ export type ServiceDemoContent = {
       title: string;
       paras: string[];
       quote: string;
-      tall: { kind: string; note: string };
-      small: { kind: string; note: string };
+      /* Marigold: the attribution drawn under the quote — whose voice it is,
+         never a named person the source does not name. */
+      quoteCite?: string;
+      /* Marigold: the one line that says what the nine photographs on this page
+         actually are. They are licensed stock plates of other rooms and other
+         food, so the concept names that out loud instead of letting them read as
+         pictures of a dining room it does not have. */
+      provenance?: string;
+      tall: { kind: string; note: string; src?: string; alt?: string };
+      small: { kind: string; note: string; src?: string; alt?: string };
     };
     /* The long table. A separate form from the reservation, because a group is
        enquired about rather than taken, and the two answers a host gives are
@@ -509,6 +582,18 @@ export type ServiceDemoContent = {
       callUs: string;
       points: string[];
       fields: { size: string; date: string; name: string; contact: string; notes: string };
+      /* The size select's own empty option — the question the list answers. */
+      sizePrompt: string;
+      /* What the enquiry says when the one field it needs is empty. Kept in data
+         so a validation message is the concept's voice, not the component's. */
+      errors: { size: string; date: string };
+      /* Marigold: the enquiry form's own strings — a submit ask, a notes
+         placeholder, and the photograph the band stands on. The source form
+         takes size, date and notes only; `fields.name`/`fields.contact` stay
+         for layouts that still ask them. */
+      submit?: string;
+      notesPlaceholder?: string;
+      image?: { src: string; alt: string };
       /* Read beside the ticket. */
       note: string;
       /* There is no submit button on this form. A group goes through a
@@ -534,6 +619,10 @@ export type ServiceDemoContent = {
       lastSeatingMinutes: number;
       slotAsk: string;
       slotNone: string;
+      /* Marigold: the grid's own words for a day the room does not serve, kept
+         apart from the "choose a date" empty state the way the source keeps
+         them apart. */
+      slotClosed?: string;
       /* `dow` matches JavaScript's own day number — Monday is 1, Sunday is 0 — so
          the live status and the slot grid read the same table. `open` and `close`
          are minutes from midnight; a null `open` is a day the room does not serve.
@@ -544,11 +633,40 @@ export type ServiceDemoContent = {
       closedWord: string;
       /* The qualification under the computed status line. */
       statusNote: string;
-      address: string[];
+      /* Marigold: three fields rather than a two-line tuple, because the machine-
+         readable card has to name the city and the state separately — a locality
+         that carries its own state duplicates the region and reads wrong to
+         anything that consumes the schema. The page still prints two lines: the
+         street, then the city and the state. */
+      address: { street: string; locality: string; region: string };
       access: string;
       parking: string;
       /* What the drawn plan stands in for, said out loud. */
       planNote: string;
+      /* Marigold: the source offers a directions link beside the phone line,
+         and labels its policy panel. */
+      directions?: { label: string; href: string };
+      policyTitle?: string;
+      /* The four questions the reservation cannot be assembled without. The
+         ticket only ever reads back what was answered, so an empty answer has to
+         be named before anything can be printed. */
+      errors: { date: string; time: string; name: string; email: string };
+      /* Marigold: the reservation form's own labels and placeholders, so the
+         copy lives with the rest of the concept and not in the component. */
+      fields?: {
+        date: string;
+        timeZone: string;
+        party: string;
+        time: string;
+        name: string;
+        namePlaceholder: string;
+        email: string;
+        emailPlaceholder: string;
+        notes: string;
+        notesOptional: string;
+        partyCall: string;
+        partyCallAria: string;
+      };
       phone: { display: string; href: string };
       /* The submit ask itself — a restaurant books a table, so the button says
          what pressing it does rather than reusing the page's generic CTA. */
@@ -560,7 +678,19 @@ export type ServiceDemoContent = {
       /* The panel that replaces the form once it is submitted. It reads back
          what was asked for and says, in the same breath, that none of it is
          held — the request cannot reach a book from this page. */
-      confirm: { title: string; lead: string; edit: string };
+      confirm: {
+        title: string;
+        lead: string;
+        edit: string;
+        /* The ticket is read back as statements, not as the questions the form
+           asked: a line that says "Choose a time · 20:00" is the form talking,
+           not the receipt. The party count needs the same treatment, and the
+           word has to agree with the number, so it is split here rather than
+           written into the layout. */
+        timeTerm: string;
+        guestOne: string;
+        guestMany: string;
+      };
     };
     /* The transparency band: the things a printed card leaves unsaid, including
        the one that costs the room a sale. */
@@ -570,6 +700,37 @@ export type ServiceDemoContent = {
       body: string;
       points: { title: string; text: string }[];
     };
+    /* --- Marigold-only bands ---------------------------------------------------
+       Sections the supplied page carries that the Ember layout never had. All
+       OPTIONAL and read by nobody until the Marigold layout exists, so the old
+       component keeps compiling while every one of the source's remaining
+       strings still lives in data rather than in a component. */
+    /* The FAQ column's standfirst, printed under the heading. */
+    faqLede?: string;
+    /* The source gives the FAQ band its own eyebrow above "Before you come", and
+       the heading band above it is the transparency section's, so the word here
+       keeps the two bands from reading as one. */
+    faqEyebrow?: string;
+    /* The gold strip under the menu: one sample dish, labelled Example. */
+    specials?: { title: string; badge: string; copy: string };
+    /* The "Come on over" band: the visit section's own heading row and map
+       card. Hours, address, access and phone stay on `booking`, which already
+       carries them. */
+    visit?: {
+      eyebrow: string;
+      title: string;
+      timezoneLabel: string;
+      callLabel: string;
+      mapCardName: string;
+      mapCardNote: string;
+    };
+    /* The footer's own strings and the pinned phone bar's labels. */
+    footer?: { copy: string; legal: string; badge: string; findTitle: string; hoursTitle: string };
+    /* The pinned three-action bar: what the bar IS (`label`, AUTHORED — a bar
+       named after one of its three actions strands the other two), and its
+       actions named for where each one goes. The middle action jumps to the
+       visit band, so it is called `visit`; it never claimed to open a map. */
+    mobileBar?: { label: string; call: string; visit: string; reserve: string };
   };
 
   /* --- Dental-concept fields ---------------------------------------------------
@@ -635,17 +796,63 @@ export type ServiceDemoContent = {
       facts: { label: string; value: string }[];
       ctaPrimary: string;
       ctaSecondary: string;
-      caption: string;
+      /* The photographic hero stands on one of the three files in `photos`, so the
+         new-patient path is one scroll away and the CTA that opens it is named
+         here rather than written in the component. */
+      photo: "waiting" | "room" | "practice-room";
+      newPatientCta: string;
     };
-    /* Every picture this concept would want is of a building that does not
-       exist, so each one is a labelled slot that says what a real build puts
-       there. Nothing pretends to be a photograph of Rowanwood House. */
-    slots: {
-      kind: string;
-      hero: { note: string; ratio: string };
-      nerves: { note: string; ratio: string };
-      visit: { note: string; ratio: string };
-      map: { note: string; ratio: string };
+    /* Ruling A, closed 2026-10-23: the concept ships THREE photographs, and they
+       are the three files already on disk in public/demos/rowanwood-dental/. Keyed
+       by file stem, so a band names its picture without repeating its alt text.
+       The alt describes what the frame actually shows and the caption out-louds
+       that it is stock: no Rowanwood House was photographed, because there is no
+       Rowanwood House. `instruments.webp` is not in this map and must not reach
+       the page — DEPPFLEX is molded into all four instrument handles and no crop
+       clears it (Ruling 17; the measurement is recorded in public/demos/CREDITS.md). */
+    photos: {
+      waiting: { alt: string; caption: string };
+      room: { alt: string; caption: string };
+      "practice-room": { alt: string; caption: string };
+    };
+    /* The path a first-time visitor is actually on: three cards, each with a
+       destination inside the page, and the sentence that keeps the fiction from
+       reading as a practice you could register with. */
+    newPatient: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      /* `target` is an anchor NAME, not a fragment: the component turns it with
+         anchor.href(target), because the ids are scoped per rendered instance. */
+      cards: { title: string; body: string; link: string; target: string }[];
+      caveat: string;
+    };
+    /* The image-led services band. A photo key per entry, one row per card, and a
+       destination that exists on the page — the harness follows every one. */
+    services: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      items: {
+        name: string;
+        line: string;
+        /* The chair time printed in `index`, reused rather than restated. */
+        time: string;
+        photo: "waiting" | "room" | "practice-room";
+        link: string;
+        target: string;
+      }[];
+      cta: string;
+      target: string;
+    };
+    /* What a visit here does differently. Every point is a claim this page
+       already prints elsewhere (`board`, `intro`, `visit`, `urgent`), set side by
+       side rather than spread over four bands; no new fact is introduced here. */
+    differences: {
+      eyebrow: string;
+      title: string;
+      lead: string;
+      points: { title: string; body: string }[];
     };
     /* 01 — The planner: point at the part of the mouth, then at the words that
        sound like yours. The picks are carried into the request slip, so the
@@ -720,6 +927,11 @@ export type ServiceDemoContent = {
       };
       noneTitle: string;
       noneBody: string;
+      /* Printed under EVERY exit, including the emergency one: however the answers
+         fall, nothing on this page has booked a chair. The harness refuses a run
+         whose outcome text does not carry it, so the honesty line cannot be
+         dropped when the branches are re-skinned. */
+      exitNote: string;
       /* Under the result, always: a page cannot see the tooth. */
       disclaimer: string;
       slipLabel: string;
@@ -886,156 +1098,6 @@ export type ServiceDemoContent = {
        page and beside the form, and the line that keeps the fiction from reading
        as a real clinic. */
     footer: { hours: string; where: string; find: string; onPage: string; concept: string };
-  };
-
-  /* --- Salon-concept fields ----------------------------------------------------
-     Maison Lune is a soft, minimal beauty studio, so its layout is a service
-     menu, a booking flow, a small team and a room — not a product grid or a
-     service brochure. It reads the fields below; all OPTIONAL and read only by
-     SalonDemo, so the other concepts are untouched.
-
-     Service names, durations, "from $" prices, stylist first names, the street,
-     the hours and the phone are invented for the fiction (as the dishes and the
-     product prices were). The number stays inside the 555-01XX range reserved
-     for made-up businesses and the page carries the concept note everywhere it
-     is needed. No review, star rating, before/after claim, "since <year>",
-     client count, award or certification is written anywhere — a studio this
-     quiet has none of those to show, and inventing them is exactly what the
-     honesty rule forbids. */
-  salon?: {
-    announcement: string;
-    hero: {
-      src: string;
-      alt: string;
-      eyebrow: string;
-      /* Split so the second part can carry the light-serif accent. */
-      headline: string;
-      accent: string;
-      sub: string;
-      /* The deciding line: whether the book is open. */
-      note: string;
-      ctaPrimary: string;
-      ctaSecondary: string;
-      /* The shorter arch that rides over the tall plate at desktop width. Held
-         per slot rather than looked up by position, so the collage is a decision
-         the copy makes and not a side effect of array order. */
-      inset: { src: string; alt: string };
-      /* Set down the hero's right edge at desktop, the way a studio spells its
-         trade along a window. */
-      spine: string;
-    };
-    /* The single large statement, set beside the three house rules. */
-    statement: string;
-    /* The line the quote is signed with. Deliberately not a founding year, an
-         award or a client count — none of those are ours to invent. */
-    statementSign: string;
-    menu: {
-      eyebrow: string;
-      title: string;
-      lead: string;
-      /* The chip that shows every family. */
-      all: string;
-      /* The noun in the count line under the chips. The number itself is read
-         off the list, so this never drifts when a treatment is added. */
-      countNoun: string;
-      /* Each family is a ruled section of ONE continuous price card, not a
-         panel of cards behind a tab. Items carry a duration and a "from $"
-         floor price, never a fixed quote. */
-      families: {
-        label: string;
-        items: { name: string; desc: string; duration: string; price: string }[];
-      }[];
-      /* What a printed card leaves unsaid and a website has to say: where the
-         figure on the card stops being the figure you pay. */
-      footnotes: string[];
-      /* The still-life plate that sits beside the card's heading. */
-      plate: { src: string; alt: string; caption: string; ratio: string };
-    };
-    booking: {
-      eyebrow: string;
-      title: string;
-      body: string;
-      /* Four step labels; the flow walks service → stylist → time → review. */
-      steps: [string, string, string, string];
-      /* Placeholder calendar slots the concept generates — deliberately generic,
-         no fabricated availability. */
-      days: string[];
-      times: string[];
-      submit: string;
-      /* Repeated beside the final step: nothing here really books. */
-      note: string;
-      /* The two questions a studio is asked before anyone books, answered on the
-         page rather than left to a validation message. */
-      terms: { label: string; body: string }[];
-      /* The panel that replaces the wizard once it is requested. It reads back
-         what was asked for and says, in the same breath, that no chair is held. */
-      confirm: { title: string; lead: string; edit: string };
-      /* Words the step controls and the live stub need. They live here so the
-         component carries no English of its own. */
-      ui: {
-        summary: string;
-        back: string;
-        next: string;
-        unchosen: string;
-        needChoice: string;
-        legends: { service: string; stylist: string; time: string };
-        /* Under the calendar: the slots are the concept's, not the studio's. */
-        slotsNote: string;
-        /* Named so a screen reader hears a sentence, not "Noor" on its own. */
-        bookWithAria: string;
-      };
-    };
-    team: {
-      eyebrow: string;
-      title: string;
-      intro: string;
-      /* Prefix for the row action that carries the name into the booking stub. */
-      bookWith: string;
-      /* Lead-in to the plain sentence that lists what each chair takes. */
-      takes: string;
-      members: {
-        name: string;
-        initials: string;
-        role: string;
-        focus: string;
-        /* Service names lifted from `menu.families` verbatim, so a stylist can
-           never advertise a treatment the card does not sell. */
-        sees: string[];
-      }[];
-    };
-    gallery: {
-      eyebrow: string;
-      title: string;
-      lead: string;
-      /* `ratio` is the file's own measured pixel ratio, held per plate rather
-         than looked up by position: the box then matches the photograph whatever
-         order the list is in, and nothing reflows when the file arrives. A plate
-         taller than it is wide is arched, because that is the shape of the
-         mirrors in the room; a wide plate is only softened. */
-      items: { src: string; alt: string; caption: string; ratio: string }[];
-    };
-    studio: {
-      eyebrow: string;
-      title: string;
-      points: { title: string; body: string }[];
-    };
-    /* The new-client note. It rides at the foot of the statement block rather
-       than standing in its own boxed band, so the page has one fewer panel and
-       one fewer button. */
-    offer: { title: string; body: string };
-    visit: {
-      eyebrow: string;
-      title: string;
-      address: string[];
-      /* One row per day. The week is drawn as a strip, so a grouped "Tue – Fri"
-         label would have to be unpicked to build it — better to keep the data
-         at the grain the layout needs. */
-      hours: { day: string; time: string }[];
-      phone: { display: string; href: string };
-      /* Practical directions in place of the map panel that could only ever
-         pretend to be a map. */
-      arriving: string;
-    };
   };
 };
 
@@ -1724,747 +1786,727 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "ember-restaurant",
+    slug: "marigold-kitchen",
     index: "02",
     demo: "restaurant",
-    name: "Ember & Oak",
+    name: "Marigold Kitchen",
     businessType: "Restaurant / Hospitality",
     industry: "Local Dining",
     category: "Hospitality",
     summary:
-      "A bright, print-led restaurant concept that answers a diner's practical questions first — when it serves, what the fire is doing at each seating, what is on the card — then names the room it deliberately does not photograph.",
+      "A warm, modern South Asian concept site for Chicago's West Loop: live open-now status worked out from the printed hours, a scroll-pinned four-course journey, the full 24-dish card with prices and dietary filters, and demo forms that read their own ticket back while saying plainly that nothing was sent.",
     objective:
-      "Convey the atmosphere of a small fire-only room without borrowing a single photograph, and remove every practical reason not to ask for a table.",
+      "Answer the diner's practical questions before asking for anything: whether the room is open right now, what the meal does course by course, what is on the card and what it costs, and how to ask for a table or a group — all honestly labelled as a concept demo, with prices and specials framed as illustrative.",
     strategy:
-      "Facts first, mood second, no stock imagery. The hours board opens the page, the fire is something you choose rather than admire, the card filters down to what you can actually eat, and both forms build their answer in front of you while saying plainly that nothing left the page. The open-or-closed line is worked out from the hours printed underneath it and the visitor's own clock, so the one claim the page makes about the room is a claim you can check.",
-    designDirection: ["Printed card", "Fire ink", "Asymmetric editorial", "Named photo slots"],
+      "The supplied brief drives every band: the hours are computed live in Chicago time, the tasting journey pins four courses against a drawn plate, the menu is typographic with vegetarian, vegan, gluten-free and spice filters over twenty-four priced dishes, and both forms assemble a sample ticket in front of the visitor. Licensed photography appears only at the hero, the story, the group band and the journey atmosphere — never repeated across dish cards.",
+    designDirection: ["Marigold & aubergine", "Pinned course journey", "Typographic priced card", "Demo-honest forms"],
     keySections: [
-      "Service board",
+      "Live status header",
       "Hero",
-      "The kitchen",
-      "The evening",
-      "The card",
-      "The room",
-      "The long table",
+      "Journey intro",
+      "The Tasting Journey",
+      "The menu",
+      "Tonight at Marigold",
+      "Story",
+      "Group & private dining",
       "Reservations",
       "Visit",
       "How we cook",
-      "Before you book",
+      "Before you come",
     ],
     mobileNotes: [
-      "Call and Find a table stay pinned to the bottom of the phone frame, where a diner actually needs them",
-      "The card's filters are wrapping chips, so a thumb can narrow the whole card down to what you can actually eat",
-      "Every entry is 16px, so focusing a field never zooms the page away from the form",
-      "Seatings are generated from the printed hours, so a phone is never offered a time the room does not serve",
-      "The evening stages turn with buttons and arrow keys, not a swipe a visitor cannot see the end of",
+      "Call, Directions and Reserve stay pinned in a bottom bar on the phone frame",
+      "The tasting journey turns into a swipeable card carousel with progress dots and arrows",
+      "The menu filters sit in a sticky, horizontally scrolling chip row under the heading",
+      "The header re-wraps to two rows so the live-status chip keeps its full words",
+      "Party and time chips are kept at touch height so the reservation never needs a zoom",
     ],
     conversionNotes: [
-      "Find a table sits in the header, the hero, each fire block, the room, the reservation itself and the pinned bar — all on one destination",
-      "The live status line answers the first question a diner asks, in the header, before they scroll",
-      "Choosing a seating carries straight into the reservation, so the page finishes the sentence the hero started",
-      "The read-back repeats the request and states plainly that no table is held",
+      "Reserve sits in the header, the hero, the reservation band itself and the pinned mobile bar — all on one destination",
+      "The live status chip answers the first question a diner asks, before they scroll, in Chicago time",
+      "The party chips hand nine-or-more straight to the phone number",
+      "Group and reservation forms both build a sample ticket from what was typed and state plainly that nothing was sent or held",
     ],
-    accent: "#C8642B",
-    /* Fire ink on paper: a warm cream room, near-black brown ink, burnt orange and
-       an olive that only ever appears as a fill because it cannot clear 4.5:1 as
-       small text. DemoVars derives every grey, both boundary colours and the
-       button ink from these four at render time, so this concept has no second
-       stylesheet and no dark-mode branch. */
-    palette: { bg: "#F4EBDD", fg: "#241811", accent: "#C8642B", accent2: "#7C8460" },
+    accent: "#C8321E",
+    /* Marigold gold on aubergine ink over warm cream: the source's own four
+       values. Chili is the accent that has to clear contrast as small text and
+       link ink; the marigold gold is a fill (journey band, reserve band,
+       highlights) and rides in accent2, where DemoVars will only ever use it as
+       a background, never as text. Paper is the card surface the forms and the
+       menu sit on. */
+    palette: { bg: "#FFF6E5", fg: "#2A1233", accent: "#C8321E", surface: "#FFFDF8", accent2: "#F2A900" },
     content: {
-      navName: "Ember & Oak",
-      ctaPrimary: "Reserve a Table →",
-      ctaSecondary: "See the Card",
+      navName: "Marigold Kitchen",
+      ctaPrimary: "Reserve a table",
+      ctaSecondary: "See the menu",
       services: [
-        { title: "The Grill", body: "Dry-aged beef and whole fish over oak and beech." },
-        { title: "The Hearth", body: "Roots and alliums buried in the ash." },
-        { title: "The Cold Room", body: "Cured fish and things we keep for later." },
-        { title: "The Cellar", body: "Low-intervention wine, poured by the glass." },
+        { title: "Chaat", body: "Bright beginnings." },
+        { title: "From the grill", body: "Smoky, citrus-bright." },
+        { title: "Curries & rice", body: "Slow, fragrant comfort." },
+        { title: "Sweet", body: "A little more time at the table." },
       ],
-      faqTitle: "Before You Book",
+      faqTitle: "Before you come",
       faqs: [
         {
           q: "Do you take walk-ins?",
-          a: "A few seats at the counter are held back for people who arrive without asking. Everything else goes out through the reservation book.",
+          a: "We welcome walk-in questions, but this fictional concept has no live seating or availability. Call ahead before making a trip.",
         },
         {
-          q: "Can you cook around an allergy?",
-          a: "Usually, if we hear it in advance. Put it in the booking note and the kitchen will tell you honestly whether it can do the job properly that night.",
+          q: "Can you accommodate allergies?",
+          a: "Please call to discuss your needs. Our kitchen handles common allergens, and we can’t promise a dish is free of any allergen or cross-contact.",
         },
         {
-          q: "Is there a set menu?",
-          a: "No. The card changes with the week, so you choose course by course and nobody is locked into a long dinner they did not ask for.",
+          q: "Is there a dress code?",
+          a: "There is no formal dress code for this concept. Come in what feels comfortable for dinner.",
         },
         {
-          q: "Do you take large groups?",
-          a: "The long table seats fourteen and is enquired about rather than taken online. The form there builds the enquiry so you can read it back, and the number on this page finishes the conversation.",
+          q: "Are kids welcome?",
+          a: "Yes, the concept is designed for a shared meal across ages. Call ahead with accessibility or seating questions.",
         },
         {
-          q: "Why are there no prices on the card?",
-          a: "Because the restaurant is invented. Any figure printed here would be a made-up number for a room that does not exist, and a number set beside a dish reads as a price even when it is a sample. A real card would carry real numbers, with no service charge added to the table.",
+          q: "Can you host a large group?",
+          a: "Use the demo group enquiry above to preview the details you’d share. For a real gathering, call us directly; no enquiry is sent from this page.",
         },
         {
-          q: "Is Ember & Oak a real restaurant?",
-          a: "No. It is a concept website — a design and functionality demonstration for a fictional fire-led kitchen. The photographs are named instead of borrowed, the street and the telephone number are invented, and nothing entered on this page reaches anybody.",
+          q: "Do you offer gift cards?",
+          a: "Gift cards are a concept only and are not available to buy.",
         },
       ],
 
-      /* The reservation cannot really hold a table, so the status line says what
-         pressing the button did in a diner's own words. */
+      /* Both forms are part of the fiction, so the status line says what
+         pressing the button actually did, in the source's own words. */
       formNote:
-        "This form is part of a concept website: nothing has been booked and no request was sent. A real reservation book would confirm the table here.",
+        "This is a demo form: nothing is sent and no table is held. Your details stay on this page.",
 
       restaurant: {
         board: [
-          "Dinner Wednesday – Saturday, from 18:00",
-          "Sunday lunch 12:00 – 17:00",
-          "Closed Monday and Tuesday",
-          "Fire lit at 16:00 · oak and beech",
+          "27 Fulton Row, West Loop · Chicago, IL",
+          "Dinner Tue–Sat · Sunday lunch & dinner",
+          "Modern South Asian",
+          "Hours: Tue–Thu 17:00–22:00",
         ],
+        /* The JSON-LD `servesCuisine`, in the concept's own words. */
+        cuisine: "Modern South Asian",
+        /* AUTHORED (not transcribed): the source names these bands in its own
+           headings, but its nav links are the three below, kept short. */
+        nav: {
+          journey: "Journey",
+          menu: "Menu",
+          story: "Story",
+          groups: "Groups",
+          visit: "Visit",
+        },
+        /* The line the clock works out from `booking.week`, read in Chicago time.
+           `{time}` is a printed opening or closing minute, `{day}` a printed day
+           name — the same strings the hours table shows. AUTHORED to match the
+           shape the source's own status script prints. */
+        status: {
+          open: "Open now · closes {time}",
+          opensToday: "Opens {time} today",
+          opensTomorrow: "Opens {time} tomorrow",
+          opensDay: "Opens {time} {day}",
+        },
         header: {
-          concept: "Concept site, not a real restaurant",
-          openLine: "Dinner Wed–Sat from 18:00 · Sunday lunch 12:00",
-          /* The chip is arithmetic on the hours printed below and the clock in the
-             visitor's own device, and the lead-in says so. */
-          statusLead: "From the hours below and your own clock:",
-          phoneLabel: "Call the room",
-          book: "Find a table",
+          concept: "Concept demo · Not a live restaurant",
+          openLine: "Dinner Tue–Sat · Sunday lunch & dinner",
+          /* The chip is arithmetic on the hours printed below, read in Chicago
+             time, and the lead-in says so. */
+          statusLead: "Chicago local time",
+          phoneLabel: "Call",
+          book: "Reserve",
         },
         hero: {
-          headline: "Everything Here",
-          accent: "Has Met A Flame.",
-          eyebrow: "Ash-fired kitchen · Twenty-two covers",
+          headline: "Modern South Asian cooking in the",
+          accent: "West Loop, Chicago.",
+          eyebrow: "A table in the West Loop · Chicago",
           lede:
-            "One fire, two blocks, and a card rewritten on Monday. The room is small and the grill sits at the back of it, so the kitchen is part of the evening rather than something happening behind a wall. If a dish is not going well, we say so at the table instead of waiting for you to notice.",
-          hoursLine: "Dinner Wednesday to Sunday · from 18:00",
-          facts: [
-            { label: "Covers", value: "22" },
-            { label: "Blocks", value: "18:00 / 21:00" },
-            { label: "The card", value: "Rewritten Mondays" },
-          ],
-          /* The fire is the deciding fact of the evening, so it is something the
-             visitor chooses here rather than a band of cards further down the
-             page. Each block answers with its own drawing. */
+            "Bright, generous plates made for passing around. Start with something crisp, stay for one more spoonful.",
+          hoursLine: "Dinner Tue–Sat · Sunday lunch & dinner",
+          /* The source's hero meta row is two icon-led lines — the address and
+             the dinner shape — which the layout renders from `hoursLine` and
+             `booking.address`; there are no labelled facts to invent here. */
+          facts: [],
+          /* Marigold has no fire to choose; what it has is two services. The
+             chooser band is kept, filled strictly from the printed hours, and
+             each block hands its opening time to the reservation grid. The
+             block times are unique because the old layout keys the chips by
+             time — Tuesday and Friday share 17:00, so they are one block. */
           fire: {
-            title: "Choose The Fire You Will Eat",
+            title: "Which service are you after?",
             body:
-              "It is the same grill all evening and not the same fire at six and at nine. Pick a block and the page tells you what the kitchen does best while that one burns.",
+              "Dinner runs Tuesday through Saturday and lunch into dinner on Sunday. Pick the service you would join and the reservation starts from it.",
             blocks: [
               {
-                time: "18:00",
-                label: "First block",
-                note: "Flame, still tall. Take this one if you want the grill's full attention.",
-                ask: "Ask For The First Block",
-                slot: "18:00",
-              },
-              {
-                time: "21:00",
-                label: "Second block",
-                note: "Coals by then, which is what the hearth roots were waiting for.",
-                ask: "Ask For The Second Block",
-                slot: "21:00",
+                time: "17:00",
+                label: "Dinner · Tue–Sat",
+                note: "Tue–Thu until 22:00, Fri–Sat until 23:00.",
+                ask: "Ask for a dinner seating",
+                slot: "17:00",
               },
               {
                 time: "12:00",
-                label: "Sunday only",
-                note: "One continuous lunch until 17:00. Shorter card, no second block.",
-                ask: "Ask About Sunday Lunch",
-                preset: "Sunday lunch — the 12:00 service. There is no second block that day.",
+                label: "Sunday lunch & dinner",
+                note: "Sunday serves 12:00 to 21:00, lunch through dinner.",
+                ask: "Ask about Sunday",
+                slot: "12:00",
               },
             ],
-            live: "Chosen fire",
-            drawn: "A drawing of the fire at that age. This concept ships no photograph.",
+            live: "Chosen service",
+            drawn: "Sample times only — this demo holds no table.",
           },
           slot: {
-            kind: "Photo slot",
-            note:
-              "The chain, lowered onto the coals, with a tall tongue of fire behind it. A real build would put its own room picture here; this one names it instead of borrowing somebody else's.",
+            kind: "Hero photograph",
+            note: "The grill at full height — flame reaching up between the bars as the meat chars.",
+            src: "/demos/marigold-kitchen/hero-fire.webp",
+            alt: "Steaks cooking over open flames on a grill.",
           },
         },
+        /* The slim band above the journey. In the source it carries the eyebrow
+           and nothing else — `indexn.html:2329`, the `div.wrap.journey-intro`
+           holds a single `p.eyebrow` and closes on 2331 — so this line is
+           AUTHORED in the source's voice rather than transcribed. It restates
+           only what the page already shows (the four courses and their own
+           one-line descriptions) and adds no fact the concept does not have. */
         intro: {
-          eyebrow: "The Kitchen",
-          body:
-            "There is one fire in this building and it does almost all the work. Meat and fish go straight onto the bars. Roots and alliums go into the ash under a foil hood, where they cook slower and taste of somewhere else. Bread arrives still ticking from the heat, and the butter is cultured here because it takes four days and we have them.",
+          eyebrow: "Four plates, one very good evening",
+          body: "The meal runs in four courses: something bright to begin, something from the grill, a curry to build the plate around, and something sweet to keep the table a little longer.",
         },
-        /* The evening as four movements, one at a time — the shape of the meal
-           before eighteen names on a card. */
+        /* The evening told in courses, one at a time: the source's scroll-pinned
+           tasting journey, four courses on one drawn plate. */
         evening: {
-          eyebrow: "The Evening",
-          title: "Two Hours, Four Movements",
+          eyebrow: "The Tasting Journey",
+          title: "A meal that moves",
           body:
-            "A full dinner in the first block runs to about two hours, and it lands in a rough order. Here is that order, so nothing surprises you when it arrives at the table.",
+            "From a bright first bite to a slow, sweet finish—follow the plates as they arrive.",
           stages: [
             {
-              label: "Bread before six",
-              line:
-                "Sourdough goes over the bars and the butter is made here, so both arrive still ticking while the fire is being built around the room. Nobody orders them; they simply come.",
-              note: "The only part of the evening that happens the same way at every block.",
+              label: "Chaat",
+              line: "A bright, crunchy first bite with sweet tamarind, cool yogurt and a little spark.",
+              note: "A bright first bite",
               slot: {
-                kind: "Photo slot",
-                note: "Torn sourdough and a dish of cultured butter on a board at the table's edge.",
+                kind: "Course photograph",
+                note: "Small plates laid along the table, sharing first.",
+                src: "/demos/marigold-kitchen/gal-table.webp",
+                alt: "Small dishes laid along a wooden table with evergreen.",
               },
             },
             {
-              label: "Small plates",
-              line:
-                "Starters are salted and small, meant to be eaten while the kitchen is still settling. Two between four people is the right ask.",
-              note: "Order as few or as many as you like — nothing here is a set menu holding the grill back.",
+              label: "From the grill",
+              line: "Smoky edges, soft centers and a squeeze of citrus while everything is still warm.",
+              note: "Straight from the fire",
               slot: {
-                kind: "Photo slot",
-                note: "Three small plates laid along a wooden table, no cutlery beside them yet.",
+                kind: "Course photograph",
+                note: "Embers glowing under the bars, the grill empty before the food goes on.",
+                src: "/demos/marigold-kitchen/gal-grill.webp",
+                alt: "Embers glowing beneath empty grill bars.",
               },
             },
             {
-              label: "What the fire does",
-              line:
-                "Mains come off the bars and rest beside the flame rather than under a lamp, which is why the age of the fire matters more than the time on your booking.",
-              note: "A whole fish and a ribeye are not the same wait. The kitchen will tell you which is which.",
+              label: "Curry",
+              line: "A slow, fragrant centerpiece with saffron rice made for one more scoop.",
+              note: "Scoop, share, repeat",
               slot: {
-                kind: "Photo slot",
-                note: "Steaks on the bars, embers glowing under them, smoke leaving frame to the right.",
+                kind: "Course photograph",
+                note: "Food laid low beside the flames, the grate swinging on its chain.",
+                src: "/demos/marigold-kitchen/gal-hearth.webp",
+                alt: "Sausages and chicken on a chain-hung grill over a hearth fire.",
               },
-            },
-            {
-              label: "Puddings, then the cellar",
-              line:
-                "Dessert is made in the afternoon, so it stops when the afternoon stops. After that the list is short and the cellar card is on the table.",
-              note: "Nobody is rushed out between blocks, and the room does not turn your table over.",
-              slot: {
-                kind: "Photo slot",
-                note: "A glazed pudding in a dark bowl at the far end of a candle-lit table.",
-              },
-            },
-          ],
-          prev: "Previous stage",
-          next: "Next stage",
-          dots: "Go to stage",
-          of: "of",
-          hint: "Once a stage has focus, the left and right arrow keys turn them.",
-        },
-        menu: {
-          eyebrow: "The Card",
-          title: "This Week, Without Numbers",
-          lead:
-            "The card changes with the week, so this is what is on it now. Everything is cooked to order, over one fire, in one kitchen.",
-          noPrices:
-            "There are no prices on this card. This is a concept site, and a figure beside a dish reads as a price even when it is a sample — so an invented room gets no invented sums. A real card would be printed with numbers only and would add no service charge to the table.",
-          filters: [
-            { key: "all", label: "Everything" },
-            { key: "veg", label: "Vegetarian" },
-            { key: "vegan", label: "Vegan" },
-            { key: "gf", label: "No gluten" },
-            { key: "heat", label: "With heat" },
-          ],
-          legend: [
-            { mark: "veg", means: "No meat or fish" },
-            { mark: "vegan", means: "Nothing from an animal, in the pan or on the plate" },
-            { mark: "gf", means: "Ordered without gluten — one kitchen, so never a guarantee" },
-            { mark: "medium", means: "Noticeable heat" },
-            { mark: "hot", means: "Properly hot" },
-          ],
-          countNoun: "dishes",
-          allergy:
-            "Everything is cooked in one kitchen, over one fire, beside flour and nuts. We cannot promise a dish is free of anything, and we would rather say that than imply the opposite. Tell us when you ask for a table and we will be straight with you about what the kitchen can do that night.",
-          note:
-            "The card is rewritten on Monday. If a dish matters to you, say so when you ask for a table and we will tell you whether it is still on.",
-          sections: [
-            {
-              label: "Starters",
-              blurb: "Small, salted, and meant to be eaten while the grill is still settling.",
-              slot: {
-                kind: "Photo slot",
-                note: "A hand-built starter board on the pass, seen from the diner's side of it.",
-              },
-              dishes: [
-                {
-                  name: "Ember Leeks",
-                  desc: "Buried in the ash, hazelnut, aged sheep's cheese",
-                  marks: ["veg"],
-                },
-                {
-                  name: "Grilled Sourdough",
-                  desc: "Cultured butter, smoked salt, thyme oil",
-                  marks: ["veg"],
-                },
-                {
-                  name: "Charred Hispi",
-                  desc: "Olive oil, lemon, toasted chilli",
-                  marks: ["veg", "vegan", "gf", "medium"],
-                },
-                {
-                  name: "Smoked Beetroot",
-                  desc: "Goat curd, walnut, honey vinegar",
-                  marks: ["veg", "gf"],
-                },
-                {
-                  name: "Cured Trout",
-                  desc: "Buttermilk, cucumber, dill oil",
-                  marks: [],
-                },
-              ],
-            },
-            {
-              label: "Mains",
-              blurb: "Off the bars, rested by the fire, never held under a lamp.",
-              slot: {
-                kind: "Photo slot",
-                note: "The whole fish on its bars, a spoon of brown butter going over it.",
-              },
-              dishes: [
-                {
-                  name: "Dry-Aged Ribeye",
-                  desc: "Bone marrow, watercress, burnt onion",
-                  marks: ["gf"],
-                },
-                {
-                  name: "Whole Plaice",
-                  desc: "Brown butter, capers, sea herbs",
-                  marks: ["gf"],
-                },
-                {
-                  name: "Coal-Roast Chicken",
-                  desc: "Morels, tarragon, pan gravy",
-                  marks: ["gf"],
-                },
-                {
-                  name: "Aged Pork Chop",
-                  desc: "Quince, fennel, mustard greens",
-                  marks: ["gf", "medium"],
-                },
-                {
-                  name: "Smoked Haddock",
-                  desc: "Crab, cauliflower, brown shrimp butter",
-                  marks: [],
-                },
-                {
-                  name: "Fire-Roast Celeriac",
-                  desc: "Black garlic, hazelnut, buried whole for four hours",
-                  marks: ["veg", "vegan", "gf", "hot"],
-                },
-              ],
             },
             {
               label: "Dessert",
-              blurb: "Three puddings and a cheese board, all made in the afternoon.",
+              line: "Cardamom, cream and warm syrup: something lovely to finish slowly.",
+              note: "A slow, sweet finish",
               slot: {
-                kind: "Photo slot",
-                note: "A pudding spooned into a warmed bowl at the end of the service.",
+                kind: "Course photograph",
+                note: "The last plate, still dressed for the table.",
+                src: "/demos/marigold-kitchen/gal-autumn.webp",
+                alt: "Plated dessert beside a cocktail, pumpkins behind.",
+              },
+            },
+          ],
+          prev: "Previous course",
+          next: "Next course",
+          dots: "Go to course",
+          of: "of",
+          hint: "Swipe through the courses",
+          /* The source keeps this caption fixed under the desktop plate while
+             the courses change — a standing line about the drawn plate, not a
+             per-course one. The mobile cards use each stage's own `note`. */
+          plateLabel: "A little of everything",
+          aside: {
+            image: {
+              src: "/demos/marigold-kitchen/gal-candles.webp",
+              alt: "Empty tables lit by small table lamps at night.",
+            },
+            cta: "Explore all 24 dishes",
+          },
+        },
+        menu: {
+          eyebrow: "Made to mix, match and pass around",
+          title: "The menu",
+          lead:
+            "Four ways into the meal. Prices are listed as numbers; ask us about ingredients and preparation.",
+          /* Marigold does print numbers, so this field carries the opposite
+             honesty: the figures are illustrative, as the source itself frames
+             them in the footer ("Prices and sample specials are illustrative"). */
+          noPrices:
+            "The prices on this card are illustrative numbers for a fictional concept — they are a sample menu, not a bill.",
+          /* The source's own filter vocabulary. The layout maps each key: the
+             three diet keys match a dish's marks (`vegetarian` reads the `veg`
+             mark), and `spicy` reads the `spice` ladder at 1 or more, so mild
+             plates are caught with the hotter ones. */
+          filters: [
+            { key: "all", label: "All" },
+            { key: "vegetarian", label: "Vegetarian" },
+            { key: "vegan", label: "Vegan" },
+            { key: "gf", label: "Gluten-free" },
+            { key: "spicy", label: "Mild–Medium–Hot" },
+          ],
+          filtersLabel: "Filter dishes",
+          /* The card's markers, spelled out by `menu.note` above: V vegetarian,
+             VG vegan, GF gluten-free. */
+          marks: { veg: "V", vegan: "VG", gf: "GF" },
+          legend: [
+            { mark: "veg", means: "vegetarian" },
+            { mark: "vegan", means: "vegan" },
+            { mark: "gf", means: "gluten-free" },
+            { mark: "hot", means: "flame marks show the spice level — one flame mild, two medium, three hot" },
+          ],
+          countNoun: "dishes",
+          allergy:
+            "Allergens: Please ask us about ingredients and preparation. Our kitchen handles common allergens, so we can’t promise a dish is free of any allergen.",
+          note:
+            "Dish markers: V vegetarian · VG vegan · GF gluten-free · flame marks spice level.",
+          spiceWords: ["", "Mild", "Medium", "Hot"],
+          sections: [
+            {
+              label: "Chaat",
+              blurb: "Bright beginnings",
+              slot: {
+                kind: "Typographic card",
+                note: "The menu is set in type — no photograph repeats across the dish lines.",
               },
               dishes: [
                 {
-                  name: "Burnt Honey Custard",
-                  desc: "Oat crumble, crème fraîche",
+                  name: "Smoky beet & potato papdi chaat",
+                  desc: "Crisp wafers, roasted beet, cool yogurt and tamarind-date chutney.",
                   marks: ["veg"],
+                  price: 14,
+                  spice: 1,
                 },
                 {
-                  name: "Chocolate and Olive Oil",
-                  desc: "Sea salt, bay leaf ice cream",
+                  name: "Avocado bhel",
+                  desc: "Puffed rice, avocado, cucumber, lime and green chutney.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 13,
+                  spice: 1,
+                },
+                {
+                  name: "Paneer tikka chaat",
+                  desc: "Charred paneer, crisp chickpeas, mint and pomegranate.",
                   marks: ["veg", "gf"],
+                  price: 16,
+                  spice: 2,
                 },
                 {
-                  name: "Baked Pear",
-                  desc: "Sourdough ice cream, walnut praline",
-                  marks: ["veg"],
+                  name: "Crisp chickpea pani puri",
+                  desc: "Semolina shells, spiced chickpea, bright mint water and tamarind.",
+                  marks: ["veg", "vegan"],
+                  price: 12,
+                  spice: 3,
                 },
                 {
-                  name: "Cheese, Two",
-                  desc: "Oatcakes, quince out of the pot",
-                  marks: ["veg"],
+                  name: "Charred corn & sev",
+                  desc: "Sweet corn, lime, cilantro and crunchy chickpea noodles.",
+                  marks: ["veg", "gf"],
+                  price: 13,
+                  spice: 1,
+                },
+                {
+                  name: "Tamarind sweet potato chaat",
+                  desc: "Roasted sweet potato, crisp lentils, tamarind and fresh lime.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 14,
+                  spice: 2,
                 },
               ],
             },
             {
-              label: "Drinks",
-              blurb: "The short list. The cellar card is longer and comes to the table.",
+              label: "From the grill",
+              blurb: "Smoky, citrus-bright",
               slot: {
-                kind: "Photo slot",
-                note: "Two glasses on a dark bar top, the bottle label out of frame.",
+                kind: "Typographic card",
+                note: "Six names off the grill, set as type — the photographs stay on the journey.",
               },
               dishes: [
                 {
-                  name: "Barrel-Aged Negroni",
-                  desc: "Orange peel, bitter wine",
-                  marks: [],
+                  name: "Tandoori mushroom",
+                  desc: "Fire-kissed mushrooms, ginger, citrus and green chutney.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 18,
+                  spice: 2,
                 },
                 {
-                  name: "Smoked Old Fashioned",
-                  desc: "Maple, black walnut bitters",
-                  marks: [],
+                  name: "Paneer malai skewers",
+                  desc: "Creamy paneer, cardamom, charred scallion and lime.",
+                  marks: ["veg", "gf"],
+                  price: 19,
+                  spice: 1,
                 },
                 {
-                  name: "Wine, By The Glass",
-                  desc: "Three whites, three reds, one orange",
-                  marks: [],
+                  name: "Chicken seekh kebab",
+                  desc: "Minced chicken, warming spice, pickled onion and mint.",
+                  marks: ["gf"],
+                  price: 21,
+                  spice: 2,
                 },
                 {
-                  name: "Spruce and Honey Soda",
-                  desc: "No alcohol, made in the kitchen",
-                  marks: [],
+                  name: "Lamb boti",
+                  desc: "Tender lamb, toasted cumin, chili and a bright herb salad.",
+                  marks: ["gf"],
+                  price: 24,
+                  spice: 3,
+                },
+                {
+                  name: "Charred cauliflower",
+                  desc: "Whole-roasted cauliflower, lemon, sesame and green chutney.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 17,
+                  spice: 2,
+                },
+                {
+                  name: "Salmon tikka",
+                  desc: "Citrus-marinated salmon, charred edges and dill yogurt.",
+                  marks: ["gf"],
+                  price: 25,
+                  spice: 2,
+                },
+              ],
+            },
+            {
+              label: "Curries & rice",
+              blurb: "Slow, fragrant comfort",
+              slot: {
+                kind: "Typographic card",
+                note: "The slow half of the card, set as type like the rest of it.",
+              },
+              dishes: [
+                {
+                  name: "Butter chicken",
+                  desc: "Tomato, cream, fenugreek and a gentle finish; served with rice.",
+                  marks: ["gf"],
+                  price: 25,
+                  spice: 1,
+                },
+                {
+                  name: "Dal makhani",
+                  desc: "Slow-simmered black lentils, butter and a touch of smoke.",
+                  marks: ["veg", "gf"],
+                  price: 21,
+                  spice: 1,
+                },
+                {
+                  name: "Chana masala",
+                  desc: "Chickpeas, tomato, warming spice and fresh cilantro.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 20,
+                  spice: 2,
+                },
+                {
+                  name: "Goat curry",
+                  desc: "A slow-cooked, deeply spiced curry with ginger and coriander.",
+                  marks: ["gf"],
+                  price: 28,
+                  spice: 3,
+                },
+                {
+                  name: "Coconut fish curry",
+                  desc: "Fish in coconut, curry leaf and tamarind broth.",
+                  marks: ["gf"],
+                  price: 26,
+                  spice: 2,
+                },
+                {
+                  name: "Saffron basmati rice",
+                  desc: "Fragrant long-grain rice with saffron and toasted cumin.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 8,
+                  spice: 0,
+                },
+              ],
+            },
+            {
+              label: "Sweet",
+              blurb: "A little more time at the table",
+              slot: {
+                kind: "Typographic card",
+                note: "The last of the sixes — nothing here needs a photograph to be ordered.",
+              },
+              dishes: [
+                {
+                  name: "Warm gulab jamun",
+                  desc: "Soft milk dumplings, rose-cardamom syrup and pistachio.",
+                  marks: ["veg"],
+                  price: 11,
+                  spice: 0,
+                },
+                {
+                  name: "Cardamom panna cotta",
+                  desc: "Silky cream, cardamom and seasonal fruit.",
+                  marks: ["veg", "gf"],
+                  price: 12,
+                  spice: 0,
+                },
+                {
+                  name: "Coconut kheer",
+                  desc: "Rice pudding, coconut, toasted cashew and a pinch of saffron.",
+                  marks: ["veg", "gf"],
+                  price: 10,
+                  spice: 0,
+                },
+                {
+                  name: "Pistachio kulfi",
+                  desc: "Slow-churned cardamom ice cream with roasted pistachio.",
+                  marks: ["veg", "gf"],
+                  price: 10,
+                  spice: 0,
+                },
+                {
+                  name: "Mango-lime sorbet",
+                  desc: "Bright mango, fresh lime and a little crunch of fennel.",
+                  marks: ["veg", "vegan", "gf"],
+                  price: 9,
+                  spice: 0,
+                },
+                {
+                  name: "Chocolate chai cake",
+                  desc: "Dark chocolate, black tea spice and a spoon of cream.",
+                  marks: ["veg"],
+                  price: 12,
+                  spice: 0,
                 },
               ],
             },
           ],
         },
         room: {
-          eyebrow: "The Room",
-          title: "Twenty-Two Covers, One Fire",
+          eyebrow: "A little about us",
+          title: "Food that makes room for everyone at the table.",
           paras: [
-            "The tables are close enough that you can hear the kitchen deciding things. It is not a quiet restaurant and it does not pretend to be one.",
-            "Service runs in two blocks so the grill can keep up with the room. The first table is seated at six, the last at nine, and nobody is turned out in between.",
+            "Marigold Kitchen is a fictional neighborhood restaurant concept built around the pleasure of sharing. Our cooking draws on South Asian flavors, familiar comforts and the changing seasons—without asking a meal to stand still.",
+            "We want the table to feel generous: a little crunch, a spoonful of something slow-cooked, and time to find your favorite bite.",
           ],
-          /* The room's own line about itself — not a diner's, not a press quote,
-             and nothing here is a review. */
+          /* The room's own line about itself — the kitchen's stated philosophy,
+             not a diner's review and not a press quote. */
           quote:
-            "We have no fryer, no combi oven and no second hob. Everything on your table has been within a metre of that fire.",
+            "“The best meal is the one that keeps getting passed around.”",
+          quoteCite: "Our kitchen philosophy",
+          /* AUTHORED (not transcribed): the source credits nothing, and its nine
+             photographs are Unsplash plates of rooms this concept does not have.
+             `public/demos/CREDITS.md` records the licence; this says the same
+             thing where the pictures are. */
+          provenance:
+            "The photographs here are licensed stock images of real food and real rooms, used to stand for a kitchen that does not exist. They are not pictures of Marigold Kitchen.",
           tall: {
-            kind: "Photo slot",
-            note: "Two hands passing small plates over the pass, in low light.",
+            kind: "Photograph",
+            note: "Two hands passing small plates across the table.",
+            src: "/demos/marigold-kitchen/story-hands.webp",
+            alt: "Two hands passing small plates across a table.",
           },
           small: {
-            kind: "Photo slot",
-            note: "A pudding in a dark glazed bowl, a flower from the window box on top.",
+            kind: "Photograph",
+            note: "A dessert in a dark glazed bowl.",
+            src: "/demos/marigold-kitchen/story-dessert.webp",
+            alt: "A plated dessert in a dark glazed bowl.",
           },
         },
         groups: {
-          eyebrow: "Private Dining",
-          title: "The Long Table",
+          eyebrow: "Good company, good plates",
+          title: "Group & private dining",
           body:
-            "A door closes, the candles come down the table, and fourteen people eat the same menu at the same time. It is cooked the same way as everything else in the building — on the fire, in front of you.",
-          bands: ["6 – 8", "9 – 11", "12 – 14", "15 and up"],
+            "Planning a birthday, team dinner or a long-overdue catch-up? Share a few details and see them gathered into a demo enquiry ticket.",
+          bands: ["9–12", "13–18", "19–24", "25+"],
           callUs:
-            "One table takes fourteen. Anything larger is a conversation on the telephone rather than a form, because the room has to be checked against the fire first.",
+            "For gatherings of 9 or more, call us so we can talk through the setup.",
           points: [
-            "Seats up to fourteen",
-            "One menu, agreed in advance",
-            "The grill is fired for your table only",
-            "No booking is made from this page",
+            "Menu choices, timing and accessibility needs can be discussed together.",
+            "This sample form does not send a message or create a booking.",
           ],
           fields: {
-            size: "Party",
+            size: "Party size",
             date: "Preferred date",
             name: "Your name",
             contact: "Phone or email",
-            notes: "What the room should know",
+            notes: "A few notes",
           },
-          note:
-            "Nothing is held here. This ticket is a record of what you would ask for, and it stays in your browser.",
+          sizePrompt: "Choose a size",
+          errors: {
+            size: "Please choose a party size.",
+            date: "Please choose a preferred date.",
+          },
+          submit: "Preview enquiry",
+          notesPlaceholder: "Occasion, timing, or anything you’d like us to know",
+          image: {
+            src: "/demos/marigold-kitchen/events-room.webp",
+            alt: "A warm dining room table set for a relaxed group meal.",
+          },
+          note: "Demo form — nothing sent. Your details stay on this page.",
           ticket: {
-            title: "Enquiry ticket",
-            lead: "Fill it and read it back in the same hand as the reservation. Nothing has been sent and no date is held.",
-            empty: "Change a field and the line appears here, written the way the booking reads itself.",
+            title: "Demo enquiry preview",
+            lead: "Tell us what you’re planning",
+            empty: "This sample form does not send a message or create a booking.",
           },
         },
         booking: {
-          eyebrow: "Reservations",
-          title: "Find A Table",
+          eyebrow: "Save a seat in the story",
+          title: "Come hungry. Leave happy.",
           body:
-            "Two to eight are asked for here; anything larger goes through the telephone so the room can check it will take you. The form asks the questions a reservation book actually records.",
-          parties: [2, 3, 4, 5, 6, 7, 8],
-          callUs: "A table for nine or more is checked against the room before it is promised. Use the number below.",
-          occasions: ["No occasion", "Birthday", "Anniversary", "Business dinner", "Just because"],
+            "Choose a date and a time to see a sample reservation ticket. This is a demo only: it does not check live availability, send a request or hold a table.",
+          parties: [1, 2, 3, 4, 5, 6, 7, 8],
+          callUs:
+            "Parties of nine or more are handled by phone, so the setup can be talked through first.",
+          /* The source reservation card has no occasion selector, so nothing is
+             invented here — the field stays for layouts that still ask. */
+          occasions: [],
           stepMinutes: 30,
-          lastSeatingMinutes: 90,
-          slotAsk: "Seatings for",
-          /* Covers both empty cases the grid can reach: a day the room does not
-             serve, and a day whose remaining seatings have already gone. */
-          slotNone:
-            "Nothing left to ask for on that day — the room either does not serve then, or its last seating has already gone.",
+          /* Marigold works the book in half-hour steps right up to half an hour
+             before close — the last slot is `close − 30`, with no earlier lead
+             buffer the way the fire layout had one. */
+          lastSeatingMinutes: 30,
+          slotAsk: "Sample times for",
+          slotNone: "Choose an open date to see sample times.",
+          /* The source keeps the closed-day line apart from the "pick a date"
+             empty state, so they are separate strings here too. */
+          slotClosed: "We’re closed Mondays. Please choose another date.",
           week: [
-            { day: "Monday", dow: 1, open: null, close: 1410, shown: "Closed" },
-            { day: "Tuesday", dow: 2, open: null, close: 1410, shown: "Closed" },
-            { day: "Wednesday", dow: 3, open: 1080, close: 1410, shown: "18:00 – 23:30" },
-            { day: "Thursday", dow: 4, open: 1080, close: 1410, shown: "18:00 – 23:30" },
-            { day: "Friday", dow: 5, open: 1080, close: 1410, shown: "18:00 – 23:30" },
-            { day: "Saturday", dow: 6, open: 1080, close: 1410, shown: "18:00 – 23:30" },
-            { day: "Sunday", dow: 0, open: 720, close: 1020, shown: "12:00 – 17:00" },
+            { day: "Monday", dow: 1, open: null, close: 1320, shown: "Closed" },
+            { day: "Tuesday", dow: 2, open: 1020, close: 1320, shown: "17:00 – 22:00" },
+            { day: "Wednesday", dow: 3, open: 1020, close: 1320, shown: "17:00 – 22:00" },
+            { day: "Thursday", dow: 4, open: 1020, close: 1320, shown: "17:00 – 22:00" },
+            { day: "Friday", dow: 5, open: 1020, close: 1380, shown: "17:00 – 23:00" },
+            { day: "Saturday", dow: 6, open: 1020, close: 1380, shown: "17:00 – 23:00" },
+            { day: "Sunday", dow: 0, open: 720, close: 1260, shown: "12:00 – 21:00" },
           ],
-          hoursTitle: "Service hours",
+          hoursTitle: "Hours",
           closedWord: "Closed",
           statusNote:
-            "The room cannot check a clock for you. This line is the hours above set against the time on your own device, in your own timezone.",
-          address: ["14 Ashgrove Lane", "Old Foundry Quarter"],
+            "The open line reads against Chicago local time, so it can differ from the clock on your own device.",
+          address: { street: "27 Fulton Row, West Loop", locality: "Chicago", region: "IL" },
           access:
-            "Step-free from the pavement as far as two tables; the pass itself is one step up.",
+            "For step-free access or other accessibility questions, call ahead so we can discuss your needs.",
           parking:
-            "No car park of its own. The nearest bays are a short walk, and this concept cannot confirm what they charge.",
+            "Parking and transit details are not confirmed for this fictional location. Please check the route before travelling.",
           planNote:
             "A drawing of the room, not a map. The street is invented with the rest of it, so there is no pin to drop and no route to promise.",
-          phone: { display: "(555) 555-0166", href: "tel:+15555550166" },
-          submit: "Find a Table",
-          note: "Tables are held for the block you ask for, not for the whole evening. Running late is worth a call.",
+          directions: {
+            label: "Get directions",
+            href: "https://www.google.com/maps/dir/?api=1&destination=27%20Fulton%20Row%2C%20West%20Loop%2C%20Chicago%2C%20IL",
+          },
+          policyTitle: "Booking & changes",
+          errors: {
+            date: "Please choose a date for the table.",
+            time: "Please choose one of the sample times.",
+            name: "Please give a name for the table.",
+            email: "Please enter an email address for the receipt.",
+          },
+          fields: {
+            date: "Date",
+            timeZone: "(Chicago time)",
+            party: "Party size",
+            time: "Choose a time",
+            name: "Name",
+            namePlaceholder: "Your name",
+            email: "Email",
+            emailPlaceholder: "you@example.com",
+            notes: "Notes",
+            notesOptional: "(optional)",
+            partyCall: "9+ call us",
+            partyCallAria: "Call for parties of nine or more",
+          },
+          phone: { display: "(312) 555-0129", href: "tel:+13125550129" },
+          submit: "Preview reservation ticket",
+          note: "Nothing is confirmed until a real restaurant confirms it. This demo has no booking or cancellation service. For changes to a real reservation, contact the restaurant directly.",
           hints: {
-            date: "Tonight onwards. A day the room has already served cannot be asked for.",
-            time: "Built from the hours above — half-hour steps up to the last seating, nothing outside them.",
-            party: "Two to eight here. Anything larger is checked against the room first.",
-            notes: "Allergies, a wheelchair, a pram, a table you would rather not sit beside the grill. Say it here.",
+            date: "Dates use Chicago time. A day the kitchen has already served cannot be asked for.",
+            time: "Built from the hours above — half-hour sample times up to half an hour before close, nothing outside them.",
+            party: "For parties of 9 or more, call (312) 555-0129.",
+            notes: "Seating preference or anything you’d like to mention.",
           },
           confirm: {
-            title: "Asked for, not booked",
-            lead:
-              "This is what the form received. Nothing left this page, so the table is not held and nobody has been told to expect you.",
+            title: "Sample reservation ticket",
+            lead: "Demo form — no table was held.",
             edit: "Change it",
+            timeTerm: "Time",
+            guestOne: "guest",
+            guestMany: "guests",
           },
         },
         how: {
-          eyebrow: "How We Cook",
-          title: "Four Things A Printed Card Leaves Out",
-          body:
-            "A menu is a promise that only goes one way. These are the honest answers to the questions a card cannot ask.",
+          eyebrow: "No guesswork, just good food",
+          title: "How we cook",
+          /* The source runs straight from the heading into the four items —
+             `indexn.html:2741`, the `div.transparency-heading` holds one child
+             with the eyebrow and the `h2`, then closes — so this standfirst is
+             AUTHORED in the source's voice rather than transcribed. It only
+             lists what the four points below already say. */
+          body: "Four things a card cannot say for itself: how the heat is marked, what the kitchen builds around, what it will not promise about allergens, and what a demo booking actually holds.",
           points: [
             {
-              title: "One fire",
-              text: "Everything is cooked on the same bars, in the same draught, at the same speed. A dish can be late because another dish is in front of it.",
+              title: "Spice, your way",
+              text: "Each dish is marked mild, medium or hot. Ask if you’d like guidance before ordering.",
             },
             {
-              title: "One kitchen",
-              text: "Flour, nuts, fish and dairy share a metre of worktop. We can move things around; we cannot promise a plate is free of anything.",
+              title: "Ingredients with a season",
+              text: "We build around South Asian pantry staples and produce that changes with the season. Sourcing varies.",
             },
             {
-              title: "A card that moves",
-              text: "The menu is rewritten on Monday, so a dish read here last week may already be gone. Say so when you ask for a table.",
+              title: "Allergens, honestly",
+              text: "Our kitchen handles common allergens, so we can’t promise any dish is allergen-free.",
             },
             {
-              title: "And one thing about this page",
-              text: "Ember & Oak is a concept site. The room, the street and the number are invented, so nothing on it is a reservation, a price or an opening hour you can rely on.",
+              title: "Bookings, clearly",
+              text: "This demo holds no table. A real booking would need confirmation; please call about any changes.",
             },
           ],
         },
-      },
-    },
-  },
-  {
-    slug: "maison-lune",
-    index: "03",
-    demo: "salon",
-    name: "Maison Lune",
-    businessType: "Beauty Studio",
-    industry: "Hair & Beauty",
-    category: "Hospitality",
-    summary:
-      "A quiet cream studio site built around one continuous price list kept in rule and type, a stylist roster that drops you into the booking with that name already chosen, and an honest four-step request.",
-    objective:
-      "Make a small studio feel calm and premium, and turn a visitor into an appointment without a heavy storefront.",
-    strategy:
-      "Restraint, and one shape used only where it earns its place. A beauty studio sells on atmosphere and trust, so the room's arches carry the plates that stand taller than they are wide — the arch that opens the page and its shorter companion on a wide screen, the stylist monograms, the one upright photograph — while every wide photograph keeps soft corners instead, because a semicircle cap on a landscape shot eats the picture. Everything a studio usually pads with cards and stock claims is set as ruled type: one continuous dotted-leader menu that filters by family, a roster you can book from directly, and a request that stops short of pretending to send.",
-    designDirection: ["Soft luxury", "Arch motif", "Didone editorial", "Calm"],
-    keySections: ["Hero", "Statement", "Price Card", "Roster", "Booking", "Gallery", "Visit"],
-    mobileNotes: [
-      "The header nav is a hamburger sheet on the phone and tablet frames and only splits around the wordmark at the desktop frame",
-      "The live appointment stub moves above the choices, so a phone reads its own summary first",
-      "A sticky Book bar keeps the appointment reachable with one thumb",
-      "Each gallery plate keeps the ratio measured from its file, so no photograph is cropped and no line jumps as it loads",
-    ],
-    conversionNotes: [
-      "One booking destination — the header pill, the hero, the sheet, and the sticky bar all land on the same section",
-      "The roster's Book with links fill the stylist step before the flow even opens",
-      "Menu chips filter and recount in place, so a visitor finds their service without hunting a tab",
-      "The receipt repeats what was chosen and says plainly that no chair is held",
-    ],
-    accent: "#B5776A",
-    palette: { bg: "#F7F2EC", fg: "#2B221D", accent: "#B5776A", surface: "#E9DFD3" },
-    content: {
-      /* The salon layout renders nothing from the shared local-service base
-         except `navName`, which its header and footer both draw. Everything else
-         it shows lives under `salon` below. See ruling H. */
-      navName: "Maison Lune",
-      formNote:
-        "This page is part of a concept website. Nothing was sent and no chair was held — the request stopped in your browser.",
-      imageSource:
-        "Photography: Tile Merchant Ireland, Franco Debartolo, Mohamed B., Ksenia Pixelesse and iridial — all used under the Unsplash License. This is a fictional studio; the rooms shown are not this studio's.",
-
-      salon: {
-        announcement: "Now booking, Tuesday to Saturday",
-        hero: {
-          src: "/demos/maison-lune/hero.webp",
-          alt: "The studio floor: tan styling chairs beneath arched gold mirrors, a wash basin in the foreground, no people.",
-          eyebrow: "Hair & Beauty Studio",
-          headline: "A quiet room for",
-          accent: "slow appointments.",
-          sub: "Few chairs, unhurried appointments, and a menu kept short so each one gets the time it needs.",
-          note: "Appointments open",
-          ctaPrimary: "Book an Appointment",
-          ctaSecondary: "See the Menu",
-          inset: {
-            src: "/demos/maison-lune/marble.webp",
-            alt: "Two tan styling chairs on a polished marble floor, seen from behind.",
-          },
-          spine: "Hair · Colour · Skin · Nails",
-        },
-        statement:
-          "We are a small studio. We would rather do fewer people well than fill a calendar — so a haircut is not squeezed between the appointments on either side of it.",
-        statementSign: "The rule the room is kept by",
-        menu: {
-          eyebrow: "The Menu",
-          title: "What we do",
-          lead: "A short menu, kept short on purpose. Every treatment is priced from a floor figure and timed so it does not have to be rushed.",
-          all: "Everything",
-          countNoun: "treatments shown",
-          families: [
-            {
-              label: "Hair",
-              items: [
-                { name: "Cut & Style", desc: "A consultation, a wash, and a cut you can live with.", duration: "60 min", price: "from $65" },
-                { name: "Blow-dry", desc: "Prepped, dried and finished to leave the chair ready.", duration: "40 min", price: "from $45" },
-                { name: "Keratin smoothing", desc: "A frizz-taming finish that settles over the next few washes.", duration: "150 min", price: "from $180" },
-              ],
-            },
-            {
-              label: "Colour",
-              items: [
-                { name: "Root retouch", desc: "A grown-out root line, blended back into the length.", duration: "75 min", price: "from $85" },
-                { name: "Balayage", desc: "Hand-painted, sun-kissed ends with no hard line.", duration: "180 min", price: "from $210" },
-                { name: "Gloss & tone", desc: "A sheer colour bath that brings back shine.", duration: "45 min", price: "from $55" },
-              ],
-            },
-            {
-              label: "Skin",
-              items: [
-                { name: "Express facial", desc: "Cleanse, exfoliate and hydrate in half an hour.", duration: "30 min", price: "from $50" },
-                { name: "Signature facial", desc: "A longer treatment built around what your skin needs.", duration: "75 min", price: "from $95" },
-                { name: "Brow shape", desc: "Waxed or threaded, and tidied to suit your face.", duration: "20 min", price: "from $24" },
-              ],
-            },
-            {
-              label: "Nails",
-              items: [
-                { name: "Classic manicure", desc: "Shape, cuticle care and a coat of polish.", duration: "45 min", price: "from $38" },
-                { name: "Gel overlay", desc: "A longer-wearing finish that cures under a lamp.", duration: "60 min", price: "from $55" },
-                { name: "Spa pedicure", desc: "A soak, an exfoliation and a clean finish.", duration: "60 min", price: "from $60" },
-              ],
-            },
-          ],
-          footnotes: [
-            "A colour service is quoted after a look at your hair's history. The figure on this card is where that conversation starts, not where it ends.",
-            "A longer treatment runs over its listed time when a correction turns up. The studio tells you before it begins, never after.",
-          ],
-          plate: {
-            src: "/demos/maison-lune/tools.webp",
-            alt: "Nail scissors, files and wooden sticks laid out on a soft grey towel.",
-            caption: "The tools, laid out before the first client",
-            /* Measured from the file, not chosen for the layout. */
-            ratio: "800/531",
-          },
-        },
-        booking: {
-          eyebrow: "Appointments",
-          title: "Book in four steps",
-          body: "Pick what you would like, who you would like to see, and when. Four steps, and a summary that fills itself in as you go.",
-          steps: ["Service", "Stylist", "Time", "Review"],
-          /* Tuesday to Saturday: the studio is shut on Mondays, so a Monday chip
-             would offer a day the room is closed. The last slot ends before the
-             earliest closing time on the board. */
-          days: ["Tue 13", "Wed 14", "Thu 15", "Fri 16", "Sat 17"],
-          times: ["09:30", "11:00", "13:15", "15:00"],
-          submit: "Request Appointment",
-          note: "Concept site — this booking does not send anywhere and no chair is held.",
-          terms: [
-            {
-              label: "Deposit",
-              body: "Colour and keratin bookings ask for a deposit ahead of the appointment. The studio confirms the amount when it replies, before anything is taken.",
-            },
-            {
-              label: "Running late",
-              body: "A treatment needs the time it was given. Past a quarter of an hour the chair is usually shortened rather than pushed back into the next appointment.",
-            },
-          ],
-          confirm: {
-            title: "Request noted",
-            lead: "This is the request as the page has it — the service, the stylist and the time picked in the three steps above.",
-            edit: "Change it",
-          },
-          ui: {
-            summary: "Your appointment",
-            back: "Back",
-            next: "Continue",
-            unchosen: "Not chosen yet",
-            needChoice: "Make a choice to continue",
-            legends: {
-              service: "What are you coming in for?",
-              stylist: "Anyone in particular?",
-              time: "When suits you?",
-            },
-            slotsNote:
-              "These days and slots belong to the concept, not to a diary. A real studio would show only the times its chairs are actually free.",
-            bookWithAria: "Request this stylist",
-          },
-        },
-        team: {
-          eyebrow: "The Studio",
-          title: "Who you'll see",
-          intro: "Three stylists share the room. You can ask for a favourite, or let the studio pair you with whoever suits the service.",
-          bookWith: "Book with",
-          takes: "Takes",
-          members: [
-            {
-              name: "Noor",
-              initials: "N",
-              role: "Senior Stylist",
-              focus: "Cuts, curl re-shaping and colour correction.",
-              sees: ["Cut & Style", "Blow-dry", "Keratin smoothing"],
-            },
-            {
-              name: "Elise",
-              initials: "E",
-              role: "Colour Specialist",
-              focus: "Balayage, lived-in blonde and toning.",
-              sees: ["Root retouch", "Balayage", "Gloss & tone"],
-            },
-            {
-              name: "Priya",
-              initials: "P",
-              role: "Skin & Nails",
-              focus: "Facials, brow shaping and gel finishes.",
-              sees: ["Signature facial", "Brow shape", "Gel overlay"],
-            },
-          ],
-        },
-        gallery: {
-          eyebrow: "The Room",
-          title: "Inside the studio",
-          lead: "A working room, photographed between appointments. No faces and no products posed as endorsements.",
-          items: [
-            { src: "/demos/maison-lune/stations.webp", alt: "A row of tan styling chairs and arched gold mirrors along a cream wall.", caption: "The styling floor", ratio: "1200/800" },
-            { src: "/demos/maison-lune/braid.webp", alt: "Fresh cornrow braids seen from behind, mid-style.", caption: "Braiding & texture", ratio: "880/1100" },
-            { src: "/demos/maison-lune/corner.webp", alt: "A white lounge chair and a round standing mirror in a cream alcove.", caption: "The quiet corner", ratio: "1200/800" },
-            { src: "/demos/maison-lune/towels.webp", alt: "A stack of rolled white towels warming in sunlight on a wooden bench.", caption: "Fresh from the wash", ratio: "1200/802" },
-          ],
-        },
-        studio: {
-          eyebrow: "How we work",
-          title: "A few things we keep to",
-          points: [
-            { title: "Quality products", body: "We use the same lines on our own hair and skin, and we only stock what we would recommend to a friend." },
-            { title: "A calm space", body: "Low music, daylight, and no two appointments scheduled back-to-back on the same chair." },
-            { title: "Consultation first", body: "Colour and longer treatments start with a short talk about your hair, so nothing begins before you agree to it." },
-          ],
-        },
-        offer: {
-          title: "New here?",
-          body: "Your first visit includes a short consultation and a take-home sample, chosen at the chair.",
+        /* --- Marigold-only bands the Ember layout never carried -------------- */
+        faqLede: "Still wondering? Call us at (312) 555-0129.",
+        faqEyebrow: "A few useful things",
+        specials: {
+          title: "Tonight at Marigold",
+          badge: "Example",
+          copy: "Charred squash with coconut, lime leaf and toasted seeds. A sample daily special for this concept—not a live availability update.",
         },
         visit: {
-          eyebrow: "Visit",
-          title: "Finding the studio",
-          address: ["Maison Lune", "142 Alder Street", "Springfield"],
-          hours: [
-            { day: "Mon", time: "Closed" },
-            { day: "Tue", time: "09:00 – 18:00" },
-            { day: "Wed", time: "09:00 – 18:00" },
-            { day: "Thu", time: "09:00 – 18:00" },
-            { day: "Fri", time: "09:00 – 18:00" },
-            { day: "Sat", time: "09:00 – 16:00" },
-            { day: "Sun", time: "Closed" },
-          ],
-          phone: { display: "(555) 555-0187", href: "tel:+15555550187" },
-          arriving:
-            "There is no reception desk, so the door stays unlocked through the hours above and the stylist comes out to meet you. Alder Street is one-way from the corner, which puts the entrance on the far side of the building.",
+          eyebrow: "Find your way to us",
+          title: "Come on over.",
+          timezoneLabel: "Chicago local time",
+          callLabel: "Call (312) 555-0129",
+          mapCardName: "Marigold Kitchen",
+          mapCardNote: "Illustrated map placeholder",
+        },
+        footer: {
+          copy: "Modern South Asian cooking in Chicago’s West Loop. A fictional restaurant concept made for this demo.",
+          legal: "© Marigold Kitchen · Fictional concept · Prices and sample specials are illustrative.",
+          badge: "Concept demo · Not a live restaurant",
+          findTitle: "Find us",
+          hoursTitle: "Hours · Chicago time",
+        },
+        mobileBar: {
+          /* AUTHORED (not transcribed): the source's bar has no name of its own;
+             this one is named for what it is, so its accessible label does not
+             have to borrow one action's word for three actions. */
+          label: "Quick actions",
+          call: "Call",
+          visit: "Visit",
+          reserve: "Reserve",
         },
       },
     },
   },
   {
     slug: "rowanwood-dental",
-    index: "04",
+    index: "03",
     demo: "dental",
     name: "Rowanwood Dental",
     businessType: "Dental Practice",
@@ -2563,26 +2605,113 @@ export const projects: Project[] = [
           ],
           ctaPrimary: "Request a visit",
           ctaSecondary: "I'm in pain today",
-          caption: "The appointment that works is the one nobody in it is late for.",
+          photo: "room",
+          newPatientCta: "New here — start with the hour",
         },
-        slots: {
-          kind: "Image slot",
-          hero: {
-            note: "Room two laid out for the first appointment of the day: chair, operating light, instrument trolley, daylight in the far window. Nobody in it.",
-            ratio: "4 / 5",
+        /* The three files ruling A puts on this page. Each alt says what the frame
+           shows and each caption says what it is not: none of these rooms belongs
+           to Rowanwood, because Rowanwood has no rooms. Read against
+           public/demos/CREDITS.md, which carries the photographer, the licence and
+           the reason the fourth file on disk stays off the page. */
+        photos: {
+          room: {
+            alt: "An empty treatment room: a grey-and-white dental chair seen from behind, an operating light on an arm, the delivery unit, and a window with a blind.",
+            caption: "Concept photography. A stock room standing in for one at a practice that does not exist — nothing in this frame belongs to Rowanwood.",
           },
-          nerves: {
-            note: "The quiet end of the waiting room — a low armchair, a lamp on a side table, a plant by the window, afternoon light. Nobody in it.",
-            ratio: "4 / 3",
+          waiting: {
+            alt: "An empty waiting area: teal sofas, a plant by the window, a slatted reception desk, and a window looking into a treatment room.",
+            caption: "Concept photography. Somebody else's waiting room, used to show the shape of the first ten minutes.",
           },
-          visit: {
-            note: "The front desk seen from the corridor, with both treatment-room doors behind it and no patient in the building.",
-            ratio: "4 / 3",
+          "practice-room": {
+            alt: "An empty room with a blue-upholstered dental chair and a practitioner's stool, and a yellow-and-blue abstract painting on the wall.",
+            caption: "Concept photography. Not this practice's building — there is no such building to photograph.",
           },
-          map: {
-            note: "A street map centred on Rowanwood House, 4 Ashgrove Lane, with the two bays marked. Replaced by the live embed in a real build.",
-            ratio: "16 / 9",
-          },
+        },
+        newPatient: {
+          eyebrow: "New here",
+          title: "What the first visit actually is.",
+          lead:
+            "It is booked as a full hour of examination and conversation, and nothing is treated on it. You leave with the options written down and nobody waiting for an answer in the chair.",
+          cards: [
+            {
+              title: "Booked as an hour",
+              body: "Sixty minutes of looking and talking, with room in it for the questions you have not thought of yet. The day is booked in hours rather than packed in tens.",
+              link: "What a visit is like",
+              target: "differences",
+            },
+            {
+              title: "A plan, then a figure",
+              body: "The options are written down with a figure against each line, and nothing starts while you are still deciding. No figure is quoted before the looking.",
+              link: "See the work and the times",
+              target: "services",
+            },
+            {
+              title: "Nervous? Say so now",
+              body: "Say it at the desk and it changes the appointment: the quietest slot in the day, a hand that stops everything, each step said before it happens.",
+              link: "Put it in the slip",
+              target: "booking",
+            },
+          ],
+          caveat:
+            "Rowanwood is a concept website, not a practice. The hours, the address and the number on this page are invented for the fiction, so nothing here can be booked and nobody is waiting for your call.",
+        },
+        services: {
+          eyebrow: "The work",
+          title: "Checks, cleaning, and the first hour.",
+          lead:
+            "Three of the rows the treatment index carries, each with the chair time it is booked for. The time is roughly how long the chair is occupied, not how long you spend in the building.",
+          items: [
+            {
+              name: "New-patient examination",
+              line: "A full look, a conversation about what bothers you, and nothing treated.",
+              time: "60 min",
+              photo: "room",
+              link: "Point at it first",
+              target: "planner",
+            },
+            {
+              name: "Check-up",
+              line: "Teeth, gums, jaw and soft tissue, then what has changed since last time.",
+              time: "25 min",
+              photo: "waiting",
+              link: "Asked at the desk",
+              target: "faq",
+            },
+            {
+              name: "Clean and polish",
+              line: "Tartar off the surface, stains off, and the reason they came back.",
+              time: "40 min",
+              photo: "practice-room",
+              link: "Request a visit",
+              target: "booking",
+            },
+          ],
+          cta: "Not sure which one it is? Point at the part instead",
+          target: "planner",
+        },
+        differences: {
+          eyebrow: "A visit here",
+          title: "Four things you can check on the day.",
+          lead:
+            "Each one is something the room either does or does not do, rather than a line to believe in a brochure. All four are printed elsewhere on this page; this band only puts them together.",
+          points: [
+            {
+              title: "The first hour is an hour",
+              body: "Sixty minutes booked as examination and conversation, with nothing treated on that visit.",
+            },
+            {
+              title: "One dentist, start to finish",
+              body: "The one who looks at the tooth in March is the one who finishes it in May, so nobody re-explains their own history.",
+            },
+            {
+              title: "Two slots held back for pain",
+              body: "Kept for the afternoon and until four o'clock — which is why the advice on pain is to ring rather than fill anything in.",
+            },
+            {
+              title: "Step-free from the lane",
+              body: "Step-free entrance from Ashgrove Lane, a lift to the first floor, and two bays outside, one of them accessible.",
+            },
+          ],
         },
         planner: {
           eyebrow: "01 — Point at it",
@@ -2786,6 +2915,8 @@ export const projects: Project[] = [
           noneTitle: "No yes at all — which is useful",
           noneBody:
             "Then this is an appointment rather than a race. If you have been putting one of those off, the slip is at the bottom of this page and takes about a minute to fill in.",
+          exitNote:
+            "Whichever of these you are on: nothing is booked here. No appointment exists, nothing you tapped left this page, and the practice has not been told anything.",
           disclaimer:
             "This is a page reading your words, not a clinician reading your mouth. If you are not sure which answer you are on, take the more urgent one and ring.",
           slipLabel: "Say so in the slip",

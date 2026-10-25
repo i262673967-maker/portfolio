@@ -248,6 +248,7 @@ export function DemoImage({
   imgClassName = "",
   sizes,
   preload = false,
+  photoHook,
 }: {
   src: string;
   alt: string;
@@ -255,6 +256,10 @@ export function DemoImage({
   imgClassName?: string;
   sizes: string;
   preload?: boolean;
+  /* Rowanwood's behaviour harness addresses each of its three approved plates by
+     name on the <img> itself (img[data-dw-photo="room"]), so the hook has to be
+     able to travel through this wrapper. No other concept uses it. */
+  photoHook?: string;
 }) {
   return (
     <div
@@ -270,6 +275,7 @@ export function DemoImage({
         sizes={sizes}
         preload={preload}
         fetchPriority={preload ? "high" : "auto"}
+        {...(photoHook ? { "data-dw-photo": photoHook } : {})}
         className={`object-cover ${imgClassName}`}
       />
     </div>

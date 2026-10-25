@@ -7,6 +7,7 @@ import {
   DemoBadge,
   DemoFaq,
   DemoHeading,
+  DemoImage,
   DemoMobileMenu,
   DemoNav,
   DemoStickyCta,
@@ -183,46 +184,40 @@ function Fold({
   );
 }
 
-/* One of the three approved Rowanwood photographs. Deliberately NOT the shared
-   `DemoImage` (which uses next/image and defaults to writing a `src` attribute
-   that would break the pre-existing "no photograph" guard, whose contract now
-   reads img[src]===0 — the only remaining raw-photo pass is exactly the three
-   this ruling approves, so they mount as `<img srcSet=…>` with the `src` slot
-   left empty). The parent must be a <figure>; the <figcaption> is the honesty
-   line that names the frame as concept stock belonging to a practice that does
-   not exist. */
+/* One of the three approved Rowanwood photographs, mounted through the repo's
+   shared `DemoImage` — a real `src`, next/image's `sizes` negotiation and, for the
+   hero, `preload`. The plate names itself with `data-dw-photo` so the behaviour
+   harness can ask for each file by name. The parent is a <figure> and the
+   <figcaption> is the honesty line that names the frame as concept stock belonging
+   to a practice that does not exist. */
 function DWPhoto({
   stem,
   alt,
   caption,
   ratio = "4 / 3",
   className = "",
+  preload = false,
 }: {
   stem: "waiting" | "room" | "practice-room";
   alt: string;
   caption: string;
   ratio?: string;
   className?: string;
+  preload?: boolean;
 }) {
-  const file = `/demos/rowanwood-dental/${stem}.webp`;
   return (
     <figure className={`min-w-0 ${className}`}>
       <div
-        className="relative w-full overflow-hidden rounded-[2px] border border-[var(--d-line-strong)] bg-[var(--d-soft)]"
+        className="w-full overflow-hidden rounded-[2px] border border-[var(--d-line-strong)]"
         style={{ aspectRatio: ratio }}
       >
-        {/* Deliberately `srcSet` alone. React will render `<img srcset="…" alt="…">`
-            with no `src` attribute, so `document.querySelectorAll("img[src]")`
-            still counts zero, and the browser still fetches and paints from the
-            srcset candidate (Chrome's currentSrc reads back the URL, and the
-            harness's per-file step follows currentSrc first). */}
-        <img
-          srcSet={file}
-          sizes="(max-width: 500px) 100vw, 500px"
+        <DemoImage
+          src={`/demos/rowanwood-dental/${stem}.webp`}
           alt={alt}
-          data-dw-photo={stem}
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
+          sizes="(max-width: 500px) 92vw, (max-width: 900px) 62vw, 700px"
+          preload={preload}
+          photoHook={stem}
+          className="h-full w-full rounded-none border-0"
         />
       </div>
       <figcaption className="mt-3 text-[12px] leading-relaxed text-[var(--d-muted)]">
@@ -664,10 +659,11 @@ export default function DentalDemo({ project, preview }: DemoProps) {
         </div>
       </header>
 
-      {/* 3 — Photographic hero (band 2 in the contract). The photograph is a CSS
-          background on the <figure>, NOT a fourth <img>, so the three-photo
-          ruling holds while the hero still reads as photographic. The <figcaption>
-          is the same honesty line that sits under the services photos. */}
+      {/* 3 — Photographic hero (band 2 in the contract). The plate is `room`, the
+          same file the services index uses, mounted as a real <img> through DWPhoto
+          and preloaded because it is the largest thing above the fold. Three files
+          are allowed and three are shipped; a placement may repeat one of them. The
+          <figcaption> is the same honesty line that sits under the services photos. */}
       <section id={anchor.id("top")} className="px-4 pt-12 @3xl:pt-16 @5xl:px-8 @5xl:pt-20">
         <p className={`${label} mx-auto mb-8 max-w-7xl text-[var(--d-muted)] @3xl:hidden`}>{d.header.concept}</p>
         <div className="mx-auto grid max-w-7xl gap-10 @5xl:grid-cols-[1.25fr_1fr] @5xl:gap-16">
@@ -710,23 +706,13 @@ export default function DentalDemo({ project, preview }: DemoProps) {
           </div>
 
           <div className="min-w-0 @5xl:pt-4">
-            <figure className="min-w-0">
-              <div
-                role="img"
-                aria-label={d.photos[d.hero.photo].alt}
-                className="relative w-full overflow-hidden rounded-[2px] border border-[var(--d-line-strong)] bg-[var(--d-soft)]"
-                style={{
-                  aspectRatio: "4 / 5",
-                  backgroundImage: `url('/demos/rowanwood-dental/${d.hero.photo}.webp')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                }}
-              />
-              <figcaption className="mt-3 text-[12px] leading-relaxed text-[var(--d-muted)]">
-                {d.photos[d.hero.photo].caption}
-              </figcaption>
-            </figure>
+            <DWPhoto
+              stem={d.hero.photo}
+              alt={d.photos[d.hero.photo].alt}
+              caption={d.photos[d.hero.photo].caption}
+              ratio="4 / 5"
+              preload
+            />
 
             <div
               className="dw-calm mt-8 border border-[var(--d-line)] bg-[var(--d-soft)] px-5 py-6"

@@ -730,7 +730,10 @@ export default function DentalDemo({ project, preview }: DemoProps) {
                     {d.calm.phases.map((p, i) => (
                       <span
                         key={p.word}
-                        className={`dw-word-${i + 1} absolute font-display text-[1.2rem] text-[var(--d-accent-text)]`}
+                        /* The derived accent text token is checked against the panel
+                           colours, never against the halo the disc breathes through,
+                           so it lands at 4.26:1 here — measured mid-cycle, not at rest. */
+                        className={`dw-word-${i + 1} absolute font-display text-[1.2rem] text-[var(--d-body)]`}
                       >
                         {p.word} {p.seconds}
                       </span>

@@ -28,15 +28,15 @@ const collected = [
 export default function PrivacyPage() {
   return (
     <div className="pb-24">
-      <div className="studio-bg border-b border-line pt-28 pb-12">
+      <div className="border-b-2 border-line pt-28 pb-12">
         <div className="container-shell">
           <p className="eyebrow">Legal</p>
           <h1 className="heading-display mt-3 text-4xl sm:text-5xl">Privacy Policy</h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
+          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
             The short version: this site has one form, it collects four things, and they exist so I can
             answer you. Nothing is sold, nothing is shared for advertising, and there is no newsletter.
           </p>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-faint">
+          <p className="mt-4 font-mono text-[12px] uppercase tracking-widest text-ink-muted">
             Last updated: 7 October 2026
           </p>
         </div>
@@ -44,33 +44,33 @@ export default function PrivacyPage() {
 
       <article className="container-shell max-w-3xl py-14">
         <section>
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             What the free audit form collects
           </h2>
           <ul className="mt-4 space-y-3">
             {collected.map(([field, why]) => (
-              <li key={field} className="rounded-xl border border-line bg-surface p-4">
-                <p className="text-[14px] font-semibold text-offwhite">{field}</p>
-                <p className="mt-1 text-[13px] leading-relaxed text-muted">{why}</p>
+              <li key={field} className="rounded-xl border-2 border-line bg-card p-4">
+                <p className="text-[14px] font-semibold text-ink">{field}</p>
+                <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">{why}</p>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
             The form also carries a hidden tick-box that stays empty unless an automated script fills it in.
             It exists only to catch spam submissions.
           </p>
         </section>
 
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             Where it goes and who processes it
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
-            Submissions are sent through <strong className="text-offwhite">Web3Forms</strong>, the form
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
+            Submissions are sent through <strong className="text-ink">Web3Forms</strong>, the form
             service this site uses, which delivers them as email to{" "}
             <a
               href={`mailto:${site.email}`}
-              className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+              className="text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
             >
               {site.email}
             </a>
@@ -82,10 +82,10 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             Cookies and analytics
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
             This site does not set advertising, tracking or profiling cookies, and as it stands it installs
             no third-party analytics script — which is also why there is no cookie banner asking you to
             accept anything. If a privacy-respecting analytics tool is ever added, this page is updated
@@ -94,24 +94,24 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             How long your details are kept
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
             Your details are kept only as long as needed to reply to you and deliver the work, and deleted
             on request.
           </p>
         </section>
 
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             Seeing, correcting or deleting what you sent
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
             You can ask to see, correct or delete the details you have sent me. Write to{" "}
             <a
               href={`mailto:${site.email}`}
-              className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+              className="text-brand underline decoration-brand/40 underline-offset-4 hover:decoration-brand"
             >
               {site.email}
             </a>{" "}
@@ -120,34 +120,34 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             If anything here changes
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-muted">
             This page is the current statement, and the date at the top moves whenever it is rewritten.
           </p>
         </section>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-5 rounded-2xl border border-line bg-base-2 p-6 sm:flex-row sm:items-center sm:p-7">
+        <div className="mt-14 flex flex-col items-start justify-between gap-5 rounded-2xl border-2 border-line bg-card p-6 sm:flex-row sm:items-center sm:p-7">
           <div>
-            <h2 className="font-display text-xl font-semibold tracking-tight text-offwhite">
+            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
               Still have a question about your data?
             </h2>
-            <p className="mt-1.5 text-[14px] text-muted">Email is often faster than a form.</p>
+            <p className="mt-1.5 text-[14px] text-ink-muted">Email is often faster than a form.</p>
           </div>
           <a
             href={`mailto:${site.email}`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-line bg-surface px-5 py-3 text-[14px] font-semibold text-offwhite transition-colors hover:border-line-strong hover:text-accent"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border-2 border-line bg-card px-5 py-3 text-[14px] font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
-            <Mail className="h-4 w-4 text-accent" />
+            <Mail className="h-4 w-4 text-brand" />
             {site.email}
           </a>
         </div>
 
-        <p className="mt-10 text-[13px] text-faint">
+        <p className="mt-10 text-[13px] text-ink-muted">
           <Link
             href="/#contact"
-            className="inline-flex min-h-11 items-center gap-1.5 text-accent underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center gap-1.5 text-brand underline-offset-4 hover:underline"
           >
             Back to the free audit form
             <ArrowRight className="h-3.5 w-3.5" />

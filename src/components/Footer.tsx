@@ -29,7 +29,7 @@ const cols = [
 
 export default function Footer() {
   return (
-    <footer id="footer" className="border-t border-line bg-base-2">
+    <footer id="footer" className="bg-navy">
       <div className="container-shell py-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
@@ -41,12 +41,14 @@ export default function Footer() {
                 height={36}
                 className="h-9 w-9 rounded-full object-contain"
               />
-              <span className="font-display text-[1rem] font-semibold tracking-tight">{site.brand}</span>
+              <span className="font-display text-[1rem] font-bold tracking-tight text-white">
+                {site.brand}
+              </span>
             </div>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.coreMessage}</p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">{site.coreMessage}</p>
             <a
               href={`mailto:${site.email}`}
-              className="mt-4 inline-flex min-h-6 items-center gap-2 text-sm text-accent underline-offset-4 hover:underline"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-mark underline-offset-4 hover:underline"
             >
               <Mail className="h-4 w-4" />
               {site.email}
@@ -55,7 +57,7 @@ export default function Footer() {
                 sections, not to the footer chrome. */}
             <Link
               href="/#contact"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-offwhite transition-colors hover:text-accent"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-white link-pop hover:text-mark"
             >
               {cta.nav}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -64,11 +66,14 @@ export default function Footer() {
 
           {cols.map((col) => (
             <div key={col.title}>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{col.title}</h3>
+              <h3 className="font-mono text-[12px] uppercase tracking-widest text-mark">{col.title}</h3>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-sm text-muted transition-colors hover:text-offwhite">
+                    <Link
+                      href={href}
+                      className="inline-flex min-h-11 items-center text-sm text-white/70 link-pop hover:text-white"
+                    >
                       {label}
                     </Link>
                   </li>
@@ -78,7 +83,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/15 pt-6 text-[12px] text-white/70 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} {site.brand}. All rights reserved.</span>
           <span className="font-mono uppercase tracking-widest">Concept projects shown are fictional · not live clients</span>
         </div>

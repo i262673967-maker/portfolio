@@ -20,6 +20,37 @@ const nextConfig: NextConfig = {
      the wrong project root without this. */
   turbopack: { root: path.join(__dirname) },
 
+  /* More concepts have left the showcase since these URLs were first published:
+     the renovation studio and the electrician were dropped outright, the plumbing
+     concept was replaced whole by a different one, the e-commerce site was renamed
+     into a beauty studio which has itself since been dropped, and the restaurant
+     has been rebuilt under a new identity. Every old address is permanently
+     redirected rather than left to 404 — the renamed and replaced pairs to the
+     route that carries that work now, the retired concepts to the gallery, where
+     the three remaining concepts live. Nothing here redirects to a route that does
+     not answer: a retired slug goes to its final destination in one hop, never to
+     another retired slug that would only fail a second later. A redirect beats a
+     dead end for anyone who bookmarked or linked one, and it keeps a removed
+     concept unreachable through an old route.
+     `permanent: true` is a 308, which keeps the request method and tells a crawler
+     the address has moved for good. */
+  async redirects() {
+    return [
+      { source: "/work/maison-lifestyle", destination: "/projects", permanent: true },
+      { source: "/demos/maison-lifestyle", destination: "/projects", permanent: true },
+      { source: "/work/maison-lune", destination: "/projects", permanent: true },
+      { source: "/demos/maison-lune", destination: "/projects", permanent: true },
+      { source: "/work/ember-restaurant", destination: "/work/marigold-kitchen", permanent: true },
+      { source: "/demos/ember-restaurant", destination: "/demos/marigold-kitchen", permanent: true },
+      { source: "/work/flowright-plumbing", destination: "/work/blueline-plumbing", permanent: true },
+      { source: "/demos/flowright-plumbing", destination: "/demos/blueline-plumbing", permanent: true },
+      { source: "/work/atlas-renovation", destination: "/projects", permanent: true },
+      { source: "/demos/atlas-renovation", destination: "/projects", permanent: true },
+      { source: "/work/voltwise-electrical", destination: "/projects", permanent: true },
+      { source: "/demos/voltwise-electrical", destination: "/projects", permanent: true },
+    ];
+  },
+
   /* Baseline response headers on every route, including the prerendered pages
      and /_next assets. Deliberately minimal: the CSP carries frame-ancestors
      only, so nothing restricts the inline styles the device frames and the

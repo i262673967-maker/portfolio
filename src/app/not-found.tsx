@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <SiteChrome>
-      <section className="studio-bg relative flex min-h-[70vh] items-center overflow-hidden pt-28 pb-16">
+      <section className="relative flex min-h-[70vh] items-center overflow-hidden pt-28 pb-16">
         <div className="container-shell relative">
           <p className="eyebrow">404</p>
-          <h1 className="heading-display mt-4 text-[2.25rem] leading-[1.05] sm:text-5xl">
+          <h1 className="heading-display mt-4 text-[2.25rem] leading-[1.05] text-ink sm:text-5xl">
             That page isn&rsquo;t here.
           </h1>
-          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted sm:text-[17px]">
+          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ink-muted sm:text-[17px]">
             The link may be out of date, or the page moved. Nothing is lost — the work and the way to
             start a project are both one click away.
           </p>
@@ -29,19 +29,19 @@ export default function NotFound() {
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/projects"
-              className="group inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)]"
+              className="group inline-flex min-h-11 items-center justify-center gap-2 btn-pop bg-brand px-6 py-3.5 text-[15px] font-semibold text-on-brand"
             >
               <Search className="h-4 w-4" /> Browse concept projects
             </Link>
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-line-strong px-6 py-3.5 text-[15px] font-semibold text-offwhite transition-colors hover:bg-white/5"
+              className="inline-flex min-h-11 items-center justify-center gap-2 btn-pop bg-paper px-6 py-3.5 text-[15px] font-semibold text-ink"
             >
               <Home className="h-4 w-4" /> {site.brand} home
             </Link>
             <Link
               href="/#contact"
-              className="group inline-flex items-center justify-center gap-2 rounded-full px-2 py-3.5 text-[15px] font-semibold text-muted transition-colors hover:text-offwhite"
+              className="group inline-flex min-h-11 items-center justify-center gap-2 px-2 py-3.5 text-[15px] font-semibold text-brand transition-colors hover:underline"
             >
               {cta.nav}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

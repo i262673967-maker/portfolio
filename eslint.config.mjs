@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Already gitignored: one-off measurement harnesses, not app code.
+    "scratch/**",
   ]),
 ]);
 

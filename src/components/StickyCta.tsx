@@ -8,7 +8,11 @@ import { cta } from "@/lib/data";
 /* Fixed bottom action for phones only. It stays out of the way: hidden above
    the fold, hidden while the mobile menu is open (CSS keyed on body[data-nav-open]),
    hidden once the contact form is on screen so it never covers the form, and hidden
-   over the footer so it never covers the last content on the page. */
+   over the footer so it never covers the last content on the page.
+
+   It also stands down while the hero is on screen — the header already carries the
+   same action up there — and over the closing yellow band, whose own button is the
+   same destination. Two copies of one button on one screen is noise. */
 export default function StickyCta() {
   const [show, setShow] = useState(false);
 
@@ -36,7 +40,7 @@ export default function StickyCta() {
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    for (const id of ["contact", "footer"]) {
+    for (const id of ["home", "final-cta", "contact", "footer"]) {
       const el = document.getElementById(id);
       if (el) io.observe(el);
     }
@@ -53,13 +57,13 @@ export default function StickyCta() {
       } transition-opacity duration-300`}
       aria-hidden={!show}
     >
-      <div className="border-t border-line bg-base/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
+      <div className="border-t-2 border-line bg-paper px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <Link
           href="/#contact"
           tabIndex={show ? undefined : -1}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-3.5 text-[15px] font-semibold text-ink"
+          className="btn-pop flex min-h-11 w-full items-center justify-center gap-2 bg-brand px-4 py-2 text-[13px] font-semibold text-on-brand"
         >
-          <Search className="h-4 w-4" /> {cta.primary}
+          <Search className="h-4 w-4" /> {cta.nav}
         </Link>
       </div>
     </div>

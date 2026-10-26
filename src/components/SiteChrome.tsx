@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import StickyCta from "./StickyCta";
 import Footer from "./Footer";
+import Motion from "./Motion";
 
 /* The site shell in one place: the (site) layout uses it for every page, and the
    root not-found page uses it so an unmatched URL still gets the nav, the footer
@@ -10,7 +11,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     <div className="flex min-h-screen flex-col">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-[14px] focus:font-semibold focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-20 focus:z-[60] focus:rounded-full focus:bg-brand focus:px-5 focus:py-3 focus:text-[14px] focus:font-semibold focus:text-on-brand"
       >
         Skip to content
       </a>
@@ -20,6 +21,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <StickyCta />
+      {/* Drives the motion CSS cannot do on its own: the observer behind the
+          reveal fallback and the marquee pause, and the cursor spotlight. */}
+      <Motion />
     </div>
   );
 }

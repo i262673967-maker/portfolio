@@ -1,19 +1,18 @@
 import type { ComponentType } from "react";
 import type { DemoKey, Project } from "@/lib/data";
 import type { DemoProps } from "./_shared";
-import LocalServiceDemo from "./LocalServiceDemo";
-import EcommerceDemo from "./EcommerceDemo";
 import PlumberDemo from "./PlumberDemo";
 import RestaurantDemo from "./RestaurantDemo";
+import DentalDemo from "./DentalDemo";
 
 export const demoRegistry: Record<DemoKey, ComponentType<DemoProps>> = {
-  renovation: LocalServiceDemo,
-  /* FlowRight is a bright concept site, so it gets its own layout rather than
-     a recoloured copy of the dark local-service one. */
+  /* BlueLine is a bright concept site built from a supplied design, so it gets its
+     own layout rather than a recoloured copy of the dark local-service one. */
   plumber: PlumberDemo,
-  electrician: LocalServiceDemo,
-  ecommerce: EcommerceDemo,
   restaurant: RestaurantDemo,
+  /* Rowanwood is a printed leaflet: a status board, a hairline treatment index
+     and a two-column section rhythm. It shares nothing with the other two. */
+  dental: DentalDemo,
 };
 
 /* preview=true (the default) means the concept is shown as a preview inside a

@@ -15,13 +15,13 @@ export default function ProjectCard({
   return (
     <div
       className="reveal"
-      style={{ "--reveal-delay": `${(i % 3) * 0.08}s`, "--reveal-y": "24px" } as React.CSSProperties}
+      style={{ "--reveal-step": `${Math.min(i, 6)}`, "--reveal-y": "24px" } as React.CSSProperties}
     >
       {/* The card previews a website that contains its own links, so the card
           itself can't be an <a>. A stretched overlay keeps it clickable. */}
-      <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_30px_70px_-30px_rgba(0,0,0,0.9)]">
-        <div className="relative overflow-hidden border-b border-line bg-base-2 p-3">
-          <span className="absolute left-4 top-4 z-20 rounded-full border border-line-strong bg-base/80 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.18em] text-accent backdrop-blur">
+      <div className="card-pop card-spot group relative flex h-full flex-col overflow-hidden">
+        <div className="relative overflow-hidden border-b-2 border-line bg-paper-2 p-3">
+          <span className="absolute left-4 top-4 z-20 rounded-full border-2 border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-widest text-brand">
             Concept Project
           </span>
           <div className="transition-transform duration-500 group-hover:scale-[1.02]">
@@ -30,21 +30,21 @@ export default function ProjectCard({
         </div>
 
         <div className="flex flex-1 flex-col p-5">
-          <span className="font-mono text-[11px] text-faint">{project.index}</span>
-          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-offwhite">
+          <span className="font-mono text-[12px] text-ink-muted">{project.index}</span>
+          <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
             {project.name}
           </h3>
           {/* Just the industry: the name already carries the trade, so pairing it
-              with businessType read as "VoltWise Electrical — Electrical Services". */}
-          <p className="mt-0.5 text-[13px] text-muted">{project.industry}</p>
+              with businessType read as "Rowanwood Dental — Dental Practice". */}
+          <p className="mt-0.5 text-[13px] text-ink-muted">{project.industry}</p>
 
           {detailed ? (
             <>
-              <p className="mt-3 text-[13px] leading-relaxed text-offwhite/85">{project.objective}</p>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-faint">Key features</p>
+              <p className="mt-3 text-[13px] leading-relaxed text-ink">{project.objective}</p>
+              <p className="mt-5 font-mono text-[12px] uppercase tracking-widest text-ink-muted">Key features</p>
               <ul className="mt-2 flex flex-wrap gap-1.5">
                 {project.keySections.map((s) => (
-                  <li key={s} className="rounded-full border border-line px-2.5 py-1 text-[11px] text-muted">
+                  <li key={s} className="rounded-full border border-line px-2.5 py-1 text-[12px] text-ink-muted">
                     {s}
                   </li>
                 ))}
@@ -52,10 +52,10 @@ export default function ProjectCard({
             </>
           ) : (
             <>
-              <p className="mt-2 text-[13px] leading-relaxed text-muted">{project.summary}</p>
+              <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">{project.summary}</p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {project.designDirection.slice(0, 3).map((d) => (
-                  <span key={d} className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] text-muted">
+                  <span key={d} className="rounded-full bg-ink/[0.06] px-2.5 py-1 text-[12px] text-ink-muted">
                     {d}
                   </span>
                 ))}
@@ -63,15 +63,15 @@ export default function ProjectCard({
             </>
           )}
 
-          <span className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-offwhite">
+          <span className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink">
             View project
-            <ArrowUpRight className="h-4 w-4 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="h-4 w-4 text-brand transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </span>
         </div>
 
         <Link
           href={`/work/${project.slug}`}
-          className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           aria-label={`${project.name} — view concept project`}
         />
       </div>

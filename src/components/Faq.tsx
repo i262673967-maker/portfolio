@@ -45,18 +45,18 @@ export function Faq() {
 
         <div className="mt-12 grid gap-4 lg:grid-cols-2">
           {faqItems.map((item, i) => (
-            <Reveal key={item.q} delay={(i % 2) * 0.06}>
-              <details className="group h-full rounded-2xl border border-line bg-surface px-5 py-4 transition-colors hover:border-line-strong open:border-line-strong">
-                <summary className="-mx-1 flex min-h-11 cursor-pointer list-none items-start gap-3 rounded-lg pr-1 text-[15px] font-semibold text-offwhite marker:content-none">
+            <Reveal key={item.q} step={i % 2}>
+              <details className="group h-full rounded-2xl border-2 border-line bg-card px-5 py-4">
+                <summary className="-mx-1 flex min-h-11 cursor-pointer list-none items-start gap-3 rounded-lg pr-1 text-[15px] font-semibold text-ink marker:content-none">
                   <span
                     aria-hidden
-                    className="mt-1 font-mono text-[11px] leading-none text-accent transition-transform group-open:rotate-90"
+                    className="mt-1 font-mono text-[12px] leading-none text-brand transition-transform group-open:rotate-90"
                   >
                     ▸
                   </span>
                   {item.q}
                 </summary>
-                <p className="mt-3 pl-6 text-[14px] leading-relaxed text-muted">{item.a}</p>
+                <p className="mt-3 pl-6 text-[14px] leading-relaxed text-ink-muted">{item.a}</p>
               </details>
             </Reveal>
           ))}

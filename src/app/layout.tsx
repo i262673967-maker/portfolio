@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { Sora, Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { brandPitch, homeDescription, site, siteUrl } from "@/lib/data";
 
-const sora = Sora({ variable: "--font-sora", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"] });
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  display: "swap",
+});
+const instrument = Instrument_Sans({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  display: "swap",
+});
+const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"], display: "swap" });
 
 /* Routes that need their own share copy use pageMeta() from src/lib/metadata.ts.
    This is the fallback for everything else (the 404 page, /demos/*). */
@@ -45,9 +54,22 @@ export default function RootLayout(props: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-base text-offwhite">
+      <body className="min-h-full bg-paper text-ink">
+        {/* Three lines, and they run before the first pixel of the page paints.
+           Where the engine can drive an animation from scroll position, the CSS
+           does it alone and this says nothing. Where it cannot, this flags the
+           document so the entrance is armed by an observer instead of by page load
+           — and a visitor with scripting off never sets the flag, so they keep the
+           load-time entrance in the stylesheet, which leaves every section visible
+           either way. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(window.CSS&&CSS.supports&&!CSS.supports('animation-timeline','view()'))document.documentElement.dataset.motion='io';",
+          }}
+        />
         {props.children}
         <script
           type="application/ld+json"

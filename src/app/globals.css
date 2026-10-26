@@ -1,34 +1,26 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------
-   Design tokens — premium dark studio
+   Design tokens — bright brand studio (light theme)
+   Derived from the logo: navy circle, white "i", electric-blue "W".
+   Never a token named `base` (it collides with Tailwind's text-base).
+   Demo palettes live in DemoVars (--d-*) and are deliberately untouched.
    --------------------------------------------------------------- */
 @theme {
-  /* WARNING: a colour token named `base` makes Tailwind v4 resolve `text-base`
-     to this colour instead of the usual 1rem font size — the text turns
-     near-black on a near-black background. Write sizes as `text-[1rem]`. */
-  --color-base: #08090c;
-  --color-base-2: #0c0e13;
-  --color-ink: #08090c;
-  --color-surface: #12141b;
-  --color-surface-2: #191c25;
-  --color-line: #ffffff14;
-  --color-line-strong: #ffffff24;
-  /* Form controls need a boundary a visitor can actually see (WCAG 1.4.11 asks
-     for 3:1 against the surrounding colour). line/line-strong are decorative
-     hairlines at ~1.2:1 and don't qualify, so inputs get their own token. */
-  --color-line-input: #626a7c;
-  --color-offwhite: #f4f3ef;
-  --color-muted: #9aa0ad;
-  --color-faint: #838a97;
-  --color-accent: #38bdf8;
-  --color-accent-2: #22d3ee;
-  --color-accent-deep: #0ea5e9;
-  --color-warm: #f2a65a;
-  --color-warm-2: #e8896b;
+  --color-paper: #f6f4ef; /* page background */
+  --color-paper-2: #ece8df; /* subtle alternating band + chip fill */
+  --color-card: #ffffff; /* raised card / input surface */
+  --color-ink: #07133f; /* primary text + solid shapes (navy) */
+  --color-ink-muted: #4a5272; /* secondary text (AA on paper/card/paper-2) */
+  --color-line: #07133f; /* borders at full strength */
+  --color-brand: #1a5cff; /* electric blue — primary action */
+  --color-sky: #22a7ff; /* decorative large block only (fails text/UI contrast) */
+  --color-mark: #ffd43b; /* yellow highlighter swipe */
+  --color-navy: #07133f; /* solid navy shapes */
+  --color-on-brand: #ffffff; /* text sitting on brand/navy fills */
 
-  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --animate-marquee: marquee 32s linear infinite;
@@ -40,7 +32,20 @@
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+
+  /* Motion tokens — one vocabulary for every duration, easing and distance on the
+     host site and inside the concepts, so a lift or an entrance reads the same
+     everywhere. Kept deliberately inside the 150–600ms band the site aims at; the
+     marquee is the only loop and the hero drift the only long transition. */
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-tap: 160ms; /* hover and press */
+  --motion-short: 300ms; /* small state changes, heading arrival */
+  --motion-mid: 500ms; /* a concept section arriving */
+  --motion-long: 600ms; /* a section arriving */
+  --motion-rise: 20px; /* how far an entrance travels */
+  --motion-lift: 2px; /* how far a hovered card lifts */
+  --motion-stagger: 70ms; /* gap between sibling entrances */
 }
 
 html {
@@ -48,25 +53,25 @@ html {
 }
 
 body {
-  background: var(--color-base);
-  color: var(--color-offwhite);
+  background: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--color-accent) 35%, transparent);
-  color: #fff;
+  background: var(--color-brand);
+  color: var(--color-on-brand);
 }
 
 /* Thin, subtle scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #ffffff22 transparent;
+  scrollbar-color: #07133f33 transparent;
 }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
-*::-webkit-scrollbar-thumb { background: #ffffff1f; border-radius: 999px; }
+*::-webkit-scrollbar-thumb { background: #07133f2b; border-radius: 999px; }
 *::-webkit-scrollbar-track { background: transparent; }
 
 /* ---------------------------------------------------------------
@@ -85,27 +90,198 @@ body {
   .container-shell { padding-inline: 2.5rem; }
 }
 
+/* 12px floor: this is uppercase mono, and below 12px it stops reading as a label
+   on a phone. Tracking is 0.1em, not the 0.22em it used to be — spread that wide
+   turned an uppercase word into a row of separate letters, which is the one thing
+   uppercase mono does worst. Brand blue clears AA on paper/card (4.75/5.23), so an
+   eyebrow never sits directly on the paper-2 band. */
 @utility eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-brand);
 }
 
 @utility heading-display {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
-  color: var(--color-offwhite);
+  color: var(--color-ink);
 }
 
-/* Subtle grain / vignette backdrop */
-@utility studio-bg {
-  background-image:
-    radial-gradient(60rem 40rem at 80% -10%, color-mix(in oklab, var(--color-accent) 10%, transparent), transparent 60%),
-    radial-gradient(50rem 40rem at 0% 10%, color-mix(in oklab, var(--color-warm) 6%, transparent), transparent 55%);
+/* Raised card: 2px navy border, generous radius, one hard offset shadow that
+   grows and lifts on hover. transform/opacity only, so it never costs layout. */
+@utility card-pop {
+  border: 2px solid var(--color-line);
+  border-radius: 22px;
+  background: var(--color-card);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition:
+    transform var(--motion-tap) var(--motion-ease),
+    box-shadow var(--motion-tap) var(--motion-ease);
+}
+
+@utility btn-pop {
+  border: 2px solid var(--color-line);
+  border-radius: 999px;
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition:
+    transform var(--motion-tap) var(--motion-ease),
+    box-shadow var(--motion-tap) var(--motion-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card-pop:hover {
+    transform: translate(calc(var(--motion-lift) * -1), calc(var(--motion-lift) * -1));
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  .btn-pop:hover {
+    transform: translate(calc(var(--motion-lift) * -1), calc(var(--motion-lift) * -1));
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+}
+
+/* Pressed: the block sits back down into its own shadow. Deliberately NOT inside
+   the hover query — a tap presses too, and that acknowledgement matters most on a
+   phone. Only a control presses: `.card-pop` is used on static panels where
+   selecting the text inside would otherwise make the card jump. */
+@media (prefers-reduced-motion: no-preference) {
+  .btn-pop:active {
+    transform: translate(0, 0);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
+}
+
+/* A text link that answers the pointer: the same 2px travel as a lifted card and
+   a press on `:active`, but no shadow, because a nav or footer link is not a
+   surface. Colour changes ride along in the same transition so nothing snaps. */
+@utility link-pop {
+  transition:
+    color var(--motion-tap) var(--motion-ease),
+    background-color var(--motion-tap) var(--motion-ease),
+    transform var(--motion-tap) var(--motion-ease);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .link-pop:hover {
+    transform: translate(0, calc(var(--motion-lift) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link-pop:active {
+    transform: scale(0.985);
+  }
+}
+
+/* The cursor spotlight. A pointer-following wash of brand blue sits BEHIND the
+   card's content: `isolation` makes the card a stacking context, and a child with
+   a negative z-index paints after that context's own background but before its
+   in-flow descendants, so no text ever sits under a tinted layer and contrast is
+   unchanged. Only `opacity` animates; the pointer position arrives as two custom
+   properties written by one delegated, rAF-throttled listener (Motion.tsx). A
+   device with no fine pointer never sees it, and the card's resting state is the
+   shipped look. */
+@property --spot-x {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+@property --spot-y {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@utility card-spot {
+  position: relative;
+  isolation: isolate;
+}
+
+.card-spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background-image: radial-gradient(
+    22rem 22rem at var(--spot-x) var(--spot-y),
+    color-mix(in oklab, var(--color-brand) 16%, transparent),
+    transparent 70%
+  );
+  transition: opacity var(--motion-short) var(--motion-ease);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card-spot:hover::before,
+  .card-spot:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+/* A highlighter behind a word. The word text stays in ink/navy (12.55:1 on the
+   yellow). There used to be a `mark-swipe` here that animated background-size
+   from 0% to 100%: `background-color` is already the same `--color-mark`, so it
+   repainted every frame to show nothing. It also broke two motion rules (paint
+   only, and nothing animating in the hero/LCP window), so it is gone. */
+@utility mark {
+  background-color: var(--color-mark);
+  background-image: linear-gradient(var(--color-mark), var(--color-mark));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.36em;
+  padding-inline: 0.08em;
+}
+
+/* A rotated circular sticker badge (e.g. "Free audit"). Sits as decoration. */
+@utility sticker {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 2px solid var(--color-ink);
+  background: var(--color-mark);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transform: rotate(-6deg);
+  box-shadow: 3px 3px 0 var(--color-ink);
+}
+
+/* CSS-only marquee that stops when the pointer is over it or the visitor asked
+   for no motion. The strip is duplicated in markup, so translateX(-50%) loops. */
+@utility marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+@media (hover: hover) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* Nothing animates off-screen. CSS has no way to know a strip has left the
+   viewport, so the shared observer in Motion.tsx marks it, and a marked strip
+   stops burning compositor work while the visitor reads elsewhere. */
+.marquee.is-out .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }
 
 /* Demo sites render inside device frames using container queries.
@@ -118,13 +294,118 @@ body {
   &::-webkit-scrollbar { display: none; }
 }
 
+/* A concept embedded inline at the page's own width belongs to the case study's
+   scroll instead of to a viewport of its own, so the two bars the concept pins to
+   its window must be released: left sticky they would slide out from behind the
+   portfolio's navbar and stack on top of the portfolio's own action bar. The
+   header goes `relative`, not `static`, because the mobile menu sheet measures
+   itself against it. Written outside any layer so it beats the `sticky` utility.
+   Inner sticky columns are left alone — a price card that follows you down a
+   section behaves correctly in page flow. */
+.demo-embed header.sticky { position: relative; }
+.demo-embed .sticky.bottom-0 { position: static; }
+
+/* Inside a device frame the concept is a picture of a website, not a second page
+   to perform for. The band's frame is scrollable and its screen holds ten more
+   viewport-heights of content, so every ambient and arrival animation there would
+   be measured, played and composited inside a box that is already the most
+   expensive subtree on the page. They are held at their finished state instead —
+   which is the same thing a visitor on `reduce`, or on an engine without scroll
+   timelines, already sees. The deliberate exception is input-driven motion (a tab
+   crossfade, a confirmation, a hovered plate): a frame the visitor is invited to
+   tap should answer the tap. On the concept's own routes — /demos/<slug> and the
+   inline embed on /work/<slug> — all of it plays. */
+.demo-scroll
+  :is(
+    .demo-reveal,
+    .demo-rail-x,
+    .demo-rail-y,
+    .demo-ken-burns,
+    .demo-header-dental,
+    .marigold-pin,
+    .reveal,
+    .heading-reveal,
+    .animate-pulse
+  ) {
+  animation: none;
+}
+
+/* BlueLine's two loops hold the same rule. The status dot animates on its
+   pseudo-element, which the list above cannot name, so it needs its own line —
+   inside a frame the dot simply sits at the state the ping begins from. */
+.demo-scroll :is(.bl-pulse)::after,
+.demo-scroll :is(.bl-map-pulse) {
+  animation: none;
+}
+
+/* Marigold's loops that the list above cannot name: the live dot pings on its
+   own pseudo-element, the plate turns on the `<svg>` inside its well rather than
+   on the well, and the header plate fades on its `::before` scrim — so the square
+   never rotates and never grows past its column, and the header holds its solid
+   resting plate. Inside a frame all three hold the finished thing — a steady dot,
+   a straight plate, a legible bar — which is also what a visitor on `reduce`
+   sees. */
+.demo-scroll :is(.marigold-status-dot)::after,
+.demo-scroll .marigold-plate > svg,
+.demo-scroll .marigold-header::before {
+  animation: none;
+}
+
+/* ---------------------------------------------------------------
+   Page-to-page motion, declared in CSS so it costs no JavaScript: a
+   cross-document view transition, opted into by every route through this
+   stylesheet. Engines that do not know the at-rule ignore the block entirely and
+   load the next page instantly, which is the whole fallback. `next/link` handles
+   most clicks client-side, so this covers real document loads — a typed address,
+   a reload, a redirect, or a visitor with scripts off; the short cross-fade below
+   is what those navigations look like.
+   --------------------------------------------------------------- */
+@view-transition {
+  navigation: auto;
+}
+
+/* Named rather than leaning on the UA's `fade-in`/`fade-out`, so the timing comes
+   from the same tokens as everything else and the reduced-motion override below
+   has something of ours to switch off. */
+@keyframes vt-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes vt-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+::view-transition-old(root) {
+  animation: vt-out var(--motion-short) var(--motion-ease) both;
+}
+::view-transition-new(root) {
+  animation: vt-in var(--motion-short) var(--motion-ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* The work section's project pills: one row you swipe on a phone instead of five
+   stacked chips, which pushed the preview below the fold. The strip still
+   scrolls, it just does not show a bar doing it. */
+@utility pill-row {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { display: none; }
+}
+
 /* The hero frames are decoration, so their subtree is inert and an inert element
    is never hit-testable — :hover would never fire on it. The pointer is therefore
    caught on `.peek-host` outside the inert subtree, and the page inside drifts up
    by just over half a frame to say there is more below it. Mouse-capable devices
    only, and never when the visitor has asked for reduced motion. */
 .demo-peek {
-  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--motion-long) var(--motion-ease);
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -135,11 +416,14 @@ body {
 
 /* Entrance animation with no JavaScript dependency: the element's resting
    state is fully visible and the animation only plays on top of it, so crawlers,
-   disabled JS and old engines that never run the bundle still show all content. */
+   disabled JS and old engines that never run the bundle still show all content.
+   `--reveal-step` is a sibling's ordinal (0–6) and `--reveal-delay` a hand-set
+   offset; one shared keyframe serves both the whole-section entrance and the
+   shorter, nearer arrival of a heading. */
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(var(--reveal-y, 1rem));
+    transform: translateY(var(--reveal-y, var(--motion-rise)));
   }
   to {
     opacity: 1;
@@ -148,17 +432,58 @@ body {
 }
 
 @utility reveal {
-  animation: reveal-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --reveal-dur: var(--motion-long);
+  --reveal-y: var(--motion-rise);
+  animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
+  animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger) + var(--reveal-delay, 0s));
+}
+
+/* A heading arriving under its section: half the travel, half the time, and never
+   inside the hero — SectionHeading is only used below it, so the largest
+   contentful paint stays untouched. */
+@utility heading-reveal {
+  --reveal-dur: var(--motion-short);
+  --reveal-y: 0.6rem;
+  animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
   animation-delay: var(--reveal-delay, 0s);
 }
 
 /* Where the platform supports it, drive the same keyframes from scroll position
-   instead of page load so sections still arrive as they enter the viewport. */
+   instead of page load so sections still arrive as they enter the viewport. The
+   sibling step becomes a share of the entry range, which is how a stagger reads
+   when time is not what drives the animation. */
 @supports (animation-timeline: view()) {
-  .reveal {
+  .reveal,
+  .heading-reveal {
     animation-delay: 0s;
     animation-timeline: view();
-    animation-range: entry 0% entry 100%;
+    animation-range: entry calc(var(--reveal-step, 0) * 9%) entry 100%;
+  }
+}
+
+/* Engines without scroll-driven animation get the same entrance on their own
+   terms: one shared IntersectionObserver plays it as the element arrives instead
+   of at page load. The `data-motion` flag is written by a two-line inline script
+   only when this branch applies AND JavaScript really ran, so a visitor with
+   scripts disabled keeps the load-time entrance above and every resting state
+   stays visible in every case — nothing is ever left hidden waiting for a trigger
+   that cannot fire. */
+@supports not (animation-timeline: view()) {
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal) {
+    animation: none;
+  }
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal).is-in {
+    animation: reveal-in var(--reveal-dur, var(--motion-long)) var(--motion-ease) both;
+    animation-delay: calc(var(--reveal-step, 0) * var(--motion-stagger) + var(--reveal-delay, 0s));
+  }
+  /* The rails draw themselves once, in one direction, so an arrival trigger is the
+     whole effect: the same observer that arms a section can arm them, on a clock
+     instead of a scroll position. Their unarmed state stays the finished line. */
+  html[data-motion="io"] .demo-rail-x.is-in {
+    animation: rail-draw-x var(--motion-long) var(--motion-ease) both;
+  }
+  html[data-motion="io"] .demo-rail-y.is-in {
+    animation: rail-draw-y var(--motion-long) var(--motion-ease) both;
   }
 }
 
@@ -171,24 +496,440 @@ body {
   }
 }
 
-/* Mobile menu, without an animation library: the panel stays mounted so it
-   closes as smoothly as it opens, and `grid-template-rows: 0fr -> 1fr` animates
-   an unknown height. `visibility` transitions in steps (delayed on the way out)
+/* The same entrance for a section of a concept website, on the host's own
+   motion tokens: measured against the frame's own scroll box rather than the
+   browser window, because the demo is the thing scrolling inside the device. Only
+   opacity and transform animate, the resting state is fully visible, and nothing
+   is applied at all when the visitor has asked for reduced motion — so a browser
+   that cannot run scroll-driven animation, or a page whose bundle never arrives,
+   still shows every section. */
+@utility demo-reveal {
+  --reveal-dur: var(--motion-mid);
+  --reveal-y: 0.75rem;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-reveal {
+      animation: reveal-in var(--reveal-dur) var(--motion-ease) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+
+    /* BlueLine's "how a service call works" rail draws itself as the steps come into
+       view. The resting state is the finished line, so a visitor on an engine
+       without scroll-driven animation — or who asked for reduced motion — simply
+       sees a drawn connector, which is exactly what the animation ends on. */
+    .demo-rail-x {
+      animation: rail-draw-x var(--motion-long) var(--motion-ease) both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+    .demo-rail-y {
+      animation: rail-draw-y var(--motion-long) var(--motion-ease) both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 60%;
+    }
+  }
+}
+
+@keyframes rail-draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rail-draw-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* --- The three concepts' signature effects ----------------------------------
+   Each is applied only under `prefers-reduced-motion: no-preference` rather than
+   relying on the global duration collapse, and each element's resting state is
+   what a visitor who asked for no motion should see, so an engine that never runs
+   this rule gets a finished page rather than a half-faded one. */
+
+/* The signature moment: a hero photograph drifts. It only ever scales UP from its
+   natural size, so the unanimated state can never show an edge of the frame the
+   way a zoom-out-from-below-1 would, and the pan stays inside the overzoom. 12s
+   per leg, easing in and back out, so it reads as a room rather than a loop.
+   Three things wear it: BlueLine's two photographs and Marigold's drawn hero well.
+   The keyframe keeps the name of the concept it was written for. */
+@keyframes ember-ken-burns {
+  from {
+    transform: scale(1.04) translate3d(-0.6%, -0.4%, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(0.5%, 0.5%, 0);
+  }
+}
+
+/* The ledger fades in when what it shows changes — a course tab, a menu filter, an
+   evening stage, a ticket's contents. Only opacity animates, and the outgoing list
+   is removed rather than stacked, so a screen reader gets one panel per change
+   instead of two — and a visitor on `reduce` gets an instant, fully legible swap. */
+@keyframes ember-menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-ken-burns {
+    animation: ember-ken-burns 12s ease-in-out infinite alternate;
+  }
+
+  .demo-menu-fade {
+    animation: ember-menu-in 350ms ease-out both;
+  }
+
+  /* Rowanwood House's top bar: quiet over the hero, solid once the page has moved.
+     It is driven from the header's own nearest scroll container, so it behaves the
+     same inside a device frame and on the concept's full-page route. The plate
+     never goes fully transparent: at 0 it keeps 88% of the page colour and at 1 it
+     keeps 97%, so the largest shift across the whole first 5rem is nine parts of the
+     page colour and the text on the bar is measured against the page colour itself.
+     Without support, or on `reduce`, the header keeps its resting solid style.
+     The keyframe still carries the name of the concept it was written for; the only
+     header wearing it now is `.demo-header-dental`. */
+  @keyframes ember-header {
+    from {
+      background-color: color-mix(in oklab, var(--d-bg) 88%, transparent);
+      border-bottom-color: transparent;
+    }
+    to {
+      background-color: color-mix(in oklab, var(--d-bg) 97%, transparent);
+      border-bottom-color: var(--d-line);
+    }
+  }
+
+  /* Marigold's top plate, owned by the concept and drawn with one property.
+     Constraint 8 asks for transform/opacity only, so this does NOT interpolate
+     `background-color`/`border-bottom-color` the way the header plate above it
+     does — that is why the keyframe is new rather than edited in place: the rule
+     above is shared with Rowanwood's header and its name predates both.
+     What the visitor gets is the same reading — the bar firms up against
+     whatever scrolls under it — from an absolutely-positioned scrim of the page
+     colour, faded on `opacity` alone from 0 to 1 across the first 5rem.
+     `z-index: -1` inside the sticky header is what puts it over the header's own
+     background and UNDER its content: a stacking context paints negative children
+     after the element's background and before its descendants' backgrounds and
+     text, so the wordmark, the chip and both buttons are never behind the scrim.
+     The resting value is 0, so an engine without scroll timelines, a device frame
+     and a visitor on `reduce` all get exactly what the component ships: the
+     header's own solid cream plate and its own static hairline, fully legible.
+     The hairline stops being part of the animation — it now holds the colour the
+     reduced-motion page has always shown rather than interpolating to it. */
+  @keyframes marigold-header-plate {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .marigold-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--d-bg);
+    opacity: 0;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .marigold-header::before {
+      animation: marigold-header-plate 1ms linear both;
+      animation-timeline: scroll(nearest block);
+      animation-range: 0 5rem;
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .demo-header-dental {
+      animation: ember-header 1ms linear both;
+      animation-timeline: scroll(nearest block);
+      animation-range: 0 5rem;
+    }
+  }
+}
+
+/* BlueLine's two navy bands carry a ruled overlay and a warm/cool glow that the
+   derived tokens cannot express: DemoVars measures text against the page's light
+   surfaces, so a band this dark owns its own ink in the markup. The grid is two
+   1px rules at 4.5% white over the navy, and the glow sits behind the copy as a
+   `::before` so the band's own text never lands on top of a moving gradient.
+   `#0b2135` is the concept's own navy, not the portfolio's. */
+.bl-band {
+  position: relative;
+  overflow: hidden;
+  background-color: #0b2135;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.bl-band-em::before,
+.bl-band-final::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bl-band-em::before {
+  background:
+    radial-gradient(700px 400px at 85% 12%, rgba(194, 103, 46, 0.24), transparent 70%),
+    radial-gradient(520px 380px at 6% 95%, rgba(17, 96, 201, 0.28), transparent 70%);
+}
+
+.bl-band-final::before {
+  background: radial-gradient(640px 380px at 50% 0%, rgba(17, 96, 201, 0.3), transparent 70%);
+}
+
+/* Ink for the two navy bands and the footer. `--d-muted` is measured against
+   this concept's LIGHT surfaces only, so it cannot be trusted on navy; each of
+   these four is a literal that clears AA on `#0b2135` — 16.4, 8.4, 5.2 and
+   11.5 to 1 — and is used only inside a band that paints that navy. */
+.bl-ink-hi {
+  color: #fff;
+}
+.bl-ink {
+  color: #a9bcce;
+}
+.bl-ink-lo {
+  color: #93a6b8;
+}
+.bl-ink-ok {
+  color: #9fe8c0;
+}
+
+/* Copper carries urgency here, but white on the concept's bright copper
+   (`--copper` / `#c2672e`) is 3.98:1 — below AA for a button label. The fill
+   therefore uses the same palette's own deeper copper, `#9e4f1b`, which lifts it
+   to 6.5:1. The bright copper stays decorative: dashes, kickers and icon tiles. */
+.bl-fill-copper {
+  background: #9e4f1b;
+  color: #fff;
+}
+
+/* The same deeper copper for copper-coloured TEXT. `--d-accent-2` is measured
+   against this concept's own palette as a fill; used as ink it is 3.98:1 on
+   white, and a 12.5px kicker or a 15px step number is not large text, so AA
+   wants 4.5. Bright copper stays on rules, dots and tiles. */
+.bl-ink-copper {
+  color: #9e4f1b;
+}
+
+/* `--d-accent-text` is derived for the light page, and the footer band paints
+   navy: the concept blue on `#0b2135` is 2.76:1. This is that blue lifted to a
+   tint that reads on navy (8.56:1) without leaving the palette. */
+.bl-ink-link {
+  color: #8bc0f7;
+}
+
+/* --- BlueLine's three concept effects ---------------------------------------
+   A draggable before/after plate, a status dot that pings, and a drawn map whose
+   coverage pulse expands. The plate is input-driven, so it is not muted inside a
+   device frame — a control the visitor is invited to drag has to answer the drag.
+   The two loops are, and both are silent on `reduce`, where the dot and the ring
+   simply sit at the state the animation ends in. */
+
+/* One number drives the whole plate. `--split` is where the cut lands, and the
+   clipped photograph, the white rule and the grip all read it, so the three can
+   never disagree. The 20px inset on each side is not decoration: a range input's
+   thumb centre travels from half its own width to the same distance from the far
+   edge, so the split is measured on that same track and the grip stays glued to
+   the line instead of drifting up to 20px off at either end. */
+.bl-ba {
+  --split: calc(20px + (100% - 40px) * var(--p, 0.55));
+  position: relative;
+  overflow: hidden;
+}
+
+.bl-ba-before {
+  clip-path: inset(0 calc(100% - var(--split)) 0 0);
+}
+
+.bl-ba-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 2.5px;
+  margin-left: -1.25px;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+/* The control is a real slider, so it inherits arrow keys, home/end, a value and
+   a label for free. Its own thumb is invisible and the grip drawn on top of it is
+   `pointer-events: none`, which puts the hit area under the pointer and the
+   picture in the layer above without either one moving on its own. */
+.bl-ba-range {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  right: 20px;
+  width: calc(100% - 40px);
+  height: 44px;
+  margin: 0;
+  transform: translateY(-50%);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.bl-ba-range::-webkit-slider-runnable-track {
+  height: 44px;
+  background: transparent;
+}
+
+.bl-ba-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  margin-top: 2px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.bl-ba-range::-moz-range-track {
+  height: 44px;
+  background: transparent;
+}
+
+.bl-ba-range::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.bl-ba-grip {
+  position: absolute;
+  top: 50%;
+  left: var(--split);
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  color: var(--d-accent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* With the thumb invisible the focus ring has to be drawn by the grip, so the
+   plate says plainly which control the arrows are moving. */
+.bl-ba-range:focus {
+  outline: none;
+}
+
+.bl-ba-range:focus-visible + .bl-ba-grip {
+  box-shadow:
+    0 0 0 3px var(--d-accent),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* The live dot beside "Emergency line open". Its resting state is the plain dot
+   the ping starts from, so a visitor who asked for no motion sees the same mark. */
+@keyframes bl-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.bl-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(76, 195, 138, 0.5);
+}
+
+/* The drawn map's coverage ring. `transform-box: fill-box` is what makes scaling
+   an SVG circle happen around its own centre rather than the artwork's. */
+@keyframes bl-map-ping {
+  0% {
+    transform: scale(0.35);
+    opacity: 0.9;
+  }
+  80% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.bl-map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bl-pulse::after {
+    animation: bl-ping 2s ease-out infinite;
+  }
+  .bl-map-pulse {
+    animation: bl-map-ping 2.6s ease-out infinite;
+  }
+}
+
+/* Mobile menu, without an animation library: the panel stays mounted so it opens
+   and closes from the same node, and its height is NOT animated — the track jumps
+   straight to 1fr and the list fades into that space, so nothing on this panel is
+   a layout animation. `visibility` transitions in steps (delayed on the way out)
    so the closed list leaves the tab order and the accessibility tree without
    vanishing mid-animation, and `inert` says the same thing to anything that
-   ignores visibility. The list staggers in only while the menu is open, so the
-   animation replays on every open instead of running once at page load. */
+   ignores visibility. The items stagger in only while the menu is open, so the
+   slide replays on every open instead of running once at page load. */
 .menu-panel {
   display: grid;
   grid-template-rows: 0fr;
   visibility: hidden;
-  transition: grid-template-rows 0.25s ease-in-out, visibility 0s linear 0.25s;
+  opacity: 0;
+  transition:
+    opacity var(--motion-short) var(--motion-ease),
+    visibility 0s linear var(--motion-short);
 }
 
 body[data-nav-open="true"] .menu-panel {
   grid-template-rows: 1fr;
   visibility: visible;
-  transition: grid-template-rows 0.25s ease-in-out, visibility 0s;
+  opacity: 1;
+  transition:
+    opacity var(--motion-short) var(--motion-ease),
+    visibility 0s;
 }
 
 .menu-panel > div {
@@ -249,10 +990,10 @@ section[id],
 footer[id] {
   scroll-margin-top: 4.5rem;
 }
-
-/* Keyboard focus stays visible for every interactive element. */
+/* Keyboard focus stays visible for every interactive element. Brand blue clears
+   3:1 against paper (4.75:1), so the ring is identifiable on every surface. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-brand);
   outline-offset: 3px;
 }
 
@@ -262,8 +1003,486 @@ body[data-nav-open="true"] .sticky-cta {
   display: none;
 }
 
+/* --- Rowanwood's own motion --------------------------------------------------
+   Everything here is named `dw-` and applied only under
+   `prefers-reduced-motion: no-preference`, on the same terms as the other
+   concepts' effects above: the resting state of each one is the finished look, so a
+   visitor who asked for less motion, an engine that never runs the rule, and a
+   bundle that never arrives all see the same fully legible page. Nothing here
+   holds text back from first paint.
+
+   The one ambient loop is the breathing disc, which is also the only thing on
+   this page that runs by itself. Everything else answers a press: a folded row,
+   a tapped region of the diagram, a torn slip. */
+
+/* The disc. Four counts in, four held, six out, so one cycle is fourteen seconds
+   and the keyframe stops sit at 28.57% and 57.14% — the same fractions the copy
+   names. Transform and opacity only, so the loop costs the compositor and not the
+   layout thread, and the ring is a second element rather than an animated
+   box-shadow for the same reason. */
+@keyframes dw-breath {
+  0% {
+    transform: scale(0.6);
+    animation-timing-function: ease-in-out;
+  }
+  28.57% {
+    transform: scale(1);
+    animation-timing-function: linear;
+  }
+  57.14% {
+    transform: scale(1);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: scale(0.6);
+  }
+}
+
+/* The halo behind it, on its own count so the two never visibly disagree: the
+   same fourteen seconds, the same stops, a wider travel and a shallower fade. */
+@keyframes dw-halo {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.18;
+  }
+  28.57% {
+    transform: scale(1.16);
+    opacity: 0.42;
+  }
+  57.14% {
+    transform: scale(1.16);
+    opacity: 0.42;
+  }
+  100% {
+    transform: scale(0.72);
+    opacity: 0.18;
+  }
+}
+
+/* The three words, each visible only across its own third of the cycle. Three
+   separate keyframe sets rather than one with delays, because a delayed
+   animation shows its fill state during the delay — which would light all three
+   up at once for the first four seconds. */
+@keyframes dw-word-in {
+  0%,
+  28.57% {
+    opacity: 1;
+  }
+  28.58%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dw-word-hold {
+  0%,
+  28.56% {
+    opacity: 0;
+  }
+  28.57%,
+  57.14% {
+    opacity: 1;
+  }
+  57.15%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dw-word-out {
+  0%,
+  57.13% {
+    opacity: 0;
+  }
+  57.14%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Base state, outside any media query: the first word shown, the other two
+   hidden, the static pattern line hidden. That is what a visitor on `reduce`
+   keeps — a disc at rest and the pace written out in the line below it — and it
+   is also the state before the rule below has had a chance to run. */
+.dw-word-2,
+.dw-word-3 {
+  opacity: 0;
+}
+
+.dw-static {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dw-disc {
+    animation: dw-breath 14s linear infinite;
+  }
+  .dw-halo {
+    animation: dw-halo 14s linear infinite;
+  }
+  .dw-word-1 {
+    animation: dw-word-in 14s linear infinite;
+  }
+  .dw-word-2 {
+    animation: dw-word-hold 14s linear infinite;
+  }
+  .dw-word-3 {
+    animation: dw-word-out 14s linear infinite;
+  }
+}
+
+/* Pause freezes all five animations together. They share one start (the moment
+   the concept mounted) and one duration, so they cannot drift apart while
+   stopped, and the disc resumes exactly where the word is. */
+.dw-calm[data-dw-paused="true"] :is(.dw-disc, .dw-halo, .dw-word-1, .dw-word-2, .dw-word-3) {
+  animation-play-state: paused;
+}
+
+/* On `reduce` there is nothing to watch and nothing to stop, so the disc carries
+   the pace in words and the toggle is taken out rather than left inert. A
+   control that cannot change anything is a worse lie than a missing one. */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .dw-words {
+    display: none;
+  }
+  .dw-static {
+    display: block;
+  }
+  .dw-calm-toggle {
+    display: none;
+  }
+}
+
+/* Inside a device frame the disc is ambient, so it holds still — and with it go
+   the toggle and the word cycle, for the reason above. */
+.demo-scroll :is(.dw-disc, .dw-halo, .dw-word-1, .dw-word-2, .dw-word-3) {
+  animation: none;
+}
+.demo-scroll .dw-words {
+  display: none;
+}
+.demo-scroll .dw-static {
+  display: block;
+}
+.demo-scroll .dw-calm-toggle {
+  display: none;
+}
+
+/* A folded panel that animates its own height. `0fr` to `1fr` on a single-row
+   grid is the only way to transition to an unknown height without measuring it
+   in JavaScript, and the inner cell has to be the one that clips. The panel
+   stays in the document for the animation, so when it is shut it is `inert` —
+   which takes its links out of the tab order and out of the accessibility tree
+   in one attribute. Transitions are already collapsed to nothing by the global
+   reduced-motion rule at the foot of this file. */
+.dw-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--motion-mid) var(--motion-ease);
+}
+
+.dw-fold > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dw-fold[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+/* The diagram. Each region is drawn twice — a line the visitor reads, and a
+   solid highlight over the top of it — and only the highlight's opacity and the
+   group's transform change, so a tap costs two composited properties and no
+   repaint of the drawing underneath. */
+.dw-region {
+  cursor: pointer;
+  transition: transform var(--motion-tap) var(--motion-ease);
+  transform-origin: center;
+}
+
+.dw-region .dw-lit {
+  opacity: 0;
+  transition: opacity var(--motion-tap) var(--motion-ease);
+}
+
+.dw-region[data-on="true"] {
+  transform: translateY(-3px);
+}
+
+.dw-region[data-on="true"] .dw-lit {
+  opacity: 1;
+}
+
+/* The whole diagram dims one step when a region is chosen, so the answer is the
+   brightest thing on the drawing rather than a colour difference of two shades
+   on a page of sage. */
+.dw-mouth[data-dw-picked="true"] .dw-region:not([data-on="true"]) {
+  opacity: 0.45;
+  transition: opacity var(--motion-mid) var(--motion-ease);
+}
+
+/* The slip tears once, when the read-out appears. It is an arrival rather than a
+   loop, so it is `both` and never repeats; inside a frame it is muted with the
+   rest of the ambient set, and the perforation simply sits where it ends up. */
+@keyframes dw-tear {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10px);
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dw-tear {
+    animation: dw-tear 520ms var(--motion-ease) both;
+  }
+}
+
+.demo-scroll .dw-tear {
+  animation: none;
+}
+
+/* --- Rowanwood's dark band -----------------------------------------------------
+   The one place on this concept that inverts. `DemoVars` measures its derived
+   ink tokens against the light surfaces only, because that is what the page
+   paints text on, so a band of the palette's own near-black has to carry its own
+   literals — the same reason BlueLine's navy footer does.
+
+   Measured against #10201A: the cream #F4F6F3 is 15.6:1, the grey-sage #A9BDB5
+   is 8.6:1, and the lifted sage #7FBFAE is 8.0:1. The palette's own #2E6F5E is
+   2.9:1 here, which is why the accent appears on this band as a light tint of
+   itself and never as the fill colour behind text. */
+.dw-band {
+  background-color: #10201a;
+  color: #f4f6f3;
+}
+
+.dw-ink-hi {
+  color: #f4f6f3;
+}
+
+.dw-ink-lo {
+  color: #a9bdb5;
+}
+
+.dw-ink-accent {
+  color: #7fbfae;
+}
+
+/* A fill of the lifted sage, inked with the band's own background: 8.0:1 either
+   way up, and the only button on the dark band that can carry a label. */
+.dw-fill-mint {
+  background: #7fbfae;
+  color: #10201a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .heading-reveal {
+    animation: none;
+  }
+  /* Same weight as the arming rule above, so it wins if a page was already
+     flagged before the visitor switched their motion preference. */
+  html[data-motion="io"] :is(.reveal, .heading-reveal, .demo-reveal).is-in {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Marigold Kitchen's own motion.
+
+   Three loops, all of them transform/opacity only, all of them applied only
+   under `prefers-reduced-motion: no-preference`, and every one of them resting
+   on the finished thing: a steady dot at the state the ping begins from, a
+   plate sitting straight, a pin planted in the map at full opacity. A visitor
+   who asked for no motion, an engine without scroll timelines, a page whose
+   bundle never arrives and a device frame all see the same finished page — the
+   frame case is handled by the `.demo-scroll :is(...)` list above.
+
+   The names 4a introduced and are NOT animated are listed at the foot of this
+   section with the reason. Restraint there is the point: a chilli mark whose
+   height animates is a spice level being invented, and a gold specials band
+   that shimmers is a claim dressed as decoration.
+   --------------------------------------------------------------- */
+
+/* The root. `marigold-shell` carries no animation; what it owns is the three
+   distances the loops below read, kept here so a single edit retunes the concept
+   instead of three. The `@container` box that `@3xl`/`@5xl` variants resolve
+   against is set by `DemoVars` in `src/demos/_shared.tsx`, so the shell must NOT
+   declare its own `container-type` — a second inline-size container would re-aim
+   every `@`-variant at this div and the sticky stage would never stand. */
+.marigold-shell {
+  --mk-ping: 3.6s;
+  --mk-turn: -12deg;
+  --mk-settle: 4.6s;
+}
+
+/* The live dot in the header chip. It pings only while the room is open, which is
+   what the component's `data-open` attribute is for — the dot's colour is the
+   state (accent when open, the palette's own muted ink when not), and the ring is
+   the emphasis on top of it. `inset: -2px` with `scale(1.6)` puts the widest point
+   of the ring 5.6px outside an 8px dot, well inside the pill's 12px padding, so
+   nothing about this loop can reach the page's scroll width. */
+@keyframes marigold-live-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.marigold-status,
+.marigold-status-dot {
+  position: relative;
+}
+
+.marigold-status[data-open="false"] .marigold-status-dot {
+  background: var(--d-muted);
+}
+
+.marigold-status[data-open="true"] .marigold-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--d-accent);
+}
+
+/* The pin in the drawn map card. A gentle settle, not a permanent bounce: 4.6s of
+   which the first 68% is simply the pin sitting where it was put, so the loop
+   reads as a place being marked rather than a toy. `transform-box: fill-box` with
+   the origin at the tip is what makes it shrink into its own point instead of
+   sliding sideways across the artwork. It only ever scales DOWN, so it can never
+   grow past the map card. */
+@keyframes marigold-pin-settle {
+  0%,
+  68%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  78% {
+    opacity: 0.7;
+    transform: scale(0.93);
+  }
+  88% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.marigold-pin {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* The plate on the desktop stage turns the last few degrees into place as the
+   section arrives, and ends at `none` — so the resting, unsupported, muted and
+   reduced states are all a plate drawn straight. It happens to the `<svg>`, not
+   to the well: a rotated square is wider than the square it started as, and a
+   240px box turning 12 degrees was 277px of overflow waiting to widen an 834px
+   device. The well clips at its own edge, the circle inside it has 16px of slack
+   in the 240-unit viewBox, and a circle is rotationally symmetric, so the clip is
+   a belt-and-braces guarantee rather than something a visitor can see. */
+@keyframes marigold-plate-turn {
+  from {
+    transform: rotate(var(--mk-turn));
+  }
+  to {
+    transform: none;
+  }
+}
+
+.marigold-plate {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marigold-status[data-open="true"] .marigold-status-dot::after {
+    animation: marigold-live-ping var(--mk-ping) var(--motion-ease) infinite;
+  }
+
+  .marigold-pin {
+    animation: marigold-pin-settle var(--mk-settle) var(--motion-ease) infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    .marigold-plate > svg {
+      animation: marigold-plate-turn var(--motion-long) var(--motion-ease) both;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+/* Two hover answers, both transform-only, both behind `hover: hover` because a
+   phone has no hover state and must not be left holding a lifted card. The
+   journey card lifts by the host's own `--motion-lift`; the chilli marks grow a
+   little taller where they stand, which is input-driven motion and so belongs to
+   the same class as the menu crossfade — a control the visitor is invited to
+   touch should answer, including inside a device frame. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .marigold-course-card {
+    transition: transform var(--motion-tap) var(--motion-ease);
+  }
+  .marigold-course-card:hover {
+    transform: translateY(calc(var(--motion-lift) * -1));
+  }
+
+  .marigold-flame {
+    transform-origin: 50% 100%;
+    transition: transform var(--motion-tap) var(--motion-ease);
+  }
+  [data-menu-item]:hover .marigold-flame {
+    transform: scaleY(1.12);
+  }
+}
+
+/* The course pager dots. `aria-current="step"` is the state the component already
+   carries; this is the resting difference that makes it legible as the current
+   step. It is a static transform, not a keyframe, so there is nothing to mute —
+   the dot is a full-size circle in every state. */
+.marigold-dot[aria-current="step"] {
+  transform: scale(1.08);
+}
+
+/* Not animated, deliberately, and recorded here so the list of names 4a handed
+   over is answered in full:
+   `marigold-header`   — NO LONGER in this list: it animates on its own
+                         `marigold-header-plate` opacity scrim in the header
+                         section above (it does not borrow `ember-header`, which
+                         interpolates colours — constraint 8; that keyframe now
+                         belongs to Rowanwood's header alone, under the name it
+                         was written with).
+   `marigold-shell`    — typography/container host, no motion.
+   `marigold-status`   — the pill itself is static; only its dot pings.
+   `marigold-hero`     — the drawn well inside already drifts on `.demo-ken-burns`;
+                         a second transform on the frame would fight it.
+   `marigold-stage`    — its effect is `position: sticky` against a section taller
+                         than the viewport; that is the mechanism the harness
+                         measures, and animation would only make it harder to hit.
+   `marigold-spice`    — a dietary mark; its presence IS the information.
+   `marigold-specials` — gold band fill; a shimmer would need `background-size`
+                         or `box-shadow`, both out of bounds by constraint 8.
+   `marigold-status-card`, `marigold-map`, `marigold-bar` — resting surfaces; the
+                         bar's `sticky bottom-0` is released inside an embed by
+                         `.demo-embed .sticky.bottom-0` above.
+   `plate-course`      — driven by the component's own inline `opacity` attribute
+                         plus a Tailwind `transition-opacity`, so it is correct at
+                         rest with no CSS from here at all. */
+
+@media (prefers-reduced-motion: reduce) {
+  .marigold-pin,
+  .marigold-plate > svg,
+  .marigold-header::before,
+  .marigold-status[data-open="true"] .marigold-status-dot::after {
     animation: none;
   }
 }

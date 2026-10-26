@@ -7,12 +7,12 @@ import { Reveal, SectionHeading } from "./ui";
 import { cta, formEndpoint, site, web3formsAccessKey } from "@/lib/data";
 
 /* No `outline-none` here: the global :focus-visible ring in globals.css is the
-   keyboard indicator, and line-input clears 3:1 so the empty field itself is
-   visible (WCAG 1.4.11). The border colour only marks pointer focus. */
+   keyboard indicator, and a 2px navy border clears 3:1 on the white field, so
+   the empty input is visible without colour-only cues (WCAG 1.4.11). */
 const input =
-  "w-full rounded-xl border border-line-input bg-base-2 px-4 py-3 text-[14px] text-offwhite placeholder:text-faint transition-colors focus:border-accent";
-const label = "mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-muted";
-const err = "mt-1.5 text-[12px] text-warm";
+  "w-full rounded-xl border-2 border-line bg-card px-4 py-3 text-[14px] text-ink placeholder:text-ink-muted transition-colors focus:border-brand";
+const label = "mb-1.5 block font-mono text-[12px] uppercase tracking-widest text-ink-muted";
+const err = "mt-1.5 text-[12px] font-semibold text-ink";
 
 type Status = "idle" | "sending" | "sent" | "error";
 type FieldErrors = { website?: string; email?: string };
@@ -167,7 +167,7 @@ export default function ContactForm() {
   }
 
   return (
-    <section id="contact" className="border-t border-line bg-base-2 py-20 sm:py-28">
+    <section id="contact" className="border-t-2 border-line py-20 sm:py-28">
       <div className="container-shell grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
         {/* Left: reassurance + direct contact */}
         <Reveal>
@@ -178,23 +178,23 @@ export default function ContactForm() {
               copy="Send me your website link — or your business, if you don't have a site yet — and the email to reply to. I'll tell you exactly what's holding it back. Free, no commitment."
             />
             <div className="mt-8 space-y-4">
-              <div className="flex items-start gap-3 rounded-xl border border-accent/30 bg-accent/[0.06] p-4">
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-accent/10 text-accent">
+              <div className="flex items-start gap-3 rounded-xl border-2 border-brand bg-brand/[0.07] p-4">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 text-brand">
                   <Search className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="text-[14px] font-semibold text-offwhite">{site.auditTitle}</p>
-                  <p className="mt-0.5 text-[13px] leading-relaxed text-muted">{site.auditOffer}</p>
+                  <p className="text-[14px] font-semibold text-ink">{site.auditTitle}</p>
+                  <p className="mt-0.5 text-[13px] leading-relaxed text-ink-muted">{site.auditOffer}</p>
                 </div>
               </div>
               <a
                 href={`mailto:${site.email}`}
-                className="flex items-center gap-3 rounded-xl border border-line bg-surface p-4 transition-colors hover:border-accent/40"
+                className="flex items-center gap-3 rounded-xl border-2 border-line bg-card p-4 transition-colors hover:border-brand"
               >
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-accent/10 text-accent">
+                <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand/10 text-brand">
                   <Mail className="h-4 w-4" />
                 </span>
-                <span className="text-[14px] text-offwhite">{site.email}</span>
+                <span className="text-[14px] text-ink">{site.email}</span>
               </a>
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function ContactForm() {
 
         {/* Right: form */}
         <Reveal delay={0.08}>
-          <div className="relative rounded-2xl border border-line bg-surface p-6 sm:p-8">
+          <div className="card-pop relative p-6 sm:p-8">
             {status === "sent" ? (
               <div
                 ref={sentRef}
@@ -210,9 +210,9 @@ export default function ContactForm() {
                 tabIndex={-1}
                 className="pop-in flex min-h-[360px] flex-col items-center justify-center text-center"
               >
-                <CheckCircle2 className="h-12 w-12 text-accent" />
-                <h3 className="mt-4 font-display text-xl font-semibold">Audit request received</h3>
-                <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-muted">
+                <CheckCircle2 className="h-12 w-12 text-brand" />
+                <h3 className="mt-4 font-display text-xl font-bold text-ink">Audit request received</h3>
+                <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-ink-muted">
                   Thanks.{" "}
                   {noSite
                     ? "I'll put together what your business needs a website to do"
@@ -226,7 +226,7 @@ export default function ContactForm() {
                     setNoSite(false);
                     setForm({ website: "", name: "", email: "", note: "", botcheck: "" });
                   }}
-                  className="mt-6 rounded-full border border-line-strong px-5 py-2.5 text-sm font-semibold text-offwhite transition-colors hover:bg-white/5"
+                  className="btn-pop mt-6 bg-paper px-5 py-2.5 text-sm font-semibold text-ink"
                 >
                   Request another audit
                 </button>
@@ -236,7 +236,7 @@ export default function ContactForm() {
                 {invalidCount > 0 && (
                   <p
                     role="alert"
-                    className="rounded-xl border border-warm/40 bg-warm/[0.08] px-4 py-3 text-[13px] leading-relaxed text-offwhite/90"
+                    className="rounded-xl border-2 border-line bg-ink/[0.05] px-4 py-3 text-[13px] leading-relaxed text-ink"
                   >
                     Please check the{" "}
                     {invalidFields.map((k) => FIELD_LABEL[k]).join(" and ")}{" "}
@@ -249,7 +249,7 @@ export default function ContactForm() {
                     Website URL
                   </label>
                   {noSite ? (
-                    <p className="rounded-xl border border-dashed border-line-input px-4 py-3 text-[13px] leading-relaxed text-muted">
+                    <p className="rounded-xl border-2 border-dashed border-line px-4 py-3 text-[13px] leading-relaxed text-ink-muted">
                       No website yet — that&apos;s fine. Tell me about the business below instead.
                     </p>
                   ) : (
@@ -276,7 +276,7 @@ export default function ContactForm() {
                   )}
                   <label
                     htmlFor={fid("nosite")}
-                    className="mt-2 flex min-h-11 cursor-pointer select-none items-center gap-2.5 text-[13px] text-muted hover:text-offwhite"
+                    className="mt-2 flex min-h-11 cursor-pointer select-none items-center gap-2.5 text-[13px] text-ink-muted hover:text-ink"
                   >
                     <input
                       id={fid("nosite")}
@@ -287,7 +287,7 @@ export default function ContactForm() {
                         setNoSite(e.target.checked);
                         setFieldErrors((fe) => ({ ...fe, website: undefined }));
                       }}
-                      className="h-6 w-6 shrink-0 rounded border-line-input bg-base-2 accent-accent"
+                      className="h-6 w-6 shrink-0 rounded border-2 border-line bg-card accent-brand"
                     />
                     I don&apos;t have a website yet
                   </label>
@@ -370,14 +370,14 @@ export default function ContactForm() {
                 {status === "error" && (
                   <div
                     role="alert"
-                    className="nudge-in flex items-start gap-2.5 rounded-xl border border-warm/40 bg-warm/[0.08] p-4"
+                    className="nudge-in flex items-start gap-2.5 rounded-xl border-2 border-line bg-ink/[0.05] p-4"
                   >
-                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warm" />
-                    <p className="text-[13px] leading-relaxed text-offwhite/90">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-ink" />
+                    <p className="text-[13px] leading-relaxed text-ink">
                       {errorMsg}{" "}
                       <a
                         href={`mailto:${site.email}?subject=${encodeURIComponent("Free website audit request")}`}
-                        className="font-semibold text-accent underline decoration-accent/50 underline-offset-4 hover:decoration-accent"
+                        className="font-semibold text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand"
                       >
                         {site.email}
                       </a>
@@ -391,12 +391,12 @@ export default function ContactForm() {
                     type="submit"
                     disabled={status === "sending"}
                     aria-busy={status === "sending" ? true : undefined}
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3.5 text-[15px] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-12px_rgba(56,189,248,0.6)] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-60"
+                    className="btn-pop group inline-flex w-full items-center justify-center gap-2 bg-brand px-6 py-3.5 text-[15px] font-semibold text-on-brand disabled:cursor-wait disabled:opacity-60"
                   >
                     {status === "sending" ? "Sending…" : cta.primary}
                     <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
-                  <p className="mt-3 text-center text-[12px] leading-relaxed text-faint">
+                  <p className="mt-3 text-center text-[12px] leading-relaxed text-ink-muted">
                     No commitment and no obligation — just an honest read, whether
                     you have a website or not.
                   </p>
@@ -404,11 +404,11 @@ export default function ContactForm() {
                       a raw anchor: this is a client component, and a plain <a> would
                       hard-reload the page and lose a half-filled form. min-h-11 keeps
                       the tap target reachable. */}
-                  <p className="mt-1.5 text-center text-[12px] leading-relaxed text-faint">
+                  <p className="mt-1.5 text-center text-[12px] leading-relaxed text-ink-muted">
                     By submitting, you agree to the{" "}
                     <Link
                       href="/privacy"
-                      className="inline-flex min-h-11 items-center text-accent underline decoration-accent/50 underline-offset-4 hover:decoration-accent"
+                      className="inline-flex min-h-11 items-center text-brand underline decoration-brand/50 underline-offset-4 hover:decoration-brand"
                     >
                       Privacy Policy
                     </Link>

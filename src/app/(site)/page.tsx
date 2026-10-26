@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import {
   About,
-  BeforeAfter,
   FinalCta,
   Problems,
   Process,
   Services,
-  TrustStrip,
-  WhyWork,
+  TradeMarquee,
+  WhyWorks,
 } from "@/components/Marketing";
 import FreeAudit from "@/components/FreeAudit";
 import Showcase from "@/components/Showcase";
@@ -25,24 +24,24 @@ export const metadata: Metadata = pageMeta({
   path: "/",
 });
 
-/* Funnel order: what's wrong → the free look → the work that proves it → what it
-   costs and how to keep it running → the questions that stop people asking → how
-   it's built → who you're dealing with → the one ask. */
+/* M2 order with a colour-blocked rhythm (navy → blue → paper → paper-2 → paper →
+   navy → paper → yellow): who I build for → what's wrong → the free look → the
+   work → why it works → the services → what it costs → how it runs → how it's
+   built → the questions → who you're dealing with → the one ask. */
 export default function HomePage() {
   return (
     <div>
       <Hero />
-      <TrustStrip />
+      <TradeMarquee />
       <Problems />
       <FreeAudit />
       <Showcase />
-      <BeforeAfter />
+      <WhyWorks />
       <Services />
       <Pricing />
       <CarePlans />
-      <Faq />
       <Process />
-      <WhyWork />
+      <Faq />
       <About />
       <FinalCta />
       <ContactForm />

@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import ConceptThumb from "./ConceptThumb";
 import type { Project } from "@/lib/data";
 
 export default function ProjectCard({
@@ -21,16 +21,45 @@ export default function ProjectCard({
           itself can't be an <a>. A stretched overlay keeps it clickable. */}
       <div className="card-pop card-spot group relative flex h-full flex-col overflow-hidden">
         <div className="relative overflow-hidden border-b-2 border-line bg-paper-2 p-3">
-          <span className="absolute left-4 top-4 z-20 rounded-full border-2 border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-widest text-brand">
-            Concept Project
-          </span>
           <div className="transition-transform duration-500 group-hover:scale-[1.02]">
-            <ConceptThumb project={project} />
+            {/* Real screenshot of the concept's own homepage, captured from the
+                built demo at 1280x800. The old drawn stand-in read as an
+                unfinished skeleton; this shows the finished work. */}
+            <div className="overflow-hidden rounded-xl border border-line bg-card">
+              <div
+                className="flex items-center gap-2 border-b border-line px-3 py-2"
+                aria-hidden="true"
+              >
+                <span className="flex shrink-0 gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#ff5f57]/70" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#febc2e]/70" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#28c840]/70" />
+                </span>
+                <span className="truncate font-display text-[12px] font-semibold text-ink">
+                  {project.name}
+                </span>
+              </div>
+              <Image
+                src={`/projects/${project.slug}.webp`}
+                alt={`Homepage of the ${project.name} concept website`}
+                width={1280}
+                height={800}
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
+                className="block aspect-[16/10] w-full object-cover object-top"
+              />
+            </div>
           </div>
         </div>
 
         <div className="flex flex-1 flex-col p-5">
-          <span className="font-mono text-[12px] text-ink-muted">{project.index}</span>
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-mono text-[12px] text-ink-muted">{project.index}</span>
+            {/* The label lives in the card body, not over the screenshot: as an
+                overlay it covered the concept's own header text. */}
+            <span className="rounded-full border border-line bg-card px-2.5 py-1 font-mono text-[12px] uppercase tracking-widest text-brand">
+              Concept Project
+            </span>
+          </div>
           <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
             {project.name}
           </h3>

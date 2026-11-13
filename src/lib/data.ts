@@ -2527,7 +2527,7 @@ export const projects: Project[] = [
     ],
     keySections: [
       "Status board",
-      "Hero with a paced-breathing widget",
+      "Calming breathing guide in the hero",
       "Smile planner",
       "In pain today",
       "Can this wait? self-check",

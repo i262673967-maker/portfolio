@@ -113,7 +113,7 @@ export function Problems() {
             Not sure which of these is your website?{" "}
             <Link
               href="/#audit"
-              className="font-semibold text-white underline decoration-white/60 underline-offset-4 transition-colors hover:decoration-white"
+              className="inline-flex min-h-11 items-center font-semibold text-white underline decoration-white/60 underline-offset-4 transition-colors hover:decoration-white"
             >
               That&apos;s exactly what the free audit answers
             </Link>
@@ -382,7 +382,10 @@ export function About() {
                 Email
               </dt>
               <dd>
-                <a href={`mailto:${site.email}`} className="text-brand underline-offset-4 hover:underline">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="inline-flex min-h-11 items-center text-brand underline-offset-4 hover:underline"
+                >
                   {site.email}
                 </a>
               </dd>

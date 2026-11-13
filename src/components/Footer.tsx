@@ -46,22 +46,26 @@ export default function Footer() {
               </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">{site.coreMessage}</p>
-            <a
-              href={`mailto:${site.email}`}
-              className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-mark underline-offset-4 hover:underline"
-            >
-              <Mail className="h-4 w-4" />
-              {site.email}
-            </a>
-            {/* Compact text action: the big audit button belongs to the page
-                sections, not to the footer chrome. */}
-            <Link
-              href="/#contact"
-              className="mt-4 inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-white link-pop hover:text-mark"
-            >
-              {cta.nav}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            {/* Stacked column: as two inline-flex siblings the email and the
+                audit link sat side by side and touched. */}
+            <div className="mt-4 flex flex-col items-start">
+              <a
+                href={`mailto:${site.email}`}
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-mark underline-offset-4 hover:underline"
+              >
+                <Mail className="h-4 w-4" />
+                {site.email}
+              </a>
+              {/* Compact text action: the big audit button belongs to the page
+                  sections, not to the footer chrome. */}
+              <Link
+                href="/#contact"
+                className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-white link-pop hover:text-mark"
+              >
+                {cta.nav}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
 
           {cols.map((col) => (
